@@ -102,7 +102,7 @@ Các lệnh dưới đây chạy trong PowerShell, đứng ở thư mục gốc 
 
 ### Cài nhanh bằng một lệnh
 
-Script `cai_dat.ps1` làm thay các bước 2 đến 6: kiểm tra đã có `sqlcmd`, .NET SDK 10, Node.js 22; tạo cơ sở dữ liệu và nạp dữ liệu mẫu nếu máy chưa có `QLBANVECHUYENBAY`; dựng giao diện; chạy máy chủ và mở trình duyệt tại `http://localhost:5080`. Chạy qua `cai_dat.cmd` để không phải đổi chính sách thực thi script của PowerShell:
+Script `cai_dat.ps1` làm thay các bước 2 đến 6: kiểm tra đã có `sqlcmd`, .NET SDK 10, Node.js 22; tạo cơ sở dữ liệu và nạp dữ liệu mẫu nếu máy chưa có `QLBANVECHUYENBAY` hoặc có nhưng rỗng; dựng giao diện; chạy máy chủ và mở trình duyệt tại `http://localhost:5080`. Chạy qua `cai_dat.cmd` để không phải đổi chính sách thực thi script của PowerShell:
 
 ```powershell
 .\cai_dat.cmd
@@ -110,9 +110,9 @@ Script `cai_dat.ps1` làm thay các bước 2 đến 6: kiểm tra đã có `sql
 
 | Tham số | Tác dụng |
 |---|---|
-| (không có) | Cơ sở dữ liệu đã có thì giữ nguyên, chỉ dựng lại giao diện và chạy máy chủ |
+| (không có) | Cơ sở dữ liệu đã có dữ liệu thì giữ nguyên, chỉ dựng lại giao diện và chạy máy chủ; đã có nhưng rỗng (ví dụ lần nạp trước bị lỗi) thì nạp dữ liệu mẫu, giữ các tài khoản |
 | `-NapLaiDuLieu` | Xóa `QLBANVECHUYENBAY` hiện có, tạo lại và nạp lại dữ liệu mẫu (mất dữ liệu đã nhập) |
-| `-MayChuSql "localhost"` | Dùng khi SQL Server không mang tên phiên bản `SQLEXPRESS`; chuỗi kết nối của lần chạy này đổi theo |
+| `-MayChuSql "localhost"` | Dùng khi SQL Server không mang tên phiên bản `SQLEXPRESS`; chuỗi kết nối của lần chạy này đổi theo. Không có tham số này mà không kết nối được `localhost\SQLEXPRESS` thì script tự thử `localhost` (phiên bản mặc định) |
 | `-KhongChay` | Chỉ cài đặt, không chạy máy chủ |
 
 Ví dụ nạp lại dữ liệu mẫu trước buổi demo:

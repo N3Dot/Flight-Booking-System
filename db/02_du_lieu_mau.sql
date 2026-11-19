@@ -13,6 +13,10 @@ SET ANSI_NULLS ON;
 SET NOCOUNT ON;
 GO
 
+-- Nạp trọn hoặc không nạp gì: một câu lệnh lỗi sẽ hủy cả lần nạp, không để lại dữ liệu nạp dở
+SET XACT_ABORT ON;
+BEGIN TRANSACTION;
+
 -- Xóa dữ liệu cũ theo thứ tự khóa ngoại
 DELETE FROM VE;
 DELETE FROM PHIEUDATCHO;
@@ -338,6 +342,8 @@ DECLARE @Lenh nvarchar(400) =
 EXEC (@Lenh);
 
 DROP TABLE #Lich, #So, #Ho, #Ten, #Ve, #Phieu;
+
+COMMIT TRANSACTION;
 
 -- Tóm tắt dữ liệu vừa nạp
 SELECT (SELECT COUNT(*) FROM SANBAY) AS SoSanBay,

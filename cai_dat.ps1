@@ -1,6 +1,6 @@
 # Cai dat va chay phan mem Quan ly ban ve chuyen bay bang mot lenh (Windows 10 tro len).
 # Chay trong PowerShell, dung o thu muc goc cua ma nguon:
-#   .\cai_dat.cmd                          tao CSDL (neu chua co), nap du lieu mau, dung giao dien, chay may chu
+#   .\cai_dat.cmd                          tao CSDL (neu chua co), nap du lieu mau (neu CSDL rong), dung giao dien, chay may chu
 #   .\cai_dat.cmd -NapLaiDuLieu            xoa CSDL hien co roi tao lai va nap lai du lieu mau
 #   .\cai_dat.cmd -MayChuSql "localhost"   SQL Server khong dung ten phien ban SQLEXPRESS
 #   .\cai_dat.cmd -KhongChay               chi cai dat, khong chay may chu
@@ -69,22 +69,42 @@ if (-not ($sdkDotnet -match '^10\.')) { Dung "Can .NET SDK 10 (co the cai song s
 $banNode = "$(GoiLenh 'node' @('--version') | Select-Object -Last 1)".Trim()
 if ($banNode -notmatch '^v(\d+)\.' -or [int]$Matches[1] -lt 22) { Dung "Can Node.js 22 tro len, may dang co ban $banNode." }
 
+# may cai SQL Server o phien ban mac dinh (MSSQLSERVER) khong co SQLEXPRESS: tu thu localhost khi nguoi dung khong chi dinh -MayChuSql
+if (-not $PSBoundParameters.ContainsKey('MayChuSql')) {
+    GoiLenh "sqlcmd" @("-S", $MayChuSql, "-E", "-C", "-b", "-l", "3", "-Q", "SELECT 1") | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        GoiLenh "sqlcmd" @("-S", "localhost", "-E", "-C", "-b", "-l", "3", "-Q", "SELECT 1") | Out-Null
+        if ($LASTEXITCODE -eq 0) {
+            $MayChuSql = "localhost"
+            Write-Host "Khong ket noi duoc localhost\SQLEXPRESS, dung SQL Server tai 'localhost' (phien ban mac dinh)." -ForegroundColor Yellow
+        }
+    }
+}
+
 GoiLenh "sqlcmd" @("-S", $MayChuSql, "-E", "-C", "-b", "-l", "15", "-Q", "SELECT 1") | Out-Null
 if ($LASTEXITCODE -ne 0) {
     Dung "Khong ket noi duoc SQL Server '$MayChuSql' bang tai khoan Windows hien tai. Kiem tra dich vu SQL Server dang chay; neu ten phien ban khac thi them tham so -MayChuSql."
 }
 
 # ---- 1 va 2: co so du lieu
-$daCo = (ChaySql @("-h", "-1", "-W", "-Q", "SET NOCOUNT ON; SELECT COUNT(*) FROM sys.databases WHERE name = '$tenCsdl'") |
-    Where-Object { $_ -match '^\s*\d+\s*$' } | Select-Object -First 1)
-$daCo = [int]("$daCo".Trim())
+# so dong cua 6 bang nghiep vu; -1 khi chua co CSDL hoac thieu bang (01 chay do dang). TAIKHOAN la bang tao sau cung trong 01.
+$bang = "SANBAY", "HANGVE", "CHUYENBAY", "HANHKHACH", "VE", "PHIEUDATCHO" | ForEach-Object { "(SELECT COUNT(*) FROM $tenCsdl.dbo.$_)" }
+$soDong = (ChaySql @("-h", "-1", "-W", "-Q", "SET NOCOUNT ON; IF OBJECT_ID(N'$tenCsdl.dbo.TAIKHOAN') IS NULL SELECT -1 ELSE EXEC (N'SELECT $($bang -join ' + ')')") |
+    Where-Object { $_ -match '^\s*-?\d+\s*$' } | Select-Object -First 1)
+$soDong = [int]("$soDong".Trim())
 
-if ($daCo -eq 0 -or $NapLaiDuLieu) {
+if ($soDong -lt 0 -or $NapLaiDuLieu) {
     Buoc 1 "Tao co so du lieu $tenCsdl"
     ChaySql @("-i", (Join-Path $goc "db\01_tao_csdl.sql")) | Out-Null
     Buoc 2 "Nap du lieu mau"
     ChaySql @("-i", (Join-Path $goc "db\02_du_lieu_mau.sql")) | Out-Null
     Write-Host "Da tao $tenCsdl va nap du lieu mau."
+} elseif ($soDong -eq 0) {
+    # CSDL rong (vd lan nap truoc bi loi): chi nap du lieu mau, giu tai khoan; khong mat gi vi cac bang nghiep vu dang trong
+    Buoc 1 "Co so du lieu $tenCsdl da co nhung rong, giu nguyen tai khoan"
+    Buoc 2 "Nap du lieu mau"
+    ChaySql @("-i", (Join-Path $goc "db\02_du_lieu_mau.sql")) | Out-Null
+    Write-Host "Da nap du lieu mau vao $tenCsdl."
 } else {
     Buoc 1 "Co so du lieu $tenCsdl da co, giu nguyen"
     Buoc 2 "Bo qua nap du lieu mau (them -NapLaiDuLieu neu muon xoa va nap lai)"
