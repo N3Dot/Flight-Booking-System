@@ -176,6 +176,39 @@ Các tài khoản này khai báo ở mục `TaiKhoanBanDau` của `appsettings.j
 
   Mặc định kiểm thử máy chủ `http://localhost:5080`; máy chủ khác thì đặt `$env:DIA_CHI = "http://localhost:5090"` trước khi chạy. Kết quả và ảnh chụp khi lỗi nằm trong `web/test-results/`.
 
+### Xem kiểm thử giao diện tự chạy trên trình duyệt
+
+`npm run kiem-thu-e2e` chạy ẩn và nhanh. Muốn nhìn trình duyệt tự đăng nhập, bấm, nhập liệu qua từng trường hợp thì dùng hai lệnh dưới, cùng điều kiện như trên: máy chủ đang chạy (`.\cai_dat.cmd` ở một cửa sổ khác), cơ sở dữ liệu vừa nạp dữ liệu mẫu, đã cài Chromium. Các lệnh chạy trong thư mục `web`. Trong lúc chạy không bấm vào cửa sổ trình duyệt.
+
+1. Xem tự chạy liên tục (`kiem-thu-xem`): mở Chrome và chạy lần lượt, mỗi thao tác chậm 0,4 giây, kết quả từng trường hợp in ra cửa sổ lệnh. Phần sau `--` chọn trường hợp cần chạy:
+
+   | Muốn chạy | Lệnh |
+   |---|---|
+   | Cả 50 trường hợp (khoảng 4 phút) | `npm run kiem-thu-xem` |
+   | Một use case (theo tên tập tin) | `npm run kiem-thu-xem -- uc04` |
+   | Vài use case | `npm run kiem-thu-xem -- uc01 uc04 uc05` |
+   | Một trường hợp (theo mã, có dấu cách cuối để `UC03.1` không khớp `UC03.10`) | `npm run kiem-thu-xem -- -g "UC03.1 "` |
+   | Các trường hợp có chữ trong tên | `npm run kiem-thu-xem -- -g "QĐ2"` |
+   | Xem danh sách mã và tên, không chạy | `npx playwright test --list` |
+
+   Đổi tốc độ: `$env:CHAM_MS = "1000"` (mili giây mỗi thao tác) rồi chạy lại lệnh; trở về mặc định bằng `Remove-Item Env:CHAM_MS`. Dừng giữa chừng: Ctrl+C.
+
+2. Chọn từng trường hợp bằng chuột (`kiem-thu-ui`): `npm run kiem-thu-ui` mở cửa sổ Playwright UI. Cột trái liệt kê các tập tin và trường hợp; bấm nút ▶ cạnh một trường hợp (hoặc cạnh tập tin, hoặc trên cùng để chạy tất cả). Khung giữa hiện từng bước đã làm, bấm vào một bước để xem màn hình lúc đó; ô "Show browser" ở thanh trên mở thêm trình duyệt thật.
+
+   | Tập tin | Số trường hợp | Nội dung |
+   |---|---:|---|
+   | `uc01_dang_nhap` | 5 | UC01.1 đến UC01.5: đăng nhập đúng, sai mật khẩu, tài khoản khóa, đăng xuất, chưa đăng nhập bị chặn |
+   | `uc02_phan_quyen` | 5 | UC02.1 đến UC02.5: thêm tài khoản, trùng tên, đổi nhóm quyền, khóa và mở khóa, không tự khóa chính mình |
+   | `phan_quyen_vai_tro` | 4 | UC02.6 đến UC02.9: menu, đường dẫn và nút của Nhân viên so với Quản lý |
+   | `uc03_chuyen_bay` | 11 | UC03.1 đến UC03.11: thêm, sửa, xóa, tra cứu chuyến bay, xuất và nhập Excel (QĐ1) |
+   | `uc04_ban_ve` | 7 | UC04.1 đến UC04.7: bán vé trực tiếp và từ phiếu, giá theo hạng, hết chỗ, sửa, hủy vé (QĐ2) |
+   | `uc05_dat_ve` | 6 | UC05.1 đến UC05.6: lập, tra cứu, sửa, hủy phiếu đặt chỗ, xóa phiếu đã hủy (QĐ3) |
+   | `uc07_bao_cao` | 3 | UC07.1 đến UC07.3: báo cáo tháng, năm, xuất Excel và PDF |
+   | `uc08_quy_dinh` | 6 | UC08.1 đến UC08.6: tham số quy định, sân bay, hạng vé (QĐ6) |
+   | `chung` | 3 | CHUNG.1 đến CHUNG.3: phím F1, Alt+1 đến Alt+4, chuông thông báo tự hủy phiếu |
+
+   Trường hợp lỗi có ảnh chụp màn hình trong `web/test-results/`.
+
 - Kiểm tra nhanh các luồng chính bằng curl khi máy chủ đang chạy (cần bash, ví dụ Git Bash trên Windows):
 
   ```bash

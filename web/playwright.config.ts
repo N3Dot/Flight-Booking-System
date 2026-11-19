@@ -5,6 +5,10 @@ import { defineConfig, devices } from '@playwright/test';
 
 const DIA_CHI = process.env.DIA_CHI ?? 'http://localhost:5080';
 
+// chạy có hiện trình duyệt (npm run kiem-thu-xem) thì mặc định chậm 400 ms mỗi thao tác;
+// đặt vào biến môi trường để các tiến trình worker (không có cờ --headed) cũng nhận được
+if (process.argv.includes('--headed')) process.env.CHAM_MS ??= '400';
+
 export default defineConfig({
   testDir: './kiem_thu_e2e',
   outputDir: 'test-results',
@@ -25,5 +29,7 @@ export default defineConfig({
     trace: 'off',
     screenshot: 'only-on-failure',
     actionTimeout: 15_000,
+    // CHAM_MS: số mili giây chậm lại mỗi thao tác để kịp xem (đặt ở đầu tệp khi chạy --headed)
+    launchOptions: { slowMo: Number(process.env.CHAM_MS ?? 0) },
   },
 });

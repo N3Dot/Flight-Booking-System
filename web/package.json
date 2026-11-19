@@ -9,7 +9,9 @@
     "dung-may-chu": "tsc --noEmit && vite build --outDir ../api/QuanLyBanVe.Api/wwwroot --emptyOutDir",
     "preview": "vite preview",
     "kiem-tra-kieu": "tsc --noEmit",
-    "kiem-thu-e2e": "playwright test --trace off"
+    "kiem-thu-e2e": "playwright test --trace off",
+    "kiem-thu-xem": "playwright test --trace off --headed",
+    "kiem-thu-ui": "playwright test --ui"
   },
   "dependencies": {
     "@fontsource/koho": "^5.3.0",
