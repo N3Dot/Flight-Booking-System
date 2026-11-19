@@ -63,8 +63,9 @@ KiemTraLenh "dotnet" "Cai .NET SDK 10."
 KiemTraLenh "node" "Cai Node.js 22 (kem npm)."
 KiemTraLenh "npm" "Cai Node.js 22 (kem npm)."
 
-$banDotnet = "$(GoiLenh 'dotnet' @('--version') | Select-Object -Last 1)".Trim()
-if ($banDotnet -notmatch '^10\.') { Dung "Can .NET SDK 10, may dang co ban $banDotnet." }
+# dotnet --version chi bao SDK moi nhat; may chu net10.0 can bo SDK 10 (kem runtime 10), cai them ban moi hon van duoc
+$sdkDotnet = @(GoiLenh 'dotnet' @('--list-sdks'))
+if (-not ($sdkDotnet -match '^10\.')) { Dung "Can .NET SDK 10 (co the cai song song ban moi hon). May dang co: $($sdkDotnet -join '; ')" }
 $banNode = "$(GoiLenh 'node' @('--version') | Select-Object -Last 1)".Trim()
 if ($banNode -notmatch '^v(\d+)\.' -or [int]$Matches[1] -lt 22) { Dung "Can Node.js 22 tro len, may dang co ban $banNode." }
 
@@ -93,7 +94,9 @@ if ($daCo -eq 0 -or $NapLaiDuLieu) {
 Buoc 3 "Dung giao dien"
 Push-Location (Join-Path $goc "web")
 try {
-    if (-not (Test-Path "node_modules")) {
+    # cai lai khi chua co node_modules hoac package-lock.json moi hon lan npm ci truoc (vd sau git pull)
+    $daCai = "node_modules\.package-lock.json"
+    if (-not (Test-Path $daCai) -or (Get-Item "package-lock.json").LastWriteTime -gt (Get-Item $daCai).LastWriteTime) {
         GoiLenh "npm" @("ci")
         if ($LASTEXITCODE -ne 0) { Dung "npm ci bao loi." }
     }

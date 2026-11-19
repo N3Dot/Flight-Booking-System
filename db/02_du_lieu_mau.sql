@@ -1,4 +1,4 @@
--- Dữ liệu mẫu cho QLBANVECHUYENBAY. Lịch gốc được soạn quanh ngày 12/11/2026 (chuyến bay từ tháng 1 đến tháng 12 năm 2026);
+﻿-- Dữ liệu mẫu cho QLBANVECHUYENBAY. Lịch gốc được soạn quanh ngày 12/11/2026 (chuyến bay từ tháng 1 đến tháng 12 năm 2026);
 -- khi nạp, mọi mốc ngày được dịch theo số ngày lệch giữa ngày nạp và 12/11/2026, nên nạp vào ngày nào
 -- thì ngày đó cũng đóng vai trò "hôm nay" của lịch và các kịch bản minh họa vẫn đúng.
 -- Chạy sau 01_tao_csdl.sql. Chạy lại được nhiều lần: dữ liệu nghiệp vụ cũ bị xóa rồi nạp lại.

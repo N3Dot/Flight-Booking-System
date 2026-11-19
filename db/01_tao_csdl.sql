@@ -1,4 +1,4 @@
--- Tạo cơ sở dữ liệu QLBANVECHUYENBAY và 10 bảng theo mục 3.2.12 của báo cáo.
+﻿-- Tạo cơ sở dữ liệu QLBANVECHUYENBAY và 10 bảng theo mục 3.2.12 của báo cáo.
 -- Chạy lại được nhiều lần: nếu cơ sở dữ liệu đã có thì xóa và tạo lại (mất dữ liệu cũ).
 -- Cách chạy: sqlcmd -S localhost\SQLEXPRESS -E -C -b -i 01_tao_csdl.sql
 
