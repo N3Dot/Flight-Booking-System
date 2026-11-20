@@ -33,7 +33,66 @@ import {
 import { TheHanhTrinh } from './TheHanhTrinh';
 import s from './ChuyenBay.module.css';
 
-const chiSo = (v: string, toiDa = 12) => v.replace(/\D/g, '').slice(0, toiDa);
+// ô số: gõ số âm, số lẻ hay chữ thì giữ nguyên để báo lỗi, không tự bỏ ký tự rồi thành một số khác
+const chiSo = (v: string, toiDa = 12) => (/^\s*\d*\s*$/.test(v) ? v.trim().slice(0, toiDa) : v.slice(0, toiDa + 8));
+const soCham = (v: string) => v.split('.').length - 1;
+
+/**
+ * Ô giá vé hiện dạng 1.500.000: dấu chấm do ô tự chèn thì bỏ đi. Người dùng gõ thêm dấu chấm (số lẻ),
+ * dấu phẩy, dấu trừ hay chữ thì giữ nguyên chuỗi để báo lỗi.
+ */
+function nhanGiaVe(moi: string, cu: string): string {
+  const t = moi.replace(/\s/g, '');
+  const hopLe =
+    /^\d+$/.test(t) ||
+    /^\d{1,3}(\.\d{3})+$/.test(t) ||
+    (/^\d+$/.test(cu) && /^[\d.]+$/.test(t) && soCham(t) <= soCham(dinhDangSo(Number(cu))));
+  return hopLe ? t.replace(/\./g, '').slice(0, 12) : t.slice(0, 20);
+}
+
+/**
+ * Đang nhập dở mà bấm liên kết trong trang hoặc nút Back thì hỏi trước khi bỏ dữ liệu
+ * (beforeunload chỉ chặn được tải lại trang và đóng thẻ).
+ */
+function dungHoiKhiRoiTrang(daDoi: boolean, hoi: () => Promise<boolean>, dieuHuong: (duongDan: string) => void) {
+  const ham = useRef({ hoi, dieuHuong });
+  ham.current = { hoi, dieuHuong };
+  useEffect(() => {
+    if (!daDoi) return;
+    let dangRoi = false;
+    const chanLienKet = (e: MouseEvent) => {
+      const a = (e.target as Element | null)?.closest?.('a[href]') as HTMLAnchorElement | null;
+      if (!a || dangRoi || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || a.target === '_blank' || a.origin !== location.origin) return;
+      const den = a.pathname + a.search + a.hash;
+      if (den === location.pathname + location.search + location.hash) return;
+      e.preventDefault();
+      e.stopPropagation();
+      void ham.current.hoi().then((dongY) => {
+        if (!dongY) return;
+        dangRoi = true;
+        ham.current.dieuHuong(den);
+      });
+    };
+    // thêm một mục lịch sử trùng địa chỉ để lần bấm Back đầu tiên dừng lại ở biểu mẫu
+    history.pushState(history.state, '', location.href);
+    const chanBack = () => {
+      if (dangRoi) return;
+      void ham.current.hoi().then((dongY) => {
+        if (dongY) {
+          dangRoi = true;
+          history.back();
+        } else history.pushState(history.state, '', location.href);
+      });
+    };
+    document.addEventListener('click', chanLienKet, true);
+    window.addEventListener('popstate', chanBack);
+    return () => {
+      document.removeEventListener('click', chanLienKet, true);
+      window.removeEventListener('popstate', chanBack);
+    };
+  }, [daDoi]);
+}
+
 const chonHet = (e: React.FocusEvent<HTMLInputElement>) => e.target.select();
 
 export interface ThuocTinhBieuMau {
@@ -69,6 +128,18 @@ export function BieuMauChuyenBay({ cheDo, quyDinh, chiTiet }: ThuocTinhBieuMau) 
     window.addEventListener('beforeunload', chan);
     return () => window.removeEventListener('beforeunload', chan);
   }, [daDoi]);
+  dungHoiKhiRoiTrang(
+    daDoi,
+    () =>
+      hoiXacNhan({
+        loai: 'xac-nhan',
+        tieuDe: 'Rời trang khi chưa lưu?',
+        noiDung: 'Các thông tin đang nhập chưa được lưu và sẽ bị bỏ.',
+        nutDongY: 'Rời trang',
+        nutHuy: 'Tiếp tục nhập',
+      }),
+    dieuHuong,
+  );
 
   const loi = (khoa: string): string | undefined => loiMayChu[khoa] ?? (daGui || cham.has(khoa) ? loiCuc[khoa] : undefined);
   const danhDau = (khoa: string) => datCham((c) => (c.has(khoa) ? c : new Set(c).add(khoa)));
@@ -294,11 +365,11 @@ export function BieuMauChuyenBay({ cheDo, quyDinh, chiTiet }: ThuocTinhBieuMau) 
                 batBuoc
                 inputMode="numeric"
                 placeholder="Ví dụ 1.500.000"
-                value={f.giaVe ? dinhDangSo(Number(f.giaVe)) : ''}
+                value={/^\d+$/.test(f.giaVe) ? dinhDangSo(Number(f.giaVe)) : f.giaVe}
                 loi={loi('giaVe')}
                 goiY="Đơn giá của chuyến bay; giá từng hạng tính theo tỉ lệ đơn giá."
                 ben={<span className={s.donVi}>₫</span>}
-                onChange={(e) => doi('giaVe', chiSo(e.target.value))}
+                onChange={(e) => doi('giaVe', nhanGiaVe(e.target.value, f.giaVe))}
                 onBlur={() => danhDau('giaVe')}
               />
               <OChon

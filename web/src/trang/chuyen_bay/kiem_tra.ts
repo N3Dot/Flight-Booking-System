@@ -14,7 +14,7 @@ export interface DongTrungGian {
 
 export interface DuLieuBieuMau {
   maChuyenBay: string;
-  /** chỉ chứa chữ số */
+  /** chữ số; gõ sai (số âm, số lẻ, chữ) thì giữ nguyên chuỗi để báo lỗi */
   giaVe: string;
   maSanBayDi: string | null;
   maSanBayDen: string | null;
@@ -82,7 +82,7 @@ export function kiemTraBieuMau(f: DuLieuBieuMau, nc: NguCanhKiemTra): BangLoi {
   }
 
   if (!f.giaVe) loi.giaVe = 'Chưa nhập giá vé.';
-  else if (Number(f.giaVe) <= 0) loi.giaVe = 'Giá vé phải là số nguyên dương (đồng).';
+  else if (!laSoNguyen(f.giaVe) || Number(f.giaVe) <= 0) loi.giaVe = 'Giá vé phải là số nguyên dương (đồng).';
   else if (Number(f.giaVe) > GIA_VE_TOI_DA) loi.giaVe = 'Giá vé không được vượt quá 999.999.999.999 đồng.';
 
   if (!f.maSanBayDi) loi.maSanBayDi = 'Chưa chọn sân bay đi.';

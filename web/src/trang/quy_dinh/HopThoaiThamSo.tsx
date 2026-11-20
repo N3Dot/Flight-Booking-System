@@ -66,7 +66,8 @@ export function HopThoaiThamSo({
     return null;
   };
 
-  const loiHien = loi ?? (daCham ? kiemTra(giaTri) : null);
+  // gõ ký tự không phải chữ số thì báo ngay, các lỗi khác chờ rời ô
+  const loiHien = loi ?? (daCham || /[^\d\s]/.test(giaTri) ? kiemTra(giaTri) : null);
 
   const luu = async () => {
     if (!m || dangLuu) return;
@@ -158,7 +159,8 @@ export function HopThoaiThamSo({
             goiY={`${khoang?.goiY} Áp dụng cho các nghiệp vụ phát sinh sau khi lưu.`}
             ben={<span className={s.donVi}>{m.donVi}</span>}
             onChange={(e) => {
-              datGiaTri(e.target.value.replace(/\D/g, '').slice(0, 6));
+              // không tự bỏ dấu trừ, dấu thập phân: giữ nguyên để báo "phải là số nguyên không âm"
+              datGiaTri(e.target.value.slice(0, 10));
               datLoi(null);
             }}
             onBlur={() => giaTri && datDaCham(true)}

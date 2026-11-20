@@ -139,10 +139,17 @@ export const ONgay = forwardRef<HTMLInputElement, ThuocTinhONgay>(function ONgay
   const [chu, datChu] = useState(() => hienThi(value, coGio));
   const [loiNoi, datLoiNoi] = useState<string | null>(null);
   const [mo, datMo] = useState(false);
+  // vừa báo trang giá trị rỗng vì chữ đang gõ sai: giữ nguyên chữ và lời báo, không đồng bộ lại
+  const giuChu = useRef(false);
 
   const daChon = docGiaTri(value);
   // đồng bộ chữ hiển thị khi trang đổi giá trị
   useEffect(() => {
+    if (giuChu.current && !value) {
+      giuChu.current = false;
+      return;
+    }
+    giuChu.current = false;
     datChu(hienThi(value, coGio));
     datLoiNoi(null);
   }, [value, coGio]);
@@ -171,6 +178,15 @@ export const ONgay = forwardRef<HTMLInputElement, ThuocTinhONgay>(function ONgay
     return null;
   };
 
+  /** chữ đang gõ không dùng được: báo lỗi tại ô và báo trang giá trị rỗng để trang không dùng tiếp ngày cũ */
+  const boGiaTri = (loiMoi: string) => {
+    datLoiNoi(loiMoi);
+    if (value) {
+      giuChu.current = true;
+      onChange?.(suKien('', name, idO));
+    }
+  };
+
   /** chốt chữ đang gõ; trả về true khi hợp lệ */
   const chot = (): boolean => {
     if (chu.trim() === '') {
@@ -179,12 +195,12 @@ export const ONgay = forwardRef<HTMLInputElement, ThuocTinhONgay>(function ONgay
     }
     const iso = docChu(chu, coGio, gioMacDinh);
     if (!iso) {
-      datLoiNoi(LOI_NGAY);
+      boGiaTri(LOI_NGAY);
       return false;
     }
     const lk = loiKhoang(iso);
     if (lk) {
-      datLoiNoi(lk);
+      boGiaTri(lk);
       return false;
     }
     phat(iso);
@@ -245,7 +261,8 @@ export const ONgay = forwardRef<HTMLInputElement, ThuocTinhONgay>(function ONgay
     if (traConTro) oRef.current?.focus();
   }, []);
 
-  const loiHien = loi ?? loiNoi;
+  // lời báo về chữ đang hiện trong ô được ưu tiên hơn lời báo của trang (ví dụ "Chưa nhập...")
+  const loiHien = loiNoi ?? loi;
   const trong = chu === '';
 
   return (

@@ -179,7 +179,8 @@ function HopThoaiHangVe({ cheDo, onDong }: { cheDo: CheDo; onDong: () => void })
           }
           ben={<span className={s.donVi}>%</span>}
           onChange={(e) => {
-            datTiLe(e.target.value.replace(/[^\d.,]/g, '').slice(0, 7));
+            // không tự bỏ dấu trừ hay chữ: giữ nguyên để báo lỗi thay vì lưu thành một tỉ lệ khác
+            datTiLe(e.target.value.slice(0, 10));
             datLoi(({ tiLeDonGia: _, ...c }) => c);
           }}
         />

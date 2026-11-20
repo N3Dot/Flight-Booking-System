@@ -269,6 +269,8 @@ public class XL_ChuyenBay
         // cột 0 là số dòng, cột 1 đến 6 là thông tin chung, từ cột 7 là số ghế từng hạng
         if (bangChuyenBay.Columns.Count < 8)
             throw LoiNghiepVu.khongHopLe("tapTin", "Trang ChuyenBay thiếu cột so với tập tin mẫu.");
+        if (bangChuyenBay.Rows.Count == 0)
+            throw LoiNghiepVu.khongHopLe("tapTin", "Trang ChuyenBay chưa có dòng chuyến bay nào. Hãy điền lịch chuyến bay vào tập tin mẫu rồi nhập lại.");
 
         List<HangVe> dsHangVe = dalHangVe.layDanhSachHangVe();
         var hangCuaCot = new Dictionary<int, string>();
