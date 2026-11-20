@@ -214,7 +214,7 @@ Các tài khoản này khai báo ở mục `TaiKhoanBanDau` của `appsettings.j
 Chọn và chạy các trường hợp kiểm thử giao diện ngay trên web, không cần gõ lệnh. Chỉ tài khoản Quản lý dùng được; trình duyệt kiểm thử luôn mở trên máy đang chạy máy chủ (dù bấm từ máy khác). Điều kiện như mục trên: đã `npm ci` trong `web`, đã cài Chromium (`npx playwright install chromium`).
 
 1. Mở trang: đăng nhập bằng tài khoản Quản lý. Ở mép phải màn hình, phía dưới, có một vạch đỏ mờ; di chuột vào thì hiện nút **Kiểm thử**, bấm để mở trang trong tab mới (hoặc gõ thẳng `http://localhost:5080/kiem-thu`).
-2. Chọn trường hợp: các trường hợp đánh số theo thứ tự chạy, chia nhóm theo use case. Tick từng trường hợp, tick ô ở đầu nhóm để chọn cả nhóm, hoặc **Chọn tất cả**. Ô tìm kiếm lọc theo mã (`UC04.2`) hoặc chữ trong tên.
+2. Chọn trường hợp: các trường hợp đánh số liền mạch theo thứ tự trên trang, chia nhóm theo use case. Tick từng trường hợp, tick ô ở đầu nhóm để chọn cả nhóm, hoặc **Chọn tất cả**. Ô tìm kiếm lọc theo mã (`UC04.2`) hoặc chữ trong tên.
 3. Chạy:
    - **Chạy N trường hợp**: chạy các trường hợp đã tick.
    - Nút ▶ ở cuối mỗi dòng: chạy riêng trường hợp đó; khi đã có kết quả nút đổi thành ↻ để chạy lại.

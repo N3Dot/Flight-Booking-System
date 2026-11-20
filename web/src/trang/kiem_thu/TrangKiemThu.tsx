@@ -51,6 +51,11 @@ export function TrangKiemThu() {
     // nhóm theo báo cáo đứng trước, nhóm "Bổ sung" (kiem_thu_e2e/bo_sung) xếp sau
     return [...nhom.entries()].sort(([a], [b]) => Number(laBoSung(a)) - Number(laBoSung(b)));
   }, [daLoc]);
+  // số thứ tự liền mạch theo thứ tự hiện trên trang (không đổi khi lọc)
+  const soThuTu = useMemo(
+    () => new Map([...cacCa].sort((a, b) => Number(laBoSung(a.nhom)) - Number(laBoSung(b.nhom))).map((ca, i) => [ca.id, i + 1])),
+    [cacCa],
+  );
 
   const chay = useMutation({
     mutationFn: (cacId: string[]) => apiKiemThu.chay({ cacCa: cacId, chamMs, hienTrinhDuyet }),
@@ -179,7 +184,7 @@ export function TrangKiemThu() {
                 {!dong && (
                   <ol className={s.danhSach}>
                     {cacCaNhom.map((ca) => (
-                      <DongCa key={ca.id} ca={ca} ketQua={ketQua[ca.id]} chon={chon.has(ca.id)} onChon={(bat) => doiChon([ca.id], bat)} onChay={() => chayCac([ca.id])} khoa={dangChay} />
+                      <DongCa key={ca.id} ca={ca} so={soThuTu.get(ca.id) ?? ca.stt} ketQua={ketQua[ca.id]} chon={chon.has(ca.id)} onChon={(bat) => doiChon([ca.id], bat)} onChay={() => chayCac([ca.id])} khoa={dangChay} />
                     ))}
                   </ol>
                 )}
@@ -206,13 +211,13 @@ export function TrangKiemThu() {
   );
 }
 
-function DongCa({ ca, ketQua, chon, onChon, onChay, khoa }: { ca: CaKiemThu; ketQua?: KetQuaCaKiemThu; chon: boolean; onChon: (bat: boolean) => void; onChay: () => void; khoa: boolean }) {
+function DongCa({ ca, so, ketQua, chon, onChon, onChay, khoa }: { ca: CaKiemThu; so: number; ketQua?: KetQuaCaKiemThu; chon: boolean; onChon: (bat: boolean) => void; onChay: () => void; khoa: boolean }) {
   const [loai, chu] = ketQua ? NHAN[ketQua.trangThai] : (['trung-tinh', 'Chưa chạy'] as const);
   // tên trường hợp có phần mã yêu cầu trong ngoặc ở cuối, tách ra làm nhãn nhỏ
   const tach = /^(.*?)\s*\(([^()]*)\)$/.exec(ca.ten);
   return (
     <li className={`${s.dong} ${ketQua?.trangThai === 'dangChay' ? s.dongDangChay : ''}`}>
-      <span className={s.stt}>{ca.stt}</span>
+      <span className={s.stt}>{so}</span>
       <input type="checkbox" checked={chon} onChange={(e) => onChon(e.target.checked)} aria-label={`Chọn ${ca.ma}`} />
       <span className={s.ma}>{ca.ma}</span>
       <div className={s.noiDung}>

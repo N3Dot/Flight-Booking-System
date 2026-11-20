@@ -280,7 +280,8 @@ export function BieuMauChuyenBay({ cheDo, quyDinh, chiTiet }: ThuocTinhBieuMau) 
       return { ...l, phu };
     });
   const timSanBay = (ma: string | null) => (ma ? quyDinh.sanBay.find((x) => x.maSanBay === ma) : undefined);
-  const giaVe = Number(f.giaVe) || 0;
+  // giá vé đang gõ sai (số âm, số lẻ, chữ) thì thẻ hành trình và giá từng hạng hiện "--"
+  const giaVe = /^\d+$/.test(f.giaVe) ? Number(f.giaVe) : 0;
   const tongGhe = hangVe.reduce((t, h) => t + (Number(f.ghe[h.maHangVe]) || 0), 0);
   const tongDaDung = Object.values(daDung).reduce((a, b) => a + b, 0);
   const thoiGianBay = Number(f.thoiGianBay) || null;
