@@ -209,6 +209,27 @@ Các tài khoản này khai báo ở mục `TaiKhoanBanDau` của `appsettings.j
 
    Trường hợp lỗi có ảnh chụp màn hình trong `web/test-results/`.
 
+### Trang Kiểm thử trong phần mềm
+
+Chọn và chạy các trường hợp kiểm thử giao diện ngay trên web, không cần gõ lệnh. Chỉ tài khoản Quản lý dùng được; trình duyệt kiểm thử luôn mở trên máy đang chạy máy chủ (dù bấm từ máy khác). Điều kiện như mục trên: đã `npm ci` trong `web`, đã cài Chromium (`npx playwright install chromium`).
+
+1. Mở trang: đăng nhập bằng tài khoản Quản lý. Ở mép phải màn hình, phía dưới, có một vạch đỏ mờ; di chuột vào thì hiện nút **Kiểm thử**, bấm để mở trang trong tab mới (hoặc gõ thẳng `http://localhost:5080/kiem-thu`).
+2. Chọn trường hợp: các trường hợp đánh số theo thứ tự chạy, chia nhóm theo use case. Tick từng trường hợp, tick ô ở đầu nhóm để chọn cả nhóm, hoặc **Chọn tất cả**. Ô tìm kiếm lọc theo mã (`UC04.2`) hoặc chữ trong tên.
+3. Chạy:
+   - **Chạy N trường hợp**: chạy các trường hợp đã tick.
+   - Nút ▶ ở cuối mỗi dòng: chạy riêng trường hợp đó; khi đã có kết quả nút đổi thành ↻ để chạy lại.
+   - **Chạy nhóm**: chạy cả nhóm. **Chạy lại lần trước**: chạy lại đúng các trường hợp vừa chạy.
+   - **Tốc độ**: thời gian nghỉ giữa hai bước thao tác, từ 0 (nhanh nhất) đến 3 giây, mặc định 1 giây; áp dụng từ lần bấm Chạy kế tiếp.
+   - **Hiện trình duyệt**: bỏ tick thì chạy ẩn, nhanh hơn, chỉ xem kết quả.
+   - **Dừng**: dừng ngay lần chạy, đóng trình duyệt kiểm thử.
+4. Theo dõi: dòng đang chạy tô vàng và ghi bước đang làm (ví dụ "Bước 3: Bấm · nút "Đăng nhập""); xong thì hiện Đạt hoặc Trượt kèm thời gian và câu lỗi. Cột phải là nhật ký từng bước.
+   - Khi chạy chậm, chỗ vừa bấm hiện vòng đỏ, ô đang nhập có viền đỏ.
+   - Ca làm đổi dữ liệu (thêm, sửa, xóa) có bước cuối "Mở CSDL kiểm chứng": mở thẻ mới hiện câu lệnh SELECT và các dòng thật trong bảng, tô vàng ô vừa đổi, đánh ✔/✘ từng điều kiện; dữ liệu sai thì ca bị tính là trượt.
+
+Danh sách chia hai phần: **Theo báo cáo (Chương 5)** gồm 50 ca trong `web/kiem_thu_e2e`, và **Bổ sung ngoài báo cáo** gồm các ca trong `web/kiem_thu_e2e/bo_sung` (giá trị biên, đoán lỗi, kịch bản đầu cuối).
+
+Mỗi lúc chỉ chạy được một lần. Bộ kiểm thử ghi dữ liệu thử vào cơ sở dữ liệu như khi chạy bằng lệnh; dùng xong nên nạp lại dữ liệu mẫu. Muốn tắt hẳn trang này (ví dụ khi dùng thật), đổi `"KiemThu": { "Bat": true }` thành `false` trong `api/QuanLyBanVe.Api/appsettings.json` rồi chạy lại máy chủ: nút ở mép phải và trang đều không còn dùng được.
+
 - Kiểm tra nhanh các luồng chính bằng curl khi máy chủ đang chạy (cần bash, ví dụ Git Bash trên Windows):
 
   ```bash

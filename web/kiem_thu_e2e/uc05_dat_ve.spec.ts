@@ -1,5 +1,5 @@
 // UC05 Quản lý đặt vé: lập phiếu (BM3, QĐ3), tra cứu, sửa, hủy phiếu và xóa phiếu đã hủy (AT04, BMT05, BMT09).
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, xemCsdl, type Page } from './tien_ich/trinh_dien';
 import { ApiThu, bamTrongHopThoai, dangNhap, hanhKhachMoi, hopThoai, mocVN, nhapNgay, soCanCuocMoi, toast } from './tien_ich/chung';
 
 async function timPhieu(page: Page, maPhieuDat: string) {
@@ -43,6 +43,9 @@ test.describe('UC05 Quản lý đặt vé', () => {
     const dong = page.getByRole('table', { name: 'Danh sách phiếu đặt chỗ' }).getByRole('row').filter({ hasText: maPhieu });
     await expect(dong).toContainText('Võ Thị Giữ Chỗ');
     await expect(dong).toContainText('Chờ thanh toán');
+    await xemCsdl(page, `phiếu ${maPhieu} đã được lập`,
+      { bang: 'PHIEUDATCHO', cot: 'MaPhieuDat', giaTri: maPhieu, soDong: 1, dung: { MaChuyenBay: cb.maChuyenBay, MaHangVe: 'H2', GiaTien: 1000000, TinhTrang: 'Chờ thanh toán' } },
+      { bang: 'HANHKHACH', cot: 'SoGiayTo', giaTri: soGiayTo, soDong: 1, dung: { HoTen: 'Võ Thị Giữ Chỗ' } });
   });
 
   test('UC05.2 Không đặt được vé trễ hơn thời gian chậm nhất trước ngày khởi hành (QĐ3)', async ({ page }) => {
@@ -63,6 +66,7 @@ test.describe('UC05 Quản lý đặt vé', () => {
       // vẫn bán vé trực tiếp được cho chuyến bay này
       await page.goto(`/ban-ve?maChuyenBay=${cb.maChuyenBay}`);
       await expect(page.getByRole('radio', { name: /^Hạng 2/ })).toBeEnabled();
+      await xemCsdl(page, `không có phiếu nào được lập cho chuyến bay ${cb.maChuyenBay}`, { bang: 'PHIEUDATCHO', cot: 'MaChuyenBay', giaTri: cb.maChuyenBay, soDong: 0 });
     } finally {
       await api.doiThamSo('thoiGianDatVeChamNhat', thamSoCu.thoiGianDatVeChamNhat);
       await api.dong();
@@ -87,7 +91,8 @@ test.describe('UC05 Quản lý đặt vé', () => {
   test('UC05.4 Sửa thông tin hành khách trên phiếu đặt chỗ (UC05.3)', async ({ page }) => {
     const api = await ApiThu.moi();
     const cb = await api.themChuyenBay();
-    const { maPhieuDat } = await api.datVe(cb.maChuyenBay, 'H2', hanhKhachMoi('Bùi Văn Cũ'));
+    const hk = hanhKhachMoi('Bùi Văn Cũ');
+    const { maPhieuDat } = await api.datVe(cb.maChuyenBay, 'H2', hk);
     await api.dong();
     await dangNhap(page, 'nhanVien', '/phieu-dat');
     const dong = await timPhieu(page, maPhieuDat);
@@ -98,6 +103,7 @@ test.describe('UC05 Quản lý đặt vé', () => {
     await form.getByRole('button', { name: 'Lưu', exact: true }).click();
     await expect(toast(page, new RegExp(`Đã cập nhật thông tin hành khách của phiếu.*${maPhieuDat}`))).toBeVisible();
     await expect(await timPhieu(page, maPhieuDat)).toContainText('Bùi Văn Mới');
+    await xemCsdl(page, `hành khách của phiếu ${maPhieuDat} đã đổi tên`, { bang: 'HANHKHACH', cot: 'SoGiayTo', giaTri: hk.soGiayTo, soDong: 1, dung: { HoTen: 'Bùi Văn Mới' } });
   });
 
   test('UC05.5 Hủy phiếu đặt chỗ thì phiếu chuyển sang Đã hủy (UC05.4, AT03)', async ({ page }) => {
@@ -114,6 +120,7 @@ test.describe('UC05 Quản lý đặt vé', () => {
     const dongSau = await timPhieu(page, maPhieuDat);
     await expect(dongSau).toContainText('Đã hủy');
     await expect(dongSau.getByRole('button', { name: `Hủy phiếu ${maPhieuDat}` })).toBeDisabled();
+    await xemCsdl(page, `phiếu ${maPhieuDat} chuyển sang Đã hủy, không bị xóa (AT03)`, { bang: 'PHIEUDATCHO', cot: 'MaPhieuDat', giaTri: maPhieuDat, soDong: 1, dung: { TinhTrang: 'Đã hủy' } });
   });
 
   test('UC05.6 Quản lý xóa các phiếu đã hủy trước một ngày, Nhân viên không có chức năng này (UC05.5, AT04, BMT09)', async ({ page }) => {
@@ -139,5 +146,7 @@ test.describe('UC05 Quản lý đặt vé', () => {
     await bamTrongHopThoai(page, 'Không có phiếu nào để xóa', 'Đã hiểu');
     const dem = await (await page.request.get(`/api/phieu-dat/da-huy/dem?truocNgay=${mocVN(0).iso}`)).json();
     expect(dem.soPhieu).toBe(0);
+    // phiếu Đã hủy đặt trước mốc mà đã thành vé thì được giữ lại vì vé còn tham chiếu tới phiếu (AT03)
+    await xemCsdl(page, `phiếu Đã hủy còn lại: đặt từ ${mocVN(0).vn} trở đi, hoặc đã thành vé nên được giữ`, { bang: 'PHIEUDATCHO', cot: 'TinhTrang', giaTri: 'Đã hủy' });
   });
 });

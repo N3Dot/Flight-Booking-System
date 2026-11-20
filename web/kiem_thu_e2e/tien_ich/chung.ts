@@ -26,7 +26,8 @@ export function maMoi(tienTo = 'KT'): string {
 /** Số căn cước 12 chữ số, khác nhau giữa các lần gọi và các lần chạy. */
 export function soCanCuocMoi(): string {
   dem += 1;
-  return '09' + String(goc % 1e8).padStart(8, '0') + String(dem % 100).padStart(2, '0');
+  // 3 chữ số cho bộ đếm: cả bộ kiểm thử gọi hàm này hơn 100 lần trong một lần chạy
+  return '0' + String(goc % 1e8).padStart(8, '0') + String(dem % 1000).padStart(3, '0');
 }
 
 /** Tên đăng nhập mới, không dấu, không khoảng trắng. */

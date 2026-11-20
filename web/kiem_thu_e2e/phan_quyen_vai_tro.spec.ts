@@ -1,5 +1,5 @@
 // Phân quyền theo vai trò (BMT01 đến BMT09): Nhân viên bán vé chỉ dùng được BMT01, BMT04, BMT05, BMT06.
-import { expect, test } from '@playwright/test';
+import { expect, test } from './tien_ich/trinh_dien';
 import { dangNhap } from './tien_ich/chung';
 
 const MENU_QUAN_LY = ['Báo cáo', 'Quy định', 'Tài khoản'];

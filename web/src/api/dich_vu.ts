@@ -4,6 +4,7 @@ import { goiApi, goiTaiTapTin } from './may_khach';
 import type {
   BaoCaoNam,
   BaoCaoThang,
+  CaKiemThu,
   ChuyenBayChiTiet,
   ChuyenBayTomTat,
   DinhDangXuat,
@@ -26,8 +27,10 @@ import type {
   TieuChiTimChuyenBay,
   TieuChiTimPhieu,
   TieuChiTimVe,
+  TrangThaiKiemThu,
   Ve,
   YeuCauBanVe,
+  YeuCauChayKiemThu,
   YeuCauDangNhap,
   YeuCauLuuChuyenBay,
   YeuCauSuaTaiKhoan,
@@ -135,12 +138,22 @@ export const apiThongBao = {
   danhSach: () => goiApi<ThongBao[]>('GET', '/api/thong-bao'),
 };
 
+/* ---------- Trang Kiểm thử (chỉ Quản lý; máy chủ tắt bằng KiemThu:Bat thì trả 404) ---------- */
+export const apiKiemThu = {
+  danhSach: () => goiApi<CaKiemThu[]>('GET', '/api/kiem-thu/danh-sach'),
+  trangThai: () => goiApi<TrangThaiKiemThu>('GET', '/api/kiem-thu/trang-thai'),
+  chay: (yc: YeuCauChayKiemThu) => goiApi<void>('POST', '/api/kiem-thu/chay', { than: yc }),
+  dung: () => goiApi<void>('POST', '/api/kiem-thu/dung'),
+};
+
 /** Khóa truy vấn dùng chung cho TanStack Query, để làm mới đúng chỗ sau khi ghi */
 export const khoaTruyVan = {
   phien: ['phien'] as const,
   thongBao: ['thong-bao'] as const,
   quyDinh: ['quy-dinh'] as const,
   taiKhoan: ['tai-khoan'] as const,
+  kiemThuDanhSach: ['kiem-thu', 'danh-sach'] as const,
+  kiemThuTrangThai: ['kiem-thu', 'trang-thai'] as const,
   chuyenBay: (tieuChi: TieuChiTimChuyenBay = {}) => ['chuyen-bay', 'danh-sach', tieuChi] as const,
   chuyenBayChiTiet: (maChuyenBay: string) => ['chuyen-bay', 'chi-tiet', maChuyenBay] as const,
   chuyenBaySapKhoiHanh: (soLuong: number) => ['chuyen-bay', 'sap-khoi-hanh', soLuong] as const,

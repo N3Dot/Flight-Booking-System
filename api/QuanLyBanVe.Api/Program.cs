@@ -45,6 +45,7 @@ builder.Services.AddCors(tuyChon => tuyChon.AddDefaultPolicy(chinhSach => chinhS
     .WithExposedHeaders("Content-Disposition")));
 
 builder.Services.AddHostedService<BoDinhThoi>();
+builder.Services.AddSingleton<BoChayKiemThu>();
 
 var app = builder.Build();
 

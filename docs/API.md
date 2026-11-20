@@ -90,6 +90,17 @@ Ngày giờ theo ISO 8601 giờ địa phương không kèm múi giờ (`2026-11
 
 Dịch vụ nền `BoDinhThoi` gọi `XL_HuyPhieuDat.kichHoatDinhKy(thoiDiemHienTai)` ngay khi máy chủ khởi động và sau mỗi 15 phút.
 
+## Kiểm thử giao diện (chỉ Quản lý, ngoài các use case của đề tài)
+Máy chủ chạy bộ kiểm thử Playwright trong thư mục `web` (cần `npm ci` và Chromium của Playwright trên máy chủ). Tắt hẳn bằng `"KiemThu": { "Bat": false }` trong `appsettings.json`: mọi đường dẫn dưới đây trả 404 `KHONG_TIM_THAY`.
+
+| Phương thức | Đường dẫn | Thân / trả về |
+|---|---|---|
+| GET | `/api/kiem-thu/danh-sach` | `[{stt, id, ma, ten, nhom, tapTin}]`, `id` dạng `tập tin:dòng`, theo thứ tự Playwright chạy |
+| GET | `/api/kiem-thu/trang-thai` | `{dangChay, batDau, ketThuc, ketQua: {id: {trangThai, thoiGianMs, loi, buoc, soBuoc}}, nhatKy: [chuỗi]}`; `trangThai` là `cho`, `dangChay`, `dat`, `truot`, `boQua`, `dung` |
+| POST | `/api/kiem-thu/chay` | `{cacCa: [id], chamMs (0 đến 5000, nghỉ giữa hai bước), hienTrinhDuyet}` → 204; `id` lạ: 400; đang có lần chạy khác: 409 `DANG_DUOC_SU_DUNG` |
+| POST | `/api/kiem-thu/dung` | 204, dừng lần chạy đang có (kể cả trình duyệt kiểm thử) |
+| GET | `/api/kiem-thu/csdl?bang=&cot=&giaTri=` | `{cauLenh, cacCot, cacDong}`: tối đa 50 dòng của một bảng trong danh sách cho phép, lọc `cot = giaTri` nếu có; cột `MatKhau` luôn hiện `(đã ẩn)`. Bảng hoặc cột lạ: 404 |
+
 ## Ghi chú theo máy chủ đã cài đặt
 - Đăng nhập thất bại: 401 `SAI_THONG_TIN_DANG_NHAP`; tài khoản bị khóa: 403 `TAI_KHOAN_BI_KHOA`.
 - Mã lỗi chung thêm: `DU_LIEU_KHONG_HOP_LE` (400), `CHUA_DANG_NHAP` (401), `KHONG_CO_QUYEN` (403), `KHONG_TIM_THAY` (404), `VI_PHAM_QD6` (409, phải còn ít nhất 2 sân bay và 1 hạng vé), `LOI_HE_THONG` (500, 503).

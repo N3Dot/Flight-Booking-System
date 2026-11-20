@@ -1,5 +1,5 @@
 // UC03 Quản lý chuyến bay: thêm (BM1, QĐ1), sửa, xóa (AT02), tra cứu (BM4), xuất và nhập Excel (TT01, TT02).
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, xemCsdl, type Page } from './tien_ich/trinh_dien';
 import { readFile } from 'node:fs/promises';
 import {
   ApiThu,
@@ -73,6 +73,10 @@ test.describe('UC03 Quản lý chuyến bay', () => {
     await expect(page.getByRole('main')).toContainText('DAD');
     await expect(page.getByRole('main')).toContainText('Đón khách');
     await expect(page.getByRole('main')).toContainText('1.500.000');
+    await xemCsdl(page, `chuyến bay ${ma} đã được lưu`,
+      { bang: 'CHUYENBAY', cot: 'MaChuyenBay', giaTri: ma, soDong: 1, dung: { GiaVe: 1500000, MaSanBayDi: 'SGN', MaSanBayDen: 'HAN', ThoiGianBay: 130 } },
+      { bang: 'CHITIETTRUNGGIAN', cot: 'MaChuyenBay', giaTri: ma, soDong: 1, dung: { MaSanBay: 'DAD', ThoiGianDung: 15, GhiChu: 'Đón khách' } },
+      { bang: 'GHETHEOHANG', cot: 'MaChuyenBay', giaTri: ma });
   });
 
   test('UC03.2 Thời gian bay dưới mức tối thiểu thì không lưu được (QĐ1)', async ({ page }) => {
@@ -83,6 +87,7 @@ test.describe('UC03 Quản lý chuyến bay', () => {
     await expect(page.getByText('Thời gian bay phải từ 30 phút trở lên (QĐ1).')).toBeVisible();
     await expect(page).toHaveURL(/\/chuyen-bay\/them$/);
     expect((await page.request.get(`/api/chuyen-bay/${ma}`)).status()).toBe(404);
+    await xemCsdl(page, `chuyến bay ${ma} không được lưu`, { bang: 'CHUYENBAY', cot: 'MaChuyenBay', giaTri: ma, soDong: 0 });
   });
 
   test('UC03.3 Không thêm quá số sân bay trung gian tối đa (QĐ1)', async ({ page }) => {
@@ -134,6 +139,7 @@ test.describe('UC03 Quản lý chuyến bay', () => {
     await page.goto(`/chuyen-bay/${cb.maChuyenBay}`);
     await expect(page.getByRole('main')).toContainText('2.000.000');
     await expect(page.getByRole('main')).toContainText('2 giờ 20 phút');
+    await xemCsdl(page, `chuyến bay ${cb.maChuyenBay} đã đổi giá vé và thời gian bay`, { bang: 'CHUYENBAY', cot: 'MaChuyenBay', giaTri: cb.maChuyenBay, soDong: 1, dung: { GiaVe: 2000000, ThoiGianBay: 140 } });
   });
 
   test('UC03.7 Xóa chuyến bay chưa có vé (UC03.3, AT02)', async ({ page }) => {
@@ -146,6 +152,9 @@ test.describe('UC03 Quản lý chuyến bay', () => {
     await bamTrongHopThoai(page, `Xóa chuyến bay ${cb.maChuyenBay}?`, 'Xóa');
     await expect(toast(page, `Xóa chuyến bay ${cb.maChuyenBay} thành công.`)).toBeVisible();
     expect((await page.request.get(`/api/chuyen-bay/${cb.maChuyenBay}`)).status()).toBe(404);
+    await xemCsdl(page, `chuyến bay ${cb.maChuyenBay} đã bị xóa`,
+      { bang: 'CHUYENBAY', cot: 'MaChuyenBay', giaTri: cb.maChuyenBay, soDong: 0 },
+      { bang: 'GHETHEOHANG', cot: 'MaChuyenBay', giaTri: cb.maChuyenBay, soDong: 0 });
   });
 
   test('UC03.8 Không xóa được chuyến bay đã có vé (UC03.3, AT02)', async ({ page }) => {
@@ -159,6 +168,9 @@ test.describe('UC03 Quản lý chuyến bay', () => {
     await bamTrongHopThoai(page, `Xóa chuyến bay ${cb.maChuyenBay}?`, 'Xóa');
     await bamTrongHopThoai(page, 'Không thể xóa chuyến bay', 'Đóng');
     expect((await page.request.get(`/api/chuyen-bay/${cb.maChuyenBay}`)).status()).toBe(200);
+    await xemCsdl(page, `chuyến bay ${cb.maChuyenBay} vẫn còn vì đã có vé`,
+      { bang: 'CHUYENBAY', cot: 'MaChuyenBay', giaTri: cb.maChuyenBay, soDong: 1 },
+      { bang: 'VE', cot: 'MaChuyenBay', giaTri: cb.maChuyenBay, soDong: 1 });
   });
 
   test('UC03.9 Tra cứu chuyến bay theo sân bay đi, sân bay đến và ngày (UC03.4, BM4, NV04)', async ({ page }) => {
@@ -247,5 +259,9 @@ test.describe('UC03 Quản lý chuyến bay', () => {
     expect(ct.status()).toBe(200);
     expect(JSON.stringify(await ct.json())).toContain('DAD');
     expect((await page.request.get(`/api/chuyen-bay/${maSai}`)).status()).toBe(404);
+    await xemCsdl(page, `nhập Excel: ${maDung} được lưu, ${maSai} sai QĐ1 nên không lưu`,
+      { bang: 'CHUYENBAY', cot: 'MaChuyenBay', giaTri: maDung, soDong: 1, dung: { MaSanBayDi: 'HAN', MaSanBayDen: 'PQC', ThoiGianBay: 130 } },
+      { bang: 'CHITIETTRUNGGIAN', cot: 'MaChuyenBay', giaTri: maDung, soDong: 1, dung: { MaSanBay: 'DAD' } },
+      { bang: 'CHUYENBAY', cot: 'MaChuyenBay', giaTri: maSai, soDong: 0 });
   });
 });

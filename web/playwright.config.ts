@@ -8,6 +8,8 @@ const DIA_CHI = process.env.DIA_CHI ?? 'http://localhost:5080';
 // chạy có hiện trình duyệt (npm run kiem-thu-xem) thì mặc định chậm 400 ms mỗi thao tác;
 // đặt vào biến môi trường để các tiến trình worker (không có cờ --headed) cũng nhận được
 if (process.argv.includes('--headed')) process.env.CHAM_MS ??= '400';
+// chạy chậm thì mỗi thao tác chờ thêm CHAM_MS, nới giới hạn thời gian để không trượt oan
+const CHAM = Number(process.env.CHAM_MS ?? 0);
 
 export default defineConfig({
   testDir: './kiem_thu_e2e',
@@ -16,8 +18,8 @@ export default defineConfig({
   fullyParallel: false,
   workers: 1,
   retries: 0,
-  timeout: 60_000,
-  expect: { timeout: 10_000 },
+  timeout: 60_000 + CHAM * 100,
+  expect: { timeout: 10_000 + CHAM * 4 },
   reporter: [['list']],
   use: {
     ...devices['Desktop Chrome'],
@@ -28,7 +30,7 @@ export default defineConfig({
     acceptDownloads: true,
     trace: 'off',
     screenshot: 'only-on-failure',
-    actionTimeout: 15_000,
+    actionTimeout: 15_000 + CHAM * 4,
     // CHAM_MS: số mili giây chậm lại mỗi thao tác để kịp xem (đặt ở đầu tệp khi chạy --headed)
     launchOptions: { slowMo: Number(process.env.CHAM_MS ?? 0) },
   },

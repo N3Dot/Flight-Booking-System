@@ -7,6 +7,7 @@ import { dungDaCuon } from '@/tien_ich/hook';
 import { dungPhimTat } from '@/tien_ich/phim_tat';
 import { ChanTrang } from './ChanTrang';
 import { DauTrang } from './DauTrang';
+import { NutKiemThu } from './NutKiemThu';
 import { ThanhThongBao, dungThongBao } from './ThanhThongBao';
 import { hienToast } from './toast_kho';
 import s from './BoCuc.module.css';
@@ -75,6 +76,7 @@ export function BoCuc() {
         <Outlet />
       </main>
       <ChanTrang />
+      {laQuanLy && pathname !== '/kiem-thu' && <NutKiemThu />}
     </div>
   );
 }

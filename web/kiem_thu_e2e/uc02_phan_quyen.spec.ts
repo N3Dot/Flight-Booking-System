@@ -1,5 +1,5 @@
 // UC02 Phân quyền: Quản lý thêm tài khoản, đổi nhóm quyền, khóa và mở khóa tài khoản (BMT02).
-import { expect, request, test, type Locator, type Page } from '@playwright/test';
+import { expect, request, test, xemCsdl, type Locator, type Page } from './tien_ich/trinh_dien';
 import { ApiThu, DIA_CHI, bamTrongHopThoai, dangNhap, hopThoai, tenDangNhapMoi, toast } from './tien_ich/chung';
 
 const MAT_KHAU = 'Kiemthu@123';
@@ -48,6 +48,7 @@ test.describe('UC02 Phân quyền', () => {
     await expect(await dongTaiKhoan(page, ten)).toContainText('Nhân viên bán vé');
     await expect(await dongTaiKhoan(page, ten)).toContainText('Hoạt động');
     expect(await thuDangNhapApi(ten, MAT_KHAU)).toBe(200);
+    await xemCsdl(page, `tài khoản ${ten} đã được thêm`, { bang: 'TAIKHOAN', cot: 'TenDangNhap', giaTri: ten, soDong: 1, dung: { NhomQuyen: 'Nhân viên bán vé', TrangThai: 'Hoạt động' } });
   });
 
   test('UC02.2 Không thêm được tài khoản trùng tên đăng nhập (BMT02)', async ({ page }) => {
@@ -66,6 +67,7 @@ test.describe('UC02 Phân quyền', () => {
     await expect(hopThoai(page, 'Thêm tài khoản')).toBeHidden();
     await page.getByRole('textbox', { name: 'Tìm tài khoản' }).fill('nhanvien');
     await expect(page.getByRole('table', { name: 'Danh sách tài khoản' }).getByRole('row').filter({ has: page.getByText('nhanvien', { exact: true }) })).toHaveCount(1);
+    await xemCsdl(page, 'không có tài khoản trùng tên nhanvien', { bang: 'TAIKHOAN', cot: 'TenDangNhap', giaTri: 'nhanvien', soDong: 1 });
   });
 
   test('UC02.3 Đổi nhóm quyền của tài khoản sang Quản lý (BMT02)', async ({ page }) => {
@@ -88,6 +90,7 @@ test.describe('UC02 Phân quyền', () => {
     await yc.post('/api/dang-nhap', { data: { tenDangNhap: ten, matKhau: MAT_KHAU } });
     expect((await yc.get(`/api/bao-cao/nam?nam=${new Date().getFullYear()}`)).status()).toBe(200);
     await yc.dispose();
+    await xemCsdl(page, `tài khoản ${ten} đã sang nhóm Quản lý`, { bang: 'TAIKHOAN', cot: 'TenDangNhap', giaTri: ten, soDong: 1, dung: { NhomQuyen: 'Quản lý' } });
   });
 
   test('UC02.4 Khóa rồi mở khóa tài khoản (BMT02, BMT01)', async ({ page }) => {
@@ -102,12 +105,14 @@ test.describe('UC02 Phân quyền', () => {
     await expect(toast(page, `Đã khóa tài khoản ${ten}.`)).toBeVisible();
     await expect(await dongTaiKhoan(page, ten)).toContainText('Đã khóa');
     expect(await thuDangNhapApi(ten, MAT_KHAU)).toBe(403);
+    await xemCsdl(page, `tài khoản ${ten} đã bị khóa`, { bang: 'TAIKHOAN', cot: 'TenDangNhap', giaTri: ten, soDong: 1, dung: { TrangThai: 'Đã khóa' } });
 
     await (await dongTaiKhoan(page, ten)).getByRole('button', { name: 'Mở khóa' }).click();
     await bamTrongHopThoai(page, `Mở khóa tài khoản ${ten}?`, 'Mở khóa');
     await expect(toast(page, `Đã mở khóa tài khoản ${ten}.`)).toBeVisible();
     await expect(await dongTaiKhoan(page, ten)).toContainText('Hoạt động');
     expect(await thuDangNhapApi(ten, MAT_KHAU)).toBe(200);
+    await xemCsdl(page, `tài khoản ${ten} đã mở khóa`, { bang: 'TAIKHOAN', cot: 'TenDangNhap', giaTri: ten, soDong: 1, dung: { TrangThai: 'Hoạt động' } });
   });
 
   test('UC02.5 Không tự khóa hoặc đổi nhóm quyền của chính mình (BMT02)', async ({ page }) => {

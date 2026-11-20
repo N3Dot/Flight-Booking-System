@@ -1,0 +1,38 @@
+/* Thu gọn còn vạch 10px gần như ẩn ở mép phải; di chuột hoặc focus thì trượt ra thành viên thuốc đỏ */
+.nut {
+  position: fixed;
+  right: 0;
+  bottom: 140px;
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--k-2);
+  height: 40px;
+  max-width: 10px;
+  padding: 0 0 0 12px;
+  overflow: hidden;
+  white-space: nowrap;
+  border-radius: var(--bo-vien-thuoc) 0 0 var(--bo-vien-thuoc);
+  background: var(--gd-do);
+  color: #fff;
+  font-weight: 700;
+  font-size: var(--co-nho);
+  text-decoration: none;
+  opacity: 0.3;
+  box-shadow: var(--bong-thanh);
+  transition: max-width var(--tg-vua) var(--cong-mem), padding var(--tg-vua) var(--cong-mem), opacity var(--tg-mau) ease,
+    box-shadow var(--tg-mau) ease;
+}
+
+.nut:hover,
+.nut:focus-visible {
+  max-width: 160px;
+  padding: 0 20px 0 16px;
+  opacity: 1;
+  box-shadow: var(--bong-noi);
+}
+
+.nut:focus-visible {
+  outline: none;
+  box-shadow: var(--vong-focus);
+}

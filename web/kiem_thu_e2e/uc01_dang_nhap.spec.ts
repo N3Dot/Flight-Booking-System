@@ -1,5 +1,5 @@
 // UC01 Đăng nhập, đăng xuất và bảo vệ đường dẫn khi chưa đăng nhập.
-import { expect, test } from '@playwright/test';
+import { expect, test } from './tien_ich/trinh_dien';
 import { TAI_KHOAN, dangNhapGiaoDien } from './tien_ich/chung';
 
 test.describe('UC01 Đăng nhập', () => {

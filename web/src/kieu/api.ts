@@ -37,6 +37,43 @@ export interface NguoiDung {
   nhomQuyen: NhomQuyen;
 }
 
+/* ---------- Trang Kiểm thử (chỉ Quản lý, ngoài các use case của đề tài) ---------- */
+export interface CaKiemThu {
+  stt: number;
+  /** "tập tin:dòng", gửi lại khi chạy */
+  id: string;
+  /** mã trong tên trường hợp, ví dụ UC01.1 */
+  ma: string;
+  ten: string;
+  nhom: string;
+  tapTin: string;
+}
+
+export type TrangThaiCaKiemThu = 'cho' | 'dangChay' | 'dat' | 'truot' | 'boQua' | 'dung';
+
+export interface KetQuaCaKiemThu {
+  trangThai: TrangThaiCaKiemThu;
+  thoiGianMs?: number | null;
+  loi?: string | null;
+  /** thao tác đang làm khi trangThai là dangChay */
+  buoc?: string | null;
+  soBuoc?: number;
+}
+
+export interface TrangThaiKiemThu {
+  dangChay: boolean;
+  batDau: string | null;
+  ketThuc: string | null;
+  ketQua: Record<string, KetQuaCaKiemThu>;
+  nhatKy: string[];
+}
+
+export interface YeuCauChayKiemThu {
+  cacCa: string[];
+  chamMs: number;
+  hienTrinhDuyet: boolean;
+}
+
 export interface YeuCauDangNhap {
   tenDangNhap: string;
   matKhau: string;

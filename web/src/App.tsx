@@ -17,6 +17,7 @@ import { TrangDatVe } from '@/trang/phieu_dat/TrangDatVe';
 import { TrangBaoCao } from '@/trang/bao_cao/TrangBaoCao';
 import { TrangQuyDinh } from '@/trang/quy_dinh/TrangQuyDinh';
 import { TrangTaiKhoan } from '@/trang/tai_khoan/TrangTaiKhoan';
+import { TrangKiemThu } from '@/trang/kiem_thu/TrangKiemThu';
 
 export function App() {
   return (
@@ -37,6 +38,7 @@ export function App() {
             <Route path="bao-cao" element={<TrangBaoCao />} />
             <Route path="quy-dinh" element={<TrangQuyDinh />} />
             <Route path="tai-khoan" element={<TrangTaiKhoan />} />
+            <Route path="kiem-thu" element={<TrangKiemThu />} />
           </Route>
           <Route path="tro-giup" element={<TrangTroGiup />} />
           <Route path="*" element={<TrangKhongTimThay />} />

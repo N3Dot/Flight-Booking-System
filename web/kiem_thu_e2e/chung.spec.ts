@@ -1,5 +1,5 @@
 // Chức năng chung: phím tắt (TD01 đến TD06) và chuông thông báo hủy phiếu tự động (UC06).
-import { expect, test } from '@playwright/test';
+import { expect, test } from './tien_ich/trinh_dien';
 import { dangNhap } from './tien_ich/chung';
 
 test.describe('Chức năng chung', () => {

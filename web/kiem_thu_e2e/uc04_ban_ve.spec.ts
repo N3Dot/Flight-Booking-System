@@ -1,5 +1,5 @@
 // UC04 Quản lý bán vé: bán trực tiếp (BM2, QĐ2), bán từ phiếu đặt chỗ, tra cứu, sửa và hủy vé (BMT04).
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, xemCsdl, type Page } from './tien_ich/trinh_dien';
 import { ApiThu, bamTrongHopThoai, dangNhap, hanhKhachMoi, hopThoai, soCanCuocMoi, toast } from './tien_ich/chung';
 
 async function nhapHanhKhach(page: Page, hoTen: string, soGiayTo: string, dienThoai = '0912345678') {
@@ -58,6 +58,9 @@ test.describe('UC04 Quản lý bán vé', () => {
     await expect(dong).toContainText('Trần Thị Kiểm Thử');
     await expect(dong).toContainText(soGiayTo);
     await expect(dong).toContainText('Đã bán');
+    await xemCsdl(page, `vé ${maVe} đã được bán`,
+      { bang: 'VE', cot: 'MaVe', giaTri: maVe, soDong: 1, dung: { MaChuyenBay: cb.maChuyenBay, MaHangVe: 'H2', GiaTien: 1000000, TinhTrang: 'Đã bán' } },
+      { bang: 'HANHKHACH', cot: 'SoGiayTo', giaTri: soGiayTo, soDong: 1, dung: { HoTen: 'Trần Thị Kiểm Thử' } });
   });
 
   test('UC04.2 Giá tiền theo hạng vé: Hạng 1 bằng 105% đơn giá, Hạng 2 bằng đơn giá (QĐ2)', async ({ page }) => {
@@ -76,6 +79,7 @@ test.describe('UC04 Quản lý bán vé', () => {
     const dong = await timVe(page, maVe);
     await expect(dong).toContainText('Hạng 1');
     await expect(dong).toContainText('1.050.000');
+    await xemCsdl(page, `vé ${maVe} Hạng 1 lưu giá bằng 105% đơn giá`, { bang: 'VE', cot: 'MaVe', giaTri: maVe, soDong: 1, dung: { MaHangVe: 'H1', GiaTien: 1050000 } });
   });
 
   test('UC04.3 Hạng vé hết chỗ thì không chọn được (QĐ2, NV02)', async ({ page }) => {
@@ -137,12 +141,16 @@ test.describe('UC04 Quản lý bán vé', () => {
     expect(JSON.stringify(phieu)).toContain('DaHuy');
     const ve = await (await page.request.get(`/api/ve?maVe=${maVe}`)).json();
     expect(JSON.stringify(ve)).toContain(maPhieuDat);
+    await xemCsdl(page, `phiếu ${maPhieuDat} đã thành vé ${maVe}`,
+      { bang: 'PHIEUDATCHO', cot: 'MaPhieuDat', giaTri: maPhieuDat, soDong: 1, dung: { TinhTrang: 'Đã hủy' } },
+      { bang: 'VE', cot: 'MaVe', giaTri: maVe, soDong: 1, dung: { MaPhieuDat: maPhieuDat, TinhTrang: 'Đã bán' } });
   });
 
   test('UC04.6 Sửa thông tin hành khách của vé (UC04.4)', async ({ page }) => {
     const api = await ApiThu.moi();
     const cb = await api.themChuyenBay();
-    const { maVe } = await api.banVe(cb.maChuyenBay, 'H2', hanhKhachMoi('Nguyễn Văn Cũ'));
+    const hk = hanhKhachMoi('Nguyễn Văn Cũ');
+    const { maVe } = await api.banVe(cb.maChuyenBay, 'H2', hk);
     await api.dong();
     await dangNhap(page, 'nhanVien', '/ve');
     const dong = await timVe(page, maVe);
@@ -156,6 +164,7 @@ test.describe('UC04 Quản lý bán vé', () => {
     const dongMoi = await timVe(page, maVe);
     await expect(dongMoi).toContainText('Nguyễn Văn Mới');
     await expect(dongMoi).toContainText('0987654321');
+    await xemCsdl(page, `hành khách của vé ${maVe} đã đổi tên và điện thoại`, { bang: 'HANHKHACH', cot: 'SoGiayTo', giaTri: hk.soGiayTo, soDong: 1, dung: { HoTen: 'Nguyễn Văn Mới', DienThoai: '0987654321' } });
   });
 
   test('UC04.7 Hủy vé thì vé chuyển sang Đã hủy và trả chỗ (UC04.5, AT03)', async ({ page }) => {
@@ -178,5 +187,6 @@ test.describe('UC04 Quản lý bán vé', () => {
     // ghế Hạng 2 được trả lại
     await page.goto(`/ban-ve?maChuyenBay=${cb.maChuyenBay}`);
     await expect(page.getByRole('radiogroup', { name: 'Hạng vé' }).getByRole('radio', { name: /^Hạng 2.*1 ghế trống/ })).toBeEnabled();
+    await xemCsdl(page, `vé ${maVe} đã chuyển sang Đã hủy`, { bang: 'VE', cot: 'MaVe', giaTri: maVe, soDong: 1, dung: { TinhTrang: 'Đã hủy' } });
   });
 });

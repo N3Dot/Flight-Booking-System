@@ -22,6 +22,14 @@ public class YeuCauSuaTaiKhoan
     public string? MatKhauMoi { get; set; }
 }
 
+public class YeuCauChayKiemThu
+{
+    /// <summary>Mã trường hợp dạng "tập tin:dòng" lấy từ api/kiem-thu/danh-sach</summary>
+    public List<string>? CacCa { get; set; }
+    public int? ChamMs { get; set; }
+    public bool? HienTrinhDuyet { get; set; }
+}
+
 public class YeuCauThamSo
 {
     public int? GiaTriMoi { get; set; }

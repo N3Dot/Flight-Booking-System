@@ -1,5 +1,5 @@
 // UC07 Lập báo cáo doanh thu: báo cáo tháng (BM5.1), báo cáo năm (BM5.2), xuất Excel và PDF (TT03, NV05).
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from './tien_ich/trinh_dien';
 import { readFile } from 'node:fs/promises';
 import { ApiThu, dangNhap, mocVN } from './tien_ich/chung';
 import { docExcel } from './tien_ich/excel';

@@ -42,6 +42,7 @@ public static class DangKyDichVu
         dichVu.AddScoped<DAL_PhieuDatCho>();
         dichVu.AddScoped<DAL_ThamSoQuyDinh>();
         dichVu.AddScoped<DAL_TaiKhoan>();
+        dichVu.AddScoped<DAL_KiemThu>();
 
         dichVu.AddScoped<XL_DangNhap>();
         dichVu.AddScoped<XL_PhanQuyen>();
