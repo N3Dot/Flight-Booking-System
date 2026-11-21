@@ -166,6 +166,25 @@ export interface HanhKhachThu {
   dienThoai: string;
 }
 
+/** Lịch chuyến bay thử khởi hành sau lechNgay ngày (giờ Việt Nam), mặc định SGN đi HAN, 2 ghế Hạng 1 và 5 ghế Hạng 2. */
+export function lichChuyenBayThu(tuyChon: Partial<ChuyenBayThu> & { lechNgay?: number; gio?: number } = {}): ChuyenBayThu {
+  const { lechNgay = 10, gio = 8, ...con } = tuyChon;
+  return {
+    maChuyenBay: maMoi('KT'),
+    giaVe: 1_000_000,
+    maSanBayDi: 'SGN',
+    maSanBayDen: 'HAN',
+    ngayGioKhoiHanh: mocVN(lechNgay, gio, 30).isoGio,
+    thoiGianBay: 120,
+    gheTheoHang: [
+      { maHangVe: 'H1', soLuongGhe: 2 },
+      { maHangVe: 'H2', soLuongGhe: 5 },
+    ],
+    trungGian: [],
+    ...con,
+  };
+}
+
 export function hanhKhachMoi(hoTen = 'Nguyễn Văn Thử'): HanhKhachThu {
   return { hoTen, loaiGiayTo: 'CCCD', soGiayTo: soCanCuocMoi(), dienThoai: '0901234567' };
 }
@@ -195,21 +214,7 @@ export class ApiThu {
 
   /** Thêm chuyến bay khởi hành sau lechNgay ngày (giờ Việt Nam), mặc định SGN đi HAN, 2 ghế Hạng 1 và 5 ghế Hạng 2. */
   async themChuyenBay(tuyChon: Partial<ChuyenBayThu> & { lechNgay?: number; gio?: number } = {}): Promise<ChuyenBayThu> {
-    const { lechNgay = 10, gio = 8, ...con } = tuyChon;
-    const cb: ChuyenBayThu = {
-      maChuyenBay: maMoi('KT'),
-      giaVe: 1_000_000,
-      maSanBayDi: 'SGN',
-      maSanBayDen: 'HAN',
-      ngayGioKhoiHanh: mocVN(lechNgay, gio, 30).isoGio,
-      thoiGianBay: 120,
-      gheTheoHang: [
-        { maHangVe: 'H1', soLuongGhe: 2 },
-        { maHangVe: 'H2', soLuongGhe: 5 },
-      ],
-      trungGian: [],
-      ...con,
-    };
+    const cb = lichChuyenBayThu(tuyChon);
     await this.goi('post', '/api/chuyen-bay', cb);
     return cb;
   }
@@ -245,6 +250,15 @@ export class ApiThu {
 
   async xoaSanBayNeuCo(ma: string) {
     await this.yc.delete(`/api/san-bay/${ma}`);
+  }
+
+  async themSanBay(maSanBay: string, tenSanBay: string) {
+    await this.goi('post', '/api/san-bay', { maSanBay, tenSanBay });
+  }
+
+  /** Xóa chuyến bay thử chưa có vé, phiếu; không có hoặc không xóa được thì bỏ qua. */
+  async xoaChuyenBayNeuCo(ma: string) {
+    await this.yc.delete(`/api/chuyen-bay/${ma}`);
   }
 
   async xoaHangVeNeuCo(ma: string) {

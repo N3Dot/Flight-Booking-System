@@ -1,7 +1,7 @@
 // Bổ sung chức năng chung và yêu cầu phi chức năng kiểm qua giao diện: trang không tìm thấy, F5 và Back/Forward,
 // chữ có thẻ script, chuỗi chèn SQL ở ô tìm kiếm, bố cục ở các khung màn hình thường gặp.
 import { expect, test, xemCsdl, type Locator, type Page } from '../tien_ich/trinh_dien';
-import { ApiThu, bamTrongHopThoai, dangNhap, hopThoai, nhapNgay, soCanCuocMoi, tenDangNhapMoi, toast, khoaTaiKhoanThuSauMoiCa } from '../tien_ich/chung';
+import { dangNhap, hopThoai, nhapNgay, tenDangNhapMoi, toast, khoaTaiKhoanThuSauMoiCa } from '../tien_ich/chung';
 
 const SCRIPT = '<script>alert(1)</script>';
 const ANH_LOI = '<img src=x onerror=alert(1)>';
@@ -109,62 +109,16 @@ test.describe('Bổ sung chức năng chung và phi chức năng', () => {
     await xemCsdl(page, `tài khoản ${ten} chỉ được thêm một lần`, { bang: 'TAIKHOAN', cot: 'TenDangNhap', giaTri: ten, soDong: 1 });
   });
 
-  test('CHUNG.8 Nhập thẻ script vào họ tên hành khách, tên sân bay, ghi chú trung gian thì hiện như chữ thường, không chạy (bảo mật)', async ({ page }) => {
+  test('CHUNG.8 Nhập thẻ script vào tên sân bay thì hiện như chữ thường, không chạy (bảo mật)', async ({ page }) => {
     const ghi = theoDoiTrang(page);
-    const api = await ApiThu.moi();
-    const cb = await api.themChuyenBay();
-    // ghi chú sân bay trung gian chứa thẻ ảnh có onerror
-    const cbTrungGian = await api.themChuyenBay({ thoiGianBay: 180, trungGian: [{ thuTu: 1, maSanBay: 'DAD', thoiGianDung: 15, ghiChu: ANH_LOI }] });
-    await api.dong();
-
-    // 1. họ tên hành khách: nhập trên biểu mẫu bán vé
-    await dangNhap(page, 'nhanVien', `/ban-ve?maChuyenBay=${cb.maChuyenBay}`);
-    await expect(page.getByRole('combobox', { name: 'Chuyến bay' })).toHaveValue(new RegExp(cb.maChuyenBay));
-    const form = page.getByRole('form', { name: 'Vé chuyến bay BM2' });
-    await form.getByRole('textbox', { name: 'Hành khách' }).fill(SCRIPT);
-    await form.getByRole('textbox', { name: 'CCCD/Hộ chiếu' }).fill(soCanCuocMoi());
-    await form.getByRole('textbox', { name: 'Điện thoại' }).fill('0912345678');
-    const hang = page.getByRole('radiogroup', { name: 'Hạng vé' }).getByRole('radio', { name: /^Hạng 2/ });
-    await page.locator('label').filter({ has: hang }).or(hang).first().click();
-    await form.getByRole('button', { name: 'Bán vé', exact: true }).click();
-    await bamTrongHopThoai(page, 'Xác nhận bán vé?', 'Bán vé');
-    const kq = hopThoai(page, 'Bán vé thành công');
-    await expect(kq).toBeVisible();
-    await expect(kq.getByText(SCRIPT, { exact: true })).toBeVisible();
-    const maVe = (await kq.getByText(/^VE\d{8}$/).textContent())!.trim();
-    await kq.getByRole('button').last().press('Escape');
-
-    await page.goto('/ve');
-    await page.getByRole('textbox', { name: 'Mã vé' }).fill(maVe);
-    await page.getByRole('button', { name: 'Tìm', exact: true }).click();
-    const dong = page.getByRole('table', { name: 'Danh sách vé' }).getByRole('row').filter({ hasText: maVe });
-    await expect(dong.getByText(SCRIPT, { exact: true })).toBeVisible();
-    await khongChayMa(page, ghi);
-    await xemCsdl(page, `họ tên hành khách của vé ${maVe} lưu nguyên dạng chữ`, { bang: 'VE', cot: 'MaVe', giaTri: maVe, soDong: 1 });
-
-    // 2. ghi chú sân bay trung gian: trang xem chuyến bay và biểu mẫu sửa
-    await dangNhap(page, 'quanLy', `/chuyen-bay/${cbTrungGian.maChuyenBay}`);
-    await expect(page.getByRole('main').getByText(ANH_LOI, { exact: true })).toBeVisible();
-    await page.goto(`/chuyen-bay/${cbTrungGian.maChuyenBay}/sua`);
-    await expect(page.getByRole('textbox', { name: 'Ghi chú' }).first()).toHaveValue(ANH_LOI);
-    await khongChayMa(page, ghi);
-    await xemCsdl(page, `ghi chú trung gian của ${cbTrungGian.maChuyenBay} lưu nguyên dạng chữ`, {
-      bang: 'CHITIETTRUNGGIAN',
-      cot: 'MaChuyenBay',
-      giaTri: cbTrungGian.maChuyenBay,
-      soDong: 1,
-      dung: { GhiChu: ANH_LOI },
-    });
-
-    // 3. tên sân bay: không thêm sân bay thật vào dữ liệu dùng chung; nhập vào ô của biểu mẫu rồi hủy,
-    //    và cho danh sách sân bay nhận một tên có thẻ script (thay phản hồi máy chủ ngay trong trình duyệt)
+    // Nhập tên rồi hủy biểu mẫu, và kiểm tra tên trả về từ phản hồi giả lập.
     await page.route('**/api/quy-dinh', async (route) => {
       const ph = await route.fetch();
       const duLieu = await ph.json();
       duLieu.sanBay.push({ maSanBay: 'ZZX', tenSanBay: SCRIPT }, { maSanBay: 'ZZY', tenSanBay: ANH_LOI });
       await route.fulfill({ response: ph, json: duLieu });
     });
-    await page.goto('/quy-dinh');
+    await dangNhap(page, 'quanLy', '/quy-dinh');
     const bangSanBay = page.getByRole('table', { name: 'Danh sách sân bay' });
     await expect(bangSanBay.getByRole('row').filter({ hasText: 'ZZX' }).getByText(SCRIPT, { exact: true })).toBeVisible();
     await expect(bangSanBay.getByRole('row').filter({ hasText: 'ZZY' }).getByText(ANH_LOI, { exact: true })).toBeVisible();

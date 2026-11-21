@@ -71,4 +71,63 @@ public class KiemThuUC01_DangNhap : KiemThuCoSo
         Assert.StartsWith("PBKDF2-SHA256$", taiKhoan.MatKhau);
         Assert.DoesNotContain("Quanly@123", taiKhoan.MatKhau);
     }
+
+    // PH-02: biên của bộ đếm đăng nhập sai (5 lần trong 1 phút cho một tên, 30 lần cho một máy, khóa 5 phút)
+
+    [Fact(DisplayName = "PH-02: sai 4 lần rồi đúng thì vào được và bộ đếm về 0; sai thêm 4 lần nữa vẫn chưa bị khóa")]
+    public void PH02_Sai4LanRoiDung()
+    {
+        var gioiHan = new GioiHanDangNhap(dongHo);
+        for (int i = 0; i < 4; i++) gioiHan.ghiLanSai("10.0.0.1", "quanly");
+        int truocKhiDung = gioiHan.soGiayConKhoa("10.0.0.1", "quanly");
+        gioiHan.ghiLanDung("10.0.0.1", "quanly");
+        for (int i = 0; i < 4; i++) gioiHan.ghiLanSai("10.0.0.1", "quanly");
+
+        Assert.Equal(0, truocKhiDung);
+        Assert.Equal(0, gioiHan.soGiayConKhoa("10.0.0.1", "quanly"));
+        gioiHan.ghiLanSai("10.0.0.1", "quanly");
+        Assert.True(gioiHan.soGiayConKhoa("10.0.0.1", "quanly") > 0);
+    }
+
+    [Fact(DisplayName = "PH-02: lần sai thứ 5 cách lần sai đầu hơn 1 phút thì không bị khóa")]
+    public void PH02_LanSaiThu5NgoaiCuaSo()
+    {
+        var gioiHan = new GioiHanDangNhap(dongHo);
+        DateTime dau = dongHo.BayGio;
+        for (int i = 0; i < 4; i++) gioiHan.ghiLanSai("10.0.0.2", "quanly");
+
+        dongHo.BayGio = dau.AddMinutes(1).AddSeconds(1);
+        gioiHan.ghiLanSai("10.0.0.2", "quanly");
+
+        Assert.Equal(0, gioiHan.soGiayConKhoa("10.0.0.2", "quanly"));
+    }
+
+    [Fact(DisplayName = "PH-02: bị khóa tạm thì sau 4 phút 59 giây vẫn còn khóa, đủ 5 phút thì đăng nhập lại được")]
+    public void PH02_KhoaTam5Phut()
+    {
+        var gioiHan = new GioiHanDangNhap(dongHo);
+        DateTime khoaLuc = dongHo.BayGio;
+        for (int i = 0; i < GioiHanDangNhap.SO_LAN_SAI_TOI_DA; i++) gioiHan.ghiLanSai("10.0.0.3", "quanly");
+
+        dongHo.BayGio = khoaLuc.AddMinutes(4).AddSeconds(59);
+        int conKhoa = gioiHan.soGiayConKhoa("10.0.0.3", "quanly");
+        dongHo.BayGio = khoaLuc.AddMinutes(5);
+
+        Assert.Equal(1, conKhoa);
+        Assert.Equal(0, gioiHan.soGiayConKhoa("10.0.0.3", "quanly"));
+    }
+
+    [Fact(DisplayName = "PH-02: 30 lần sai từ một máy với nhiều tên thì khóa cả máy, 29 lần thì chưa")]
+    public void PH02_KhoaCaMay()
+    {
+        var gioiHan = new GioiHanDangNhap(dongHo);
+        // mỗi tên chỉ sai 1 lần nên không tên nào chạm ngưỡng 5 lần
+        for (int i = 1; i < GioiHanDangNhap.SO_LAN_SAI_TOI_DA_MOT_MAY; i++) gioiHan.ghiLanSai("10.0.0.4", "ten" + i);
+        int sau29Lan = gioiHan.soGiayConKhoa("10.0.0.4", "tenkhac");
+        gioiHan.ghiLanSai("10.0.0.4", "ten30");
+
+        Assert.Equal(0, sau29Lan);
+        Assert.True(gioiHan.soGiayConKhoa("10.0.0.4", "tenkhac") > 0);
+        Assert.Equal(0, gioiHan.soGiayConKhoa("10.0.0.5", "tenkhac"));
+    }
 }

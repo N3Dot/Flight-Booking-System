@@ -98,7 +98,7 @@ test.describe('Bổ sung UC01 Đăng nhập', () => {
     expect((await goiDangNhapApi(TAI_KHOAN.quanLy.ten, 'QUANLY@123')).trangThai).toBe(401);
   });
 
-  test('UC01.9 Tên đăng nhập có khoảng trắng ở đầu hoặc cuối được tự cắt, giao diện và máy chủ nhất quán (BMT01) (cần chốt)', async ({ page }) => {
+  test('UC01.9 Tên đăng nhập có khoảng trắng ở đầu hoặc cuối được tự cắt, giao diện và máy chủ nhất quán (BMT01)', async ({ page }) => {
     // hành vi hiện tại: giao diện và máy chủ đều cắt khoảng trắng ở hai đầu tên rồi mới kiểm tra
     for (const ten of [`  ${TAI_KHOAN.nhanVien.ten}`, `${TAI_KHOAN.nhanVien.ten}  `, ` ${TAI_KHOAN.nhanVien.ten} `]) {
       await page.context().clearCookies();
@@ -152,7 +152,7 @@ test.describe('Bổ sung UC01 Đăng nhập', () => {
     await expect(oMatKhau(page)).toHaveAttribute('type', 'password');
   });
 
-  test('UC01.13 Đã đăng nhập rồi mở lại trang đăng nhập thì được chuyển về trang chính (BMT01) (cần chốt)', async ({ page }) => {
+  test('UC01.13 Đã đăng nhập rồi mở lại trang đăng nhập thì được chuyển về trang chính (BMT01)', async ({ page }) => {
     // hành vi hiện tại: chuyển thẳng về trang chính, phiên giữ nguyên
     await dangNhap(page, 'quanLy', '/chuyen-bay');
     await page.goto('/dang-nhap');

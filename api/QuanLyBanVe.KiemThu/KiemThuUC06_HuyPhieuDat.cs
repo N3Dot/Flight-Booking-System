@@ -101,7 +101,9 @@ public class KiemThuUC06_HuyPhieuDat : KiemThuCoSo
         Assert.Contains("2 phiếu", noiDung);
     }
 
+    // đo độ phủ thì loại ca này bằng --filter "Loai!=HieuNang" vì công cụ đo làm chậm mã
     [Fact(DisplayName = "HQ04: một lần kiểm tra hủy xong 1.000 phiếu đến hạn trong không quá 10 giây")]
+    [Trait("Loai", "HieuNang")]
     public void Huy1000PhieuTrong10Giay()
     {
         taoChuyenBay("CB500", HOM_NAY.AddDays(8), gheH1: 0, gheH2: 2000);

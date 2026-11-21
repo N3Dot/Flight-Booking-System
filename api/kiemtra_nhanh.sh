@@ -13,6 +13,9 @@ QL="$TAM/quanly.cookie"
 NV="$TAM/nhanvien.cookie"
 KHAC="$TAM/khac.cookie"
 THAN="$TAM/than.txt"
+GUI="$TAM/gui.json"
+# curl bản Windows không hiểu đường dẫn /tmp của Git Bash khi nằm sau dấu @
+GUI_CURL=$(cygpath -m "$GUI" 2>/dev/null || echo "$GUI")
 SO_DAT=0
 SO_TRUOT=0
 
@@ -21,8 +24,10 @@ goi() {
     local mo_ta="$1" mong_doi="$2" cookie="$3" phuong_thuc="$4" duong_dan="$5" than="${6:-}"
     local ma
     if [ -n "$than" ]; then
+        # gửi thân từ tập tin: trên Windows, chữ có dấu nằm ngay trên dòng lệnh bị curl đổi sai mã
+        printf '%s' "$than" > "$GUI"
         ma=$(curl -s -H 'X-Requested-With: XMLHttpRequest' -o "$THAN" -w '%{http_code}' -X "$phuong_thuc" -b "$cookie" -c "$cookie" \
-            -H 'Content-Type: application/json' -d "$than" "$GOC$duong_dan")
+            -H 'Content-Type: application/json; charset=utf-8' --data-binary "@$GUI_CURL" "$GOC$duong_dan")
     else
         ma=$(curl -s -H 'X-Requested-With: XMLHttpRequest' -o "$THAN" -w '%{http_code}' -X "$phuong_thuc" -b "$cookie" -c "$cookie" "$GOC$duong_dan")
     fi

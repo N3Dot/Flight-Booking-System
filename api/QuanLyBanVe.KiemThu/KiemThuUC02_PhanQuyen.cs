@@ -121,4 +121,50 @@ public class KiemThuUC02_PhanQuyen : KiemThuCoSo
         Assert.Equal(LoaiLoi.KhongTimThay, batLoi(() => xl.khoaTaiKhoan("khongco")).Loai);
         Assert.Equal(LoaiLoi.KhongTimThay, batLoi(() => xl.moKhoaTaiKhoan("khongco")).Loai);
     }
+
+    [Fact(DisplayName = "TR-04: khóa, hạ quyền một Quản lý khác được khi còn Quản lý hoạt động; không được nếu sau đó không còn Quản lý nào")]
+    public void TR04_ConItNhatMotQuanLy()
+    {
+        xl.themTaiKhoan("quanly2", "Quanly2@2026", TaiKhoan.QUAN_LY);
+        // quanly còn hoạt động nên khóa rồi mở khóa quanly2 được
+        xl.khoaTaiKhoan("quanly2");
+        xl.moKhoaTaiKhoan("quanly2");
+
+        // máy khác: quanly2 đăng nhập và khóa quanly
+        IServiceProvider may2 = taoMay();
+        may2.GetRequiredService<PhienLamViec>().batDau(lay<DAL_TaiKhoan>().timTaiKhoan("quanly2")!);
+        may2.GetRequiredService<XL_PhanQuyen>().khoaTaiKhoan("quanly");
+        // màn hình của quanly chưa tải lại: khóa hoặc hạ quyền quanly2 sẽ không còn Quản lý nào hoạt động
+        LoiNghiepVu khoa = batLoi(() => xl.khoaTaiKhoan("quanly2"));
+        LoiNghiepVu haQuyen = batLoi(() => xl.suaTaiKhoan("quanly2", TaiKhoan.NHAN_VIEN, null));
+
+        foreach (LoiNghiepVu loi in new[] { khoa, haQuyen })
+        {
+            Assert.Equal(MaLoi.DU_LIEU_DA_THAY_DOI, loi.Ma);
+            Assert.Equal("Hệ thống phải còn ít nhất một tài khoản Quản lý đang hoạt động.", loi.Message);
+        }
+        TaiKhoan quanLy2 = lay<DAL_TaiKhoan>().timTaiKhoan("quanly2")!;
+        Assert.Equal(TaiKhoan.QUAN_LY, quanLy2.NhomQuyen);
+        Assert.Equal(TaiKhoan.HOAT_DONG, quanLy2.TrangThai);
+    }
+
+    [Theory(DisplayName = "PH-03: mật khẩu 100 ký tự lưu được, 101 ký tự bị từ chối, khi thêm và khi đặt lại")]
+    [InlineData(100, true)]
+    [InlineData(101, false)]
+    public void PH03_MatKhauToiDa100(int doDai, bool hopLe)
+    {
+        string matKhau = "Aa@" + new string('x', doDai - 3);
+
+        if (hopLe)
+        {
+            xl.themTaiKhoan("banve03", matKhau, TaiKhoan.NHAN_VIEN);
+            xl.suaTaiKhoan("nhanvien", TaiKhoan.NHAN_VIEN, matKhau);
+            Assert.Equal("banve03", dangNhap("banve03", matKhau).TenDangNhap);
+            Assert.Equal("nhanvien", dangNhap("nhanvien", matKhau).TenDangNhap);
+            return;
+        }
+        Assert.Equal("Mật khẩu phải có từ 10 đến 100 ký tự.", batLoi(() => xl.themTaiKhoan("banve03", matKhau, TaiKhoan.NHAN_VIEN)).ChiTiet["matKhau"]);
+        Assert.Equal("Mật khẩu phải có từ 10 đến 100 ký tự.", batLoi(() => xl.suaTaiKhoan("nhanvien", TaiKhoan.NHAN_VIEN, matKhau)).ChiTiet["matKhauMoi"]);
+        Assert.Null(lay<DAL_TaiKhoan>().timTaiKhoan("banve03"));
+    }
 }

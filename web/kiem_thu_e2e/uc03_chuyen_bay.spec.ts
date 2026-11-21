@@ -185,7 +185,20 @@ test.describe('UC03 Quản lý chuyến bay', () => {
     await nhapNgay(page, 'Đến ngày', ngay.vn);
     await page.getByRole('button', { name: 'Tìm', exact: true }).click();
     const bang = page.getByRole('table', { name: 'Danh sách chuyến bay' });
-    await expect(bang.getByRole('row').filter({ hasText: cb.maChuyenBay })).toHaveCount(1);
+    await expect(page.getByText(/Tìm thấy [\d.]+ chuyến bay|Chỉ hiển thị [\d.]+ chuyến bay/)).toBeVisible();
+    const dongChuyenBay = bang.getByRole('row').filter({
+      has: page.getByRole('cell', { name: cb.maChuyenBay, exact: true }),
+    });
+    const phanTrang = page.getByRole('navigation', { name: 'Phân trang' });
+    const trangSau = phanTrang.getByRole('button', { name: 'Trang sau' });
+    const gioiHanTrang = 100; // tối đa 1.000 kết quả, 10 dòng mỗi trang
+    let trang = 1;
+    while (await dongChuyenBay.count() === 0 && trang < gioiHanTrang && await trangSau.isVisible() && await trangSau.isEnabled()) {
+      await trangSau.click();
+      trang++;
+      await expect(phanTrang.getByRole('button', { name: String(trang), exact: true })).toHaveAttribute('aria-current', 'page');
+    }
+    await expect(dongChuyenBay, `Không tìm thấy chuyến bay ${cb.maChuyenBay} theo tuyến VCA–VII ngày ${ngay.vn} sau khi kiểm tra ${trang} trang`).toHaveCount(1);
     // mọi dòng kết quả đều đúng tuyến và đúng ngày
     const cacDong = bang.locator('tbody tr');
     const soDong = await cacDong.count();
@@ -194,7 +207,6 @@ test.describe('UC03 Quản lý chuyến bay', () => {
       await expect(cacDong.nth(i)).toContainText(/VCA.*VII/);
       await expect(cacDong.nth(i)).toContainText(ngay.vn);
     }
-    await expect(page.getByText(/Tìm thấy \d+ chuyến bay/)).toBeVisible();
   });
 
   test('UC03.10 Xuất danh sách chuyến bay ra tập tin Excel (UC03.4, TT02)', async ({ page }) => {

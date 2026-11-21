@@ -18,9 +18,11 @@ namespace QuanLyBanVe.KiemThu;
 public class KiemThuGiaoTiep : IDisposable
 {
     private readonly WebApplicationFactory<Program> mayChu;
+    private readonly CoSoDuLieuThu csdl;
 
     public KiemThuGiaoTiep(CoSoDuLieuThu csdl)
     {
+        this.csdl = csdl;
         csdl.lamSach();
         mayChu = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
             builder.ConfigureAppConfiguration((_, cauHinh) => cauHinh.AddInMemoryCollection(new Dictionary<string, string?>
@@ -552,5 +554,109 @@ public class KiemThuGiaoTiep : IDisposable
         nguonLa.Headers.Add("Access-Control-Request-Method", "POST");
         HttpResponseMessage tuChoi = await mayKhach.SendAsync(nguonLa);
         Assert.False(tuChoi.Headers.Contains("Access-Control-Allow-Origin"));
+    }
+
+    private static async Task<HttpResponseMessage> guiJson(HttpClient mayKhach, string phuongThuc, string duongDan, string than)
+    {
+        var yeuCau = new HttpRequestMessage(new HttpMethod(phuongThuc), duongDan)
+        {
+            Content = new StringContent(than, System.Text.Encoding.UTF8, "application/json")
+        };
+        return await mayKhach.SendAsync(yeuCau);
+    }
+
+    [Fact(DisplayName = "GD-01: API ghi nhận thân rỗng {}, null hoặc sai kiểu (mảng ở ô chữ, chữ ở ô số) thì trả 400 có thông báo, không trả 500")]
+    public async Task GD01_ThanYeuCauRongHoacSaiKieu()
+    {
+        HttpClient quanLy = await dangNhapQuanLy();
+        (string PhuongThuc, string DuongDan, string SaiKieu)[] cacApi =
+        {
+            ("POST", "/api/dang-nhap", "{\"tenDangNhap\":[\"quanly\"],\"matKhau\":123}"),
+            ("POST", "/api/chuyen-bay", "{\"maChuyenBay\":[1,2],\"giaVe\":\"mot trieu\"}"),
+            ("POST", "/api/ve", "{\"maChuyenBay\":\"CB900\",\"maHangVe\":\"H2\",\"hanhKhach\":[1]}"),
+            ("POST", "/api/phieu-dat", "{\"maChuyenBay\":true,\"hanhKhach\":\"abc\"}"),
+            ("POST", "/api/tai-khoan", "{\"tenDangNhap\":[\"a\"],\"matKhau\":{}}"),
+            ("POST", "/api/san-bay", "{\"maSanBay\":{},\"tenSanBay\":[]}"),
+            ("POST", "/api/hang-ve", "{\"maHangVe\":\"H3\",\"tenHangVe\":\"Hạng thử\",\"tiLeDonGia\":\"nhieu\"}"),
+            ("PUT", "/api/quy-dinh/tham-so/thoiGianBayToiThieu", "{\"giaTriMoi\":[30]}"),
+        };
+
+        foreach (var (phuongThuc, duongDan, saiKieu) in cacApi)
+        {
+            foreach (string than in new[] { "{}", "null", saiKieu })
+            {
+                HttpResponseMessage phanHoi = await guiJson(quanLy, phuongThuc, duongDan, than);
+                string noiDung = await phanHoi.Content.ReadAsStringAsync();
+                Assert.True(phanHoi.StatusCode == HttpStatusCode.BadRequest, $"{phuongThuc} {duongDan} {than}: {(int)phanHoi.StatusCode} {noiDung}");
+                JsonElement loi = JsonDocument.Parse(noiDung).RootElement;
+                Assert.Equal("DU_LIEU_KHONG_HOP_LE", loi.GetProperty("ma").GetString());
+                Assert.False(string.IsNullOrWhiteSpace(loi.GetProperty("thongBao").GetString()));
+            }
+        }
+        Assert.Equal(0, csdl.dem("SELECT COUNT(*) FROM CHUYENBAY") + csdl.dem("SELECT COUNT(*) FROM VE") + csdl.dem("SELECT COUNT(*) FROM PHIEUDATCHO"));
+        Assert.Equal(30, (await docJson(await quanLy.GetAsync("/api/quy-dinh"))).GetProperty("thamSo").GetProperty("thoiGianBayToiThieu").GetInt32());
+    }
+
+    [Fact(DisplayName = "LO-02: gọi thẳng API với chuỗi 10.000 ký tự ở họ tên, ghi chú, tên đăng nhập, mật khẩu, hoặc thân JSON vài MB thì trả lỗi đúng dạng, không trả 500")]
+    public async Task LO02_ChuoiQuaDai()
+    {
+        HttpClient quanLy = await dangNhapQuanLy();
+        string dai = new string('a', 10_000);
+        Assert.Equal(HttpStatusCode.Created, (await quanLy.PostAsJsonAsync("/api/chuyen-bay", lichChuyenBay("CB900"))).StatusCode);
+
+        var lich = new
+        {
+            maChuyenBay = "CB901",
+            giaVe = 1500000,
+            maSanBayDi = "SGN",
+            maSanBayDen = "HAN",
+            ngayGioKhoiHanh = DateTime.Now.AddDays(10).ToString("yyyy-MM-dd'T'HH:mm:ss"),
+            thoiGianBay = 120,
+            gheTheoHang = new[] { new { maHangVe = "H2", soLuongGhe = 3 } },
+            trungGian = new[] { new { thuTu = 1, maSanBay = "DAD", thoiGianDung = 15, ghiChu = dai } }
+        };
+        await kiemTraLoi(await quanLy.PostAsJsonAsync("/api/chuyen-bay", lich), HttpStatusCode.BadRequest, "DU_LIEU_KHONG_HOP_LE");
+
+        object ve(string hoTen) => new
+        {
+            maChuyenBay = "CB900",
+            maHangVe = "H2",
+            hanhKhach = new { hoTen, loaiGiayTo = "CCCD", soGiayTo = "000000000001", dienThoai = "0901234567" }
+        };
+        await kiemTraLoi(await quanLy.PostAsJsonAsync("/api/ve", ve(dai)), HttpStatusCode.BadRequest, "DU_LIEU_KHONG_HOP_LE");
+        // thân JSON khoảng 3 MB
+        await kiemTraLoi(await quanLy.PostAsJsonAsync("/api/ve", ve(new string('a', 3_000_000))), HttpStatusCode.BadRequest, "DU_LIEU_KHONG_HOP_LE");
+
+        await kiemTraLoi(await quanLy.PostAsJsonAsync("/api/tai-khoan", new { tenDangNhap = dai, matKhau = "MatKhau@2026", nhomQuyen = "NhanVien" }),
+            HttpStatusCode.BadRequest, "DU_LIEU_KHONG_HOP_LE");
+        await kiemTraLoi(await quanLy.PostAsJsonAsync("/api/tai-khoan", new { tenDangNhap = "banve10k", matKhau = dai, nhomQuyen = "NhanVien" }),
+            HttpStatusCode.BadRequest, "DU_LIEU_KHONG_HOP_LE");
+        // đăng nhập bằng chuỗi rất dài chỉ là sai thông tin
+        await kiemTraLoi(await taoMayKhach().PostAsJsonAsync("/api/dang-nhap", new { tenDangNhap = dai, matKhau = dai }),
+            HttpStatusCode.Unauthorized, "SAI_THONG_TIN_DANG_NHAP");
+
+        Assert.Equal(0, csdl.dem("SELECT COUNT(*) FROM VE"));
+        Assert.Equal(1, csdl.dem("SELECT COUNT(*) FROM CHUYENBAY"));
+        Assert.Equal(0, csdl.dem("SELECT COUNT(*) FROM TAIKHOAN WHERE TenDangNhap = 'banve10k' OR LEN(TenDangNhap) > 30"));
+    }
+
+    [Fact(DisplayName = "GD-02: không kết nối được cơ sở dữ liệu thì trả 503 LOI_HE_THONG kèm câu thông báo, không trả 500")]
+    public async Task GD02_MatKetNoiCSDL()
+    {
+        // cổng 1 không có SQL Server nên kết nối bị từ chối ngay
+        using var mayChuMatCSDL = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+            builder.ConfigureAppConfiguration((_, cauHinh) => cauHinh.AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["ConnectionStrings:QLBANVE"] = "Server=tcp:127.0.0.1,1;Database=QLBANVE_KHONGCO;User Id=khongco;Password=khongco;Connect Timeout=2;TrustServerCertificate=True",
+                ["BoDinhThoi:Bat"] = "false",
+                ["NhatKy:ThuMuc"] = csdl.ThuMucNhatKy
+            })));
+        HttpClient mayKhach = mayChuMatCSDL.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true, AllowAutoRedirect = false });
+        mayKhach.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
+
+        JsonElement loi = await kiemTraLoi(await mayKhach.PostAsJsonAsync("/api/dang-nhap", new { tenDangNhap = "quanly", matKhau = "Quanly@123" }),
+            HttpStatusCode.ServiceUnavailable, "LOI_HE_THONG");
+
+        Assert.Equal("Không kết nối được cơ sở dữ liệu. Vui lòng thử lại sau.", loi.GetProperty("thongBao").GetString());
     }
 }

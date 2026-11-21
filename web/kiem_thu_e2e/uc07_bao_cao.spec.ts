@@ -40,10 +40,10 @@ test.describe('UC07 Lập báo cáo doanh thu', () => {
     await expect(dong).toContainText('3.050.000');
     await expect(dong).toContainText('%');
 
-    // dòng tổng cộng bằng tổng các dòng, tỉ lệ cộng lại xấp xỉ 100%
+    // dòng tổng cộng bằng tổng các dòng, tỉ lệ hiển thị cộng lại đúng 100%
     const tong = bang.locator('tfoot tr');
     await expect(tong).toContainText(/Tổng cộng \(\d+ chuyến bay\)/);
-    await expect(tong).toContainText('100');
+    await expect(tong.locator('td').nth(4)).toHaveText('100,00%');
     const cacDong = await bang.locator('tbody tr').all();
     let tongDoanhThu = 0;
     let tongTiLe = 0;
@@ -54,7 +54,7 @@ test.describe('UC07 Lập báo cáo doanh thu', () => {
     }
     const oTong = await tong.locator('td').allTextContents();
     expect(tongDoanhThu).toBe(soTien(oTong[3]));
-    expect(Math.abs(tongTiLe - 100)).toBeLessThan(1);
+    expect(tongTiLe.toFixed(2), `tổng tỉ lệ hiển thị là ${tongTiLe.toFixed(2)}%`).toBe('100.00');
   });
 
   test('UC07.2 Báo cáo năm có đủ 12 tháng và tổng doanh thu (BM5.2, NV05)', async ({ page }) => {
