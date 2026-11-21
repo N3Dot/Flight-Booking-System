@@ -33,7 +33,7 @@ Ngày giờ theo ISO 8601 giờ địa phương không kèm múi giờ (`2026-11
 | Phương thức | Đường dẫn | Thân yêu cầu | Trả về |
 |---|---|---|---|
 | GET | `/api/quy-dinh` | | `{thamSo: {thoiGianBayToiThieu, soSanBayTrungGianToiDa, thoiGianDungToiThieu, thoiGianDungToiDa, thoiGianDatVeChamNhat, thoiGianHuyDatVe}, sanBay: [{maSanBay, tenSanBay}], hangVe: [{maHangVe, tenHangVe, tiLeDonGia}]}` |
-| PUT | `/api/quy-dinh/tham-so/{tenThamSo}` | `{giaTriMoi}` | 204 |
+| PUT | `/api/quy-dinh/tham-so/{tenThamSo}` | `{giaTriMoi}` (`thoiGianBayToiThieu` từ 0 đến 1440) | 204 |
 | POST | `/api/san-bay` | `{maSanBay, tenSanBay}` | 201 |
 | PUT | `/api/san-bay/{maSanBay}` | `{tenSanBay}` | 204 |
 | DELETE | `/api/san-bay/{maSanBay}` | | 204, 409 `DANG_DUOC_SU_DUNG` |
@@ -47,12 +47,14 @@ Ngày giờ theo ISO 8601 giờ địa phương không kèm múi giờ (`2026-11
 | GET | `/api/chuyen-bay` | `?sanBayDi&sanBayDen&tuNgay&denNgay&maChuyenBay` | `[{maChuyenBay, maSanBayDi, tenSanBayDi, maSanBayDen, tenSanBayDen, ngayGioKhoiHanh, thoiGianBay, soGheTrong, soGheDat}]` (BM4) |
 | GET | `/api/chuyen-bay/{ma}` | | `{maChuyenBay, giaVe, maSanBayDi, maSanBayDen, ngayGioKhoiHanh, thoiGianBay, gheTheoHang: [{maHangVe, tenHangVe, soLuongGhe, soGheTrong, soDaBanVaDat}], trungGian: [{thuTu, maSanBay, tenSanBay, thoiGianDung, ghiChu}]}` |
 | POST | `/api/chuyen-bay` | như trên, không có các trường tính toán | 201 |
-| PUT | `/api/chuyen-bay/{ma}` | như POST | 204 |
+| PUT | `/api/chuyen-bay/{ma}` | như POST | 204, 409 `CHUYEN_BAY_DA_KHOI_HANH` (chuyến đã khởi hành không sửa được) |
 | DELETE | `/api/chuyen-bay/{ma}` | | 204, 409 `DA_CO_VE_HOAC_PHIEU` |
 | POST | `/api/chuyen-bay/nhap-excel` | multipart `tapTin` (.xlsx theo tập tin mẫu) | `{soDaThem, dongLoi: [{dong, lyDo}]}` |
 | GET | `/api/chuyen-bay/mau-excel` | | tập tin .xlsx mẫu |
 | GET | `/api/chuyen-bay/xuat-excel` | cùng tham số tra cứu | tập tin .xlsx |
 | GET | `/api/chuyen-bay/sap-khoi-hanh` | `?soLuong=5` | như tra cứu, sắp theo giờ khởi hành |
+
+Thêm, sửa và nhập Excel cùng kiểm: mỗi hạng vé tối đa 1000 ghế, thời gian bay tối đa 1440 phút, ngày giờ khởi hành (kể cả khi sửa) phải sau thời điểm hiện tại; sai thì trả 400 `DU_LIEU_KHONG_HOP_LE` kèm lỗi theo ô.
 
 ## Bán vé (UC04)
 | Phương thức | Đường dẫn | Thân yêu cầu / tham số | Trả về |
