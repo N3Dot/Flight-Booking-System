@@ -108,14 +108,17 @@ public class XL_ChuyenBay
     public void suaChuyenBay(string maCB, ChuyenBay cb, List<GheTheoHang> dsGhe, List<ChiTietTrungGian> dsTrungGian)
     {
         maCB = chuanHoaMa(maCB) ?? "";
-        if (!dalChuyenBay.kiemTraMaChuyenBay(maCB)) throw khongCoChuyenBay();
+        ChuyenBay cu = dalChuyenBay.layThongTin(maCB, out _, out List<ChiTietTrungGian> trungGianCu) ?? throw khongCoChuyenBay();
         cb.MaChuyenBay = maCB;
         chuanHoa(cb, dsGhe, dsTrungGian);
 
         // giả định 12, trừ điều kiện ngày giờ khởi hành sau thời điểm hiện tại
         Dictionary<string, string> loi = kiemTraHopLe(cb, dsGhe, dsTrungGian, laThemMoi: false);
         if (loi.Count > 0) throw LoiNghiepVu.khongHopLe(loi);
-        kiemTraQuyDinhNhanLich(cb, dsTrungGian);
+        // QĐ1 chỉ xét phần vừa đổi: chuyến bay lưu trước khi quy định đổi vẫn sửa được giá vé, số ghế, ngày giờ
+        bool doiTrungGian = !dsTrungGian.Select(t => (t.MaSanBay, (int)t.ThoiGianDung))
+            .SequenceEqual(trungGianCu.OrderBy(t => t.ThuTu).Select(t => (t.MaSanBay, (int)t.ThoiGianDung)));
+        kiemTraQuyDinhNhanLich(cb, dsTrungGian, xetThoiGianBay: cb.ThoiGianBay != cu.ThoiGianBay, xetTrungGian: doiTrungGian);
 
         List<GheTheoHang> dsGheCoGhe = boHangKhongCoGhe(dsGhe);
         Dictionary<string, string> tenHang = dalHangVe.layDanhSachHangVe().ToDictionary(h => h.MaHangVe, h => h.TenHangVe);
@@ -187,7 +190,10 @@ public class XL_ChuyenBay
                 dong["NgayGioKhoiHanh"], dong["ThoiGianBay"], dong["SoGheTrong"], dong["SoGheDat"]);
         }
         string ngayXuat = dongHo.layThoiDiemHienTai().ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
-        return TienIch_TapTin.taoExcel(bang, "Danh sách chuyến bay", new[] { "Ngày xuất: " + ngayXuat });
+        var dongPhu = new List<string> { "Ngày xuất: " + ngayXuat };
+        if (ketQua.Rows.Count >= DAL_ChuyenBay.SO_DONG_TOI_DA)
+            dongPhu.Add("Chỉ xuất " + DAL_ChuyenBay.SO_DONG_TOI_DA + " chuyến bay đầu tiên theo giờ khởi hành. Thu hẹp tiêu chí tra cứu để xuất phần còn lại.");
+        return TienIch_TapTin.taoExcel(bang, "Danh sách chuyến bay", dongPhu);
     }
 
     /// <summary>Tập tin Excel mẫu để nhập lịch chuyến bay: trang ChuyenBay, trang TrungGian và trang hướng dẫn.</summary>
@@ -243,11 +249,11 @@ public class XL_ChuyenBay
             using var boNho = new MemoryStream();
             tapTin.CopyTo(boNho);
             boNho.Position = 0;
-            bangChuyenBay = TienIch_TapTin.docExcel(boNho, TRANG_CHUYEN_BAY);
+            bangChuyenBay = TienIch_TapTin.docExcel(boNho, TRANG_CHUYEN_BAY, SO_DONG_NHAP_TOI_DA);
             try
             {
                 boNho.Position = 0;
-                bangTrungGian = TienIch_TapTin.docExcel(boNho, TRANG_TRUNG_GIAN);
+                bangTrungGian = TienIch_TapTin.docExcel(boNho, TRANG_TRUNG_GIAN, SO_DONG_NHAP_TOI_DA * 10);
             }
             catch (TienIch_TapTin.TapTinKhongDungMau)
             {
@@ -447,6 +453,14 @@ public class XL_ChuyenBay
         // giá vé là số nguyên dương tính bằng đồng
         if (cb.GiaVe <= 0 || cb.GiaVe != decimal.Truncate(cb.GiaVe)) loi["giaVe"] = "Giá vé phải là số nguyên dương (đồng).";
         else if (cb.GiaVe > GIA_VE_TOI_DA) loi["giaVe"] = "Giá vé không được vượt quá 999.999.999.999 đồng.";
+        else
+        {
+            // giá tiền của hạng đắt nhất mà chuyến bay có bán (giá vé x tỉ lệ đơn giá) cũng phải vừa cột tiền của vé, phiếu
+            HangVe? hangDatNhat = dsHangVe.Where(h => dsGhe.Any(g => g.MaHangVe == h.MaHangVe && g.SoLuongGhe > 0)).MaxBy(h => h.TiLeDonGia);
+            if (hangDatNhat != null && hangDatNhat.tinhGiaTien(cb.GiaVe) > GIA_VE_TOI_DA)
+                loi["giaVe"] = "Giá vé quá lớn: giá tiền " + hangDatNhat.TenHangVe + " (" + hangDatNhat.TiLeDonGia.ToString("0.##", CultureInfo.InvariantCulture)
+                    + "% giá vé) vượt quá 999.999.999.999 đồng.";
+        }
 
         if (cb.MaSanBayDi.Length == 0) loi["maSanBayDi"] = "Chưa chọn sân bay đi.";
         else if (!maSanBay.Contains(cb.MaSanBayDi)) loi["maSanBayDi"] = "Sân bay đi không có trong danh sách sân bay.";
@@ -496,17 +510,19 @@ public class XL_ChuyenBay
     /// Kiểm tra QĐ1 theo tham số hiện hành, đọc từ CSDL ở mỗi lần kiểm tra: thời gian bay tối thiểu,
     /// số sân bay trung gian tối đa, thời gian dừng tối thiểu và tối đa.
     /// </summary>
-    private void kiemTraQuyDinhNhanLich(ChuyenBay cb, List<ChiTietTrungGian> dsTrungGian)
+    private void kiemTraQuyDinhNhanLich(ChuyenBay cb, List<ChiTietTrungGian> dsTrungGian,
+        bool xetThoiGianBay = true, bool xetTrungGian = true)
     {
+        if (!xetThoiGianBay && !xetTrungGian) return;
         ThamSoQuyDinh thamSo = dalThamSo.layThamSoNhanLich();
         var viPham = new Dictionary<string, string>();
 
-        if (cb.ThoiGianBay < thamSo.ThoiGianBayToiThieu)
+        if (xetThoiGianBay && cb.ThoiGianBay < thamSo.ThoiGianBayToiThieu)
             viPham["thoiGianBay"] = "Thời gian bay phải từ " + thamSo.ThoiGianBayToiThieu + " phút trở lên (QĐ1).";
 
-        if (dsTrungGian.Count > thamSo.SoSanBayTrungGianToiDa)
+        if (xetTrungGian && dsTrungGian.Count > thamSo.SoSanBayTrungGianToiDa)
             viPham["trungGian"] = "Chuyến bay có tối đa " + thamSo.SoSanBayTrungGianToiDa + " sân bay trung gian (QĐ1).";
-        else if (dsTrungGian.Any(t => t.ThoiGianDung < thamSo.ThoiGianDungToiThieu || t.ThoiGianDung > thamSo.ThoiGianDungToiDa))
+        else if (xetTrungGian && dsTrungGian.Any(t => t.ThoiGianDung < thamSo.ThoiGianDungToiThieu || t.ThoiGianDung > thamSo.ThoiGianDungToiDa))
             viPham["trungGian"] = "Thời gian dừng tại sân bay trung gian phải từ " + thamSo.ThoiGianDungToiThieu
                 + " đến " + thamSo.ThoiGianDungToiDa + " phút (QĐ1).";
 

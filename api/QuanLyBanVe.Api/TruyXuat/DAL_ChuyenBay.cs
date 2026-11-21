@@ -117,12 +117,15 @@ public class DAL_ChuyenBay
         ketNoi.thucThi("DELETE FROM CHUYENBAY WHERE MaChuyenBay = @maCB", ThamSo.Chuoi("@maCB", maCB, 10));
     }
 
+    /// <summary>Tra cứu chuyến bay và xuất Excel chỉ lấy tối đa bấy nhiêu dòng, như tra cứu vé và phiếu.</summary>
+    public const int SO_DONG_TOI_DA = 1000;
+
     /// <summary>
     /// Tra cứu chuyến bay theo BM4. Số ghế đặt tính theo công thức (1.5), số ghế trống theo công thức (1.6),
     /// đếm ngay trong một câu truy vấn để danh sách dài vẫn trả kết quả nhanh (HQ05).
     /// soDongToiDa > 0 thì chỉ lấy bấy nhiêu chuyến bay đầu theo giờ khởi hành.
     /// </summary>
-    public DataTable timChuyenBay(TieuChiTim tieuChi, int soDongToiDa = 0)
+    public DataTable timChuyenBay(TieuChiTim tieuChi, int soDongToiDa = SO_DONG_TOI_DA)
     {
         var sql = new StringBuilder("SELECT ");
         var thamSo = new List<SqlParameter>();

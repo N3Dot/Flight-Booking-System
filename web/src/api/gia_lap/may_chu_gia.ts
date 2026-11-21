@@ -318,7 +318,7 @@ them('POST', '/api/tai-khoan', 'quanLy', ({ than }) => {
     chiTiet.tenDangNhap = 'Tên đăng nhập tối đa 30 ký tự, không chứa khoảng trắng, chỉ gồm chữ không dấu, số, dấu chấm, gạch dưới, gạch nối.';
   const mk = chuoi(than?.matKhau);
   if (!mk) chiTiet.matKhau = 'Chưa nhập mật khẩu.';
-  else if (mk.length < 6 || mk.length > 100) chiTiet.matKhau = 'Mật khẩu phải có từ 6 đến 100 ký tự.';
+  else if (mk.length < 10 || mk.length > 100) chiTiet.matKhau = 'Mật khẩu phải có từ 10 đến 100 ký tự.';
   if (than?.nhomQuyen !== 'QuanLy' && than?.nhomQuyen !== 'NhanVien') chiTiet.nhomQuyen = 'Nhóm quyền phải là Quản lý hoặc Nhân viên bán vé.';
   kiemTraChiTiet(chiTiet);
   if (db.taiKhoan.some((t) => t.tenDangNhap.toLowerCase() === ten.toLowerCase()))
@@ -332,7 +332,7 @@ them('PUT', '/api/tai-khoan/{ten}', 'quanLy', ({ p, than, nguoiDung }) => {
   if (than?.nhomQuyen !== 'QuanLy' && than?.nhomQuyen !== 'NhanVien')
     kiemTraChiTiet({ nhomQuyen: 'Nhóm quyền phải là Quản lý hoặc Nhân viên bán vé.' });
   const mkMoi = chuoi(than.matKhauMoi);
-  if (mkMoi && (mkMoi.length < 6 || mkMoi.length > 100)) kiemTraChiTiet({ matKhauMoi: 'Mật khẩu phải có từ 6 đến 100 ký tự.' });
+  if (mkMoi && (mkMoi.length < 10 || mkMoi.length > 100)) kiemTraChiTiet({ matKhauMoi: 'Mật khẩu phải có từ 10 đến 100 ký tự.' });
   if (tk.tenDangNhap === nguoiDung?.tenDangNhap && than.nhomQuyen !== tk.nhomQuyen)
     throw loi(409, 'KHONG_DUOC_TU_DOI_QUYEN', 'Không được đổi nhóm quyền của tài khoản đang đăng nhập.', { nhomQuyen: 'Không được đổi nhóm quyền của tài khoản đang đăng nhập.' });
   if (tk.nhomQuyen === 'QuanLy' && than.nhomQuyen !== 'QuanLy' && tk.trangThai === 'HoatDong' && !conQuanLyKhac(tk.tenDangNhap))
@@ -455,7 +455,7 @@ function locChuyenBay(t: ThamSo): ChuyenBayGia[] {
     .sort((a, b) => a.ngayGioKhoiHanh.localeCompare(b.ngayGioKhoiHanh));
 }
 
-them('GET', '/api/chuyen-bay', 'dangNhap', ({ thamSo }) => locChuyenBay(thamSo).map(tomTat));
+them('GET', '/api/chuyen-bay', 'dangNhap', ({ thamSo }) => locChuyenBay(thamSo).slice(0, 1000).map(tomTat));
 them('GET', '/api/chuyen-bay/sap-khoi-hanh', 'dangNhap', ({ thamSo }) => {
   const now = sangIso(bayGio());
   const soLuong = Math.max(1, Number(thamSo.soLuong) || 5);
@@ -658,14 +658,16 @@ them('GET', '/api/ve', 'dangNhap', ({ thamSo: t }): Ve[] => {
   return db.ve
     .filter((v) => {
       const ngay = v.ngayBan.slice(0, 10);
-      if (t.maVe && !v.maVe.includes(chuoi(t.maVe).trim().toUpperCase())) return false;
-      if (t.soGiayTo && !v.soGiayTo.includes(chuoi(t.soGiayTo).trim().toUpperCase())) return false;
+      // như DAL_Ve: mã vé theo tiền tố, số giấy tờ khớp chính xác, tối đa 1.000 dòng
+      if (t.maVe && !v.maVe.startsWith(chuoi(t.maVe).trim().toUpperCase())) return false;
+      if (t.soGiayTo && v.soGiayTo !== chuoi(t.soGiayTo).trim().toUpperCase()) return false;
       if (t.maChuyenBay && v.maChuyenBay !== chuoi(t.maChuyenBay).trim().toUpperCase()) return false;
       if (tu && ngay < tu) return false;
       if (den && ngay > den) return false;
       return true;
     })
     .sort((a, b) => b.ngayBan.localeCompare(a.ngayBan))
+    .slice(0, 1000)
     .map(veRa);
 });
 them('PUT', '/api/ve/{ma}/hanh-khach', 'dangNhap', ({ p, than }) => {
@@ -708,13 +710,15 @@ them('POST', '/api/phieu-dat', 'dangNhap', ({ than }): KetQuaDatVe => {
 them('GET', '/api/phieu-dat', 'dangNhap', ({ thamSo: t }) =>
   db.phieu
     .filter((x) => {
-      if (t.maPhieuDat && !x.maPhieuDat.includes(chuoi(t.maPhieuDat).trim().toUpperCase())) return false;
-      if (t.soGiayTo && !x.soGiayTo.includes(chuoi(t.soGiayTo).trim().toUpperCase())) return false;
+      // như DAL_PhieuDatCho: mã phiếu theo tiền tố, số giấy tờ khớp chính xác, tối đa 1.000 dòng
+      if (t.maPhieuDat && !x.maPhieuDat.startsWith(chuoi(t.maPhieuDat).trim().toUpperCase())) return false;
+      if (t.soGiayTo && x.soGiayTo !== chuoi(t.soGiayTo).trim().toUpperCase()) return false;
       if (t.maChuyenBay && x.maChuyenBay !== chuoi(t.maChuyenBay).trim().toUpperCase()) return false;
       if (t.tinhTrang && x.tinhTrang !== t.tinhTrang) return false;
       return true;
     })
     .sort((a, b) => b.thoiDiemDat.localeCompare(a.thoiDiemDat))
+    .slice(0, 1000)
     .map(phieuRa),
 );
 them('GET', '/api/phieu-dat/sap-het-han', 'dangNhap', ({ thamSo }) =>
@@ -739,7 +743,7 @@ them('GET', '/api/phieu-dat/con-han', 'dangNhap', ({ thamSo: t }): PhieuConHan[]
       return {
         maPhieuDat: x.maPhieuDat,
         maChuyenBay: x.maChuyenBay,
-        tuyenBay: `${tenSanBay(cb.maSanBayDi)} → ${tenSanBay(cb.maSanBayDen)}`,
+        tuyenBay: `${cb.maSanBayDi} - ${cb.maSanBayDen}`,
         ngayGioKhoiHanh: cb.ngayGioKhoiHanh,
         tenHangVe: tenHang(x.maHangVe),
         hoTen: x.hoTen,

@@ -448,6 +448,7 @@ export function BieuMauVe({ mucDich, banGhiSua, maChuyenBayBanDau = null, loc = 
               batBuoc
               iconTrai={<UserRound size={18} />}
               placeholder="Họ và tên hành khách"
+              goiY={sua ? 'Thay đổi áp dụng cho mọi vé và phiếu đặt chỗ của hành khách này.' : undefined}
               maxLength={50}
               autoComplete="off"
               value={hk.hoTen}

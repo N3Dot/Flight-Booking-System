@@ -69,11 +69,18 @@ export interface NguCanhKiemTra {
   /** số vé Đã bán cộng số phiếu Chờ thanh toán của từng hạng (khi sửa) */
   daDung: Record<string, number>;
   bayGio: Date;
+  /** bản đang lưu của chuyến bay (khi sửa): QĐ1 chỉ xét phần lịch bay khác với bản này */
+  goc?: DuLieuBieuMau;
 }
 
 export function kiemTraBieuMau(f: DuLieuBieuMau, nc: NguCanhKiemTra): BangLoi {
   const loi: BangLoi = {};
   const ts = nc.thamSo;
+  // khi sửa, QĐ1 chỉ xét phần lịch bay vừa đổi: chuyến bay lưu trước khi quy định đổi vẫn sửa được phần khác (máy chủ làm cùng cách)
+  const goc = nc.cheDo === 'sua' ? nc.goc : undefined;
+  const dangTrungGian = (ds: DongTrungGian[]) => JSON.stringify(ds.map((t) => [t.maSanBay, Number(t.thoiGianDung)]));
+  const xetThoiGianBay = !goc || Number(f.thoiGianBay) !== Number(goc.thoiGianBay);
+  const xetTrungGian = !goc || dangTrungGian(f.trungGian) !== dangTrungGian(goc.trungGian);
 
   if (nc.cheDo === 'them') {
     const ma = f.maChuyenBay.trim();
@@ -84,6 +91,12 @@ export function kiemTraBieuMau(f: DuLieuBieuMau, nc: NguCanhKiemTra): BangLoi {
   if (!f.giaVe) loi.giaVe = 'Chưa nhập giá vé.';
   else if (!laSoNguyen(f.giaVe) || Number(f.giaVe) <= 0) loi.giaVe = 'Giá vé phải là số nguyên dương (đồng).';
   else if (Number(f.giaVe) > GIA_VE_TOI_DA) loi.giaVe = 'Giá vé không được vượt quá 999.999.999.999 đồng.';
+  else {
+    // giá tiền của hạng đắt nhất mà chuyến bay có bán (giá vé x tỉ lệ đơn giá) cũng phải vừa cột tiền của vé, phiếu
+    const dat = nc.hangVe.filter((h) => Number(f.ghe[h.maHangVe]) > 0).sort((a, b) => b.tiLeDonGia - a.tiLeDonGia)[0];
+    if (dat && Math.round((Number(f.giaVe) * dat.tiLeDonGia) / 100) > GIA_VE_TOI_DA)
+      loi.giaVe = `Giá vé quá lớn: giá tiền ${dat.tenHangVe} (${dat.tiLeDonGia}% giá vé) vượt quá 999.999.999.999 đồng.`;
+  }
 
   if (!f.maSanBayDi) loi.maSanBayDi = 'Chưa chọn sân bay đi.';
   if (!f.maSanBayDen) loi.maSanBayDen = 'Chưa chọn sân bay đến.';
@@ -95,7 +108,7 @@ export function kiemTraBieuMau(f: DuLieuBieuMau, nc: NguCanhKiemTra): BangLoi {
 
   if (!f.thoiGianBay.trim()) loi.thoiGianBay = 'Chưa nhập thời gian bay.';
   else if (!laSoNguyen(f.thoiGianBay) || Number(f.thoiGianBay) <= 0) loi.thoiGianBay = 'Thời gian bay phải là số nguyên dương (phút).';
-  else if (Number(f.thoiGianBay) < ts.thoiGianBayToiThieu) loi.thoiGianBay = `Thời gian bay phải từ ${ts.thoiGianBayToiThieu} phút trở lên (QĐ1).`;
+  else if (xetThoiGianBay && Number(f.thoiGianBay) < ts.thoiGianBayToiThieu) loi.thoiGianBay = `Thời gian bay phải từ ${ts.thoiGianBayToiThieu} phút trở lên (QĐ1).`;
 
   let coHang = false;
   for (const h of nc.hangVe) {
@@ -111,7 +124,7 @@ export function kiemTraBieuMau(f: DuLieuBieuMau, nc: NguCanhKiemTra): BangLoi {
   }
   if (!coHang && !Object.keys(loi).some((k) => k.startsWith('ghe.'))) loi.gheTheoHang = 'Phải có ít nhất một hạng vé có số lượng ghế lớn hơn 0.';
 
-  if (f.trungGian.length > ts.soSanBayTrungGianToiDa) loi.trungGian = `Chuyến bay có tối đa ${ts.soSanBayTrungGianToiDa} sân bay trung gian (QĐ1).`;
+  if (xetTrungGian && f.trungGian.length > ts.soSanBayTrungGianToiDa) loi.trungGian = `Chuyến bay có tối đa ${ts.soSanBayTrungGianToiDa} sân bay trung gian (QĐ1).`;
   const daGap = new Map<string, number>();
   f.trungGian.forEach((t, i) => {
     const k = `tg.${t.id}`;
@@ -124,7 +137,7 @@ export function kiemTraBieuMau(f: DuLieuBieuMau, nc: NguCanhKiemTra): BangLoi {
     else if (!laSoNguyen(t.thoiGianDung)) loi[`${k}.thoiGianDung`] = 'Thời gian dừng là số nguyên (phút).';
     else {
       const p = Number(t.thoiGianDung);
-      if (p < ts.thoiGianDungToiThieu || p > ts.thoiGianDungToiDa)
+      if (xetTrungGian && (p < ts.thoiGianDungToiThieu || p > ts.thoiGianDungToiDa))
         loi[`${k}.thoiGianDung`] = `Từ ${ts.thoiGianDungToiThieu} đến ${ts.thoiGianDungToiDa} phút (QĐ1).`;
     }
     if (t.ghiChu.length > 200) loi[`${k}.ghiChu`] = 'Ghi chú tối đa 200 ký tự.';

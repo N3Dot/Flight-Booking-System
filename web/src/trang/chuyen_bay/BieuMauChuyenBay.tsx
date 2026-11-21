@@ -116,7 +116,7 @@ export function BieuMauChuyenBay({ cheDo, quyDinh, chiTiet }: ThuocTinhBieuMau) 
   const gocRef = useRef<HTMLFormElement>(null);
 
   const daDung = useMemo(() => Object.fromEntries((chiTiet?.gheTheoHang ?? []).map((g) => [g.maHangVe, g.soDaBanVaDat])) as Record<string, number>, [chiTiet]);
-  const loiCuc = useMemo(() => kiemTraBieuMau(f, { cheDo, thamSo, hangVe, daDung, bayGio }), [f, cheDo, thamSo, hangVe, daDung, bayGio]);
+  const loiCuc = useMemo(() => kiemTraBieuMau(f, { cheDo, thamSo, hangVe, daDung, bayGio, goc }), [f, cheDo, thamSo, hangVe, daDung, bayGio, goc]);
   const daDoi =
     JSON.stringify({ ...f, trungGian: f.trungGian.map(({ id: _, ...c }) => c) }) !==
     JSON.stringify({ ...goc, trungGian: goc.trungGian.map(({ id: _, ...c }) => c) });

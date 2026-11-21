@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Eye, FileDown, FileUp, Hash, Pencil, PlaneLanding, PlaneTakeoff, Plus, Search, Trash2, X } from 'lucide-react';
-import { apiChuyenBay, apiQuyDinh, khoaTruyVan } from '@/api/dich_vu';
+import { SO_KET_QUA_TOI_DA, apiChuyenBay, apiQuyDinh, khoaTruyVan } from '@/api/dich_vu';
 import { laLoiApi, luuTapTin, thongBaoLoi } from '@/api/may_khach';
 import { CHI_QUAN_LY } from '@/dinh_tuyen';
 import { IconMayBay } from '@/icons3d';
@@ -280,7 +280,13 @@ export function TrangDanhSachChuyenBay() {
         <TieuDeMuc
           id="tieu-de-ket-qua"
           tieuDe="Kết quả tra cứu"
-          phu={isPending ? 'Đang tìm chuyến bay...' : `Tìm thấy ${dinhDangSo(data?.length ?? 0)} chuyến bay thỏa tiêu chí.`}
+          phu={
+            isPending
+              ? 'Đang tìm chuyến bay...'
+              : (data?.length ?? 0) >= SO_KET_QUA_TOI_DA
+                ? `Chỉ hiển thị ${dinhDangSo(SO_KET_QUA_TOI_DA)} chuyến bay đầu tiên theo giờ khởi hành, hãy thu hẹp tiêu chí tra cứu.`
+                : `Tìm thấy ${dinhDangSo(data?.length ?? 0)} chuyến bay thỏa tiêu chí.`
+          }
           phai={
             <span className={s.chipLoc}>
               {chip.map((c) => (

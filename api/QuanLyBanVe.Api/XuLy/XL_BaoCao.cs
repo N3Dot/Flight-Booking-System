@@ -51,6 +51,7 @@ public class XL_BaoCao
             // công thức (1.3): tỉ lệ = doanh thu chuyến bay / tổng doanh thu tháng x 100%
             bang.Rows.Add(stt++, cb.MaChuyenBay, soVe, doanhThu, tinhTiLe(doanhThu, tongDoanhThu));
         }
+        donPhanLeTiLe(bang);
         return bang;
     }
 
@@ -77,6 +78,7 @@ public class XL_BaoCao
             // công thức (1.4): tỉ lệ = doanh thu tháng / tổng doanh thu năm x 100%
             bang.Rows.Add(thang, soChuyenBay[thang], doanhThu[thang], tinhTiLe(doanhThu[thang], tongDoanhThu));
         }
+        donPhanLeTiLe(bang);
         return bang;
     }
 
@@ -125,6 +127,18 @@ public class XL_BaoCao
     {
         if (tongDoanhThu == 0) return 0m;
         return Math.Round(doanhThu / tongDoanhThu * 100m, 2, MidpointRounding.AwayFromZero);
+    }
+
+    /// <summary>
+    /// Làm tròn từng dòng thì tổng cột tỉ lệ có thể lệch khỏi 100% vài phần trăm của một phần trăm.
+    /// Dồn phần lệch vào dòng có doanh thu lớn nhất để tổng cột tỉ lệ đúng bằng 100%.
+    /// </summary>
+    private static void donPhanLeTiLe(DataTable bang)
+    {
+        List<DataRow> cacDong = bang.Rows.Cast<DataRow>().ToList();
+        DataRow? lonNhat = cacDong.Where(dong => (decimal)dong["DoanhThu"] > 0).MaxBy(dong => (decimal)dong["DoanhThu"]);
+        if (lonNhat == null) return;
+        lonNhat["TiLe"] = (decimal)lonNhat["TiLe"] + 100m - cacDong.Sum(dong => (decimal)dong["TiLe"]);
     }
 
     private static void themCotTiLe(DataTable bang)
