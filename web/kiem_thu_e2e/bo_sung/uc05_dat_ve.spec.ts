@@ -382,4 +382,19 @@ test.describe('Bổ sung UC05 Quản lý đặt vé', () => {
     expect(await docCsdl('PHIEUDATCHO', 'MaChuyenBay', cb.maChuyenBay)).toHaveLength(1);
     await xemCsdl(page, `chuyến bay ${cb.maChuyenBay} chỉ có 1 phiếu`, { bang: 'PHIEUDATCHO', cot: 'MaChuyenBay', giaTri: cb.maChuyenBay, soDong: 1 });
   });
+  test('UC05.18 Đang nhập dở ở màn hình Đặt vé mà bấm menu khác thì hỏi xác nhận; chọn Tiếp tục nhập thì giữ thông tin, chọn Rời trang thì sang trang mới (B5, Ch.5 nguyên lý khôi phục)', async ({ page }) => {
+    await dangNhap(page, 'nhanVien', '/dat-ve');
+    await nhapHanhKhach(page, 'Lý Văn Nhập Dở', soCanCuocMoi());
+    const menu = page.getByRole('navigation', { name: 'Menu chính' });
+    await menu.getByRole('link', { name: 'Chuyến bay', exact: true }).click();
+    const hoi = hopThoai(page, 'Rời trang khi chưa lưu?');
+    await expect(hoi).toBeVisible();
+    await hoi.getByRole('button', { name: 'Tiếp tục nhập' }).click();
+    await expect(hoi).toHaveCount(0);
+    await expect(page).toHaveURL(/\/dat-ve/);
+    await expect(bieuMau(page).getByRole('textbox', { name: 'Hành khách' })).toHaveValue('Lý Văn Nhập Dở');
+    await menu.getByRole('link', { name: 'Chuyến bay', exact: true }).click();
+    await hopThoai(page, 'Rời trang khi chưa lưu?').getByRole('button', { name: 'Rời trang' }).click();
+    await expect(page).toHaveURL(/\/chuyen-bay/);
+  });
 });
