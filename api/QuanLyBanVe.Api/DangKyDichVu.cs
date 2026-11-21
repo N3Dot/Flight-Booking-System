@@ -54,6 +54,7 @@ public static class DangKyDichVu
         dichVu.AddScoped<XL_HuyPhieuDat>();
         dichVu.AddScoped<XL_BaoCao>();
         dichVu.AddScoped<XL_ThayDoiQD>();
+        dichVu.AddScoped<XL_KiemThu>();
         return dichVu;
     }
 }
