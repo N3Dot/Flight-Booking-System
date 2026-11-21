@@ -2,3 +2,4 @@ node_modules/
 dist/
 anh_kiem_tra/
 *.local
+debug.log
