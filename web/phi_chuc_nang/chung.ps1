@@ -2,6 +2,7 @@
 $KetQuaHQ = (New-Item -ItemType Directory -Force -Path (Join-Path $PSScriptRoot 'ket_qua')).FullName
 $TrangThaiHQ = Join-Path $KetQuaHQ 'may-chu.json'
 $DiaChiHQ = 'http://localhost:5095'
+$DongHQ = @()
 
 function Chay-SqlHQ {
     param([ValidateSet('master','QLBANVE_HQ')][string]$Database='QLBANVE_HQ',
@@ -52,6 +53,62 @@ function Goi-HQ {
     $r = Invoke-WebRequest @web
     if ($r.StatusCode -ne $Status) { throw "HTTP $Method ${Path}: $($r.StatusCode), cần $Status." }
     $r
+}
+# Gọi API và trả về mã HTTP, mã lỗi kèm phản hồi, kể cả khi máy chủ trả 4xx/5xx.
+function Thu-HQ {
+    param([string]$Path, [string]$Method='GET', $Session, $Data, [string]$TepXlsx)
+    $web = @{Uri="$DiaChiHQ$Path"; Method=$Method; UseBasicParsing=$true; MaximumRedirection=0; TimeoutSec=300
+             Headers=@{'X-Requested-With'='XMLHttpRequest'}}
+    if ($Session) { $web.WebSession = $Session }
+    if ($TepXlsx) {
+        $ranh = 'hq' + [guid]::NewGuid().ToString('N')
+        $dau = "--$ranh`r`nContent-Disposition: form-data; name=`"tapTin`"; filename=`"$([IO.Path]::GetFileName($TepXlsx))`"`r`n" +
+               "Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`r`n`r`n"
+        $ms = New-Object IO.MemoryStream
+        foreach ($b in @([Text.Encoding]::UTF8.GetBytes($dau), [IO.File]::ReadAllBytes($TepXlsx),
+                         [Text.Encoding]::UTF8.GetBytes("`r`n--$ranh--`r`n"))) { $ms.Write($b,0,$b.Length) }
+        $web.Body = $ms.ToArray(); $web.ContentType = "multipart/form-data; boundary=$ranh"
+    } elseif ($null -ne $Data) {
+        $web.Body = [Text.Encoding]::UTF8.GetBytes(($Data | ConvertTo-Json -Depth 8 -Compress))
+        $web.ContentType = 'application/json; charset=utf-8'
+    }
+    $r = $null; $than = $null
+    $sw = [Diagnostics.Stopwatch]::StartNew()
+    try {
+        $r = Invoke-WebRequest @web
+        $http = [int]$r.StatusCode
+        if ($r.Content -is [string]) { $than = $r.Content }
+    } catch [Net.WebException] {
+        $resp = $_.Exception.Response
+        if (-not $resp) { throw }
+        $http = [int]$resp.StatusCode
+        $than = $_.ErrorDetails.Message
+        if (-not $than) { $doc = New-Object IO.StreamReader($resp.GetResponseStream()); $than = $doc.ReadToEnd(); $doc.Dispose() }
+    }
+    $sw.Stop()
+    $ma = $null
+    if ($http -ge 400 -and $than) { try { $ma = ($than | ConvertFrom-Json).ma } catch { $ma = $null } }
+    [pscustomobject]@{Http=$http; Ma=$ma; MiliGiay=[math]::Round($sw.Elapsed.TotalMilliseconds,1); PhanHoi=$r; Than=$than}
+}
+# Ghi, Luot, Sql-Dong dùng $script:LogHQ (tệp văn bản) và $script:CsvHQ (từng lượt gọi) do script gọi đặt trước.
+function Ghi($NoiDung) { $NoiDung | Tee-Object -FilePath $script:LogHQ -Append | Out-Host }
+function Sql-Dong([string]$Sql) { @(Chay-SqlHQ -Gon -Sql $Sql | ForEach-Object { $_.Trim() } | Where-Object { $_ }) }
+# Một lượt gọi: ghi mã HTTP, mã lỗi và so với mong đợi; MaMong rỗng thì không xét mã lỗi.
+function Luot {
+    param([string]$Yc, [string]$MoTa, [string]$Path, [string]$Method='GET', $Session, $Data, [int]$Mong, [string]$MaMong, [string]$TepXlsx)
+    $kq = Thu-HQ $Path $Method $Session $Data -TepXlsx $TepXlsx
+    $dat = ($kq.Http -eq $Mong) -and (-not $MaMong -or $kq.Ma -ceq $MaMong)
+    $row = [pscustomobject]@{STT=@($script:DongHQ).Count + 1; YeuCau=$Yc; MoTa=$MoTa; PhuongThuc=$Method; DuongDan=$Path
+        Http=$kq.Http; MaLoi=$kq.Ma; MongDoi=("$Mong $MaMong").Trim(); Dat=$(if ($dat) {'Đạt'} else {'KHÔNG ĐẠT'}); MiliGiay=$kq.MiliGiay}
+    $row | Export-Csv -LiteralPath $script:CsvHQ -Append -NoTypeInformation -Encoding UTF8
+    $script:DongHQ = @($script:DongHQ) + $row
+    Ghi ("{0,3} {1} {2} -> {3} {4} (mong {5}) {6} {7} ms" -f $row.STT,$Yc,$MoTa,$row.Http,$row.MaLoi,$row.MongDoi,$row.Dat,$row.MiliGiay)
+    $kq
+}
+function TongKet-Luot {
+    $khong = @($script:DongHQ | Where-Object Dat -ne 'Đạt')
+    Ghi ("Tổng {0} lượt, {1} đạt, {2} không đạt" -f @($script:DongHQ).Count, (@($script:DongHQ).Count - $khong.Count), $khong.Count)
+    $script:DongHQ | Group-Object YeuCau | ForEach-Object { Ghi ("{0}: {1} lượt, {2} đạt" -f $_.Name,$_.Count,@($_.Group | Where-Object Dat -eq 'Đạt').Count) }
 }
 function Kiem-MayChuHQ([string]$DiaChi) {
     $uri = [uri]$DiaChi

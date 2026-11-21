@@ -1,0 +1,53 @@
+﻿== TT01 ==
+Tập tin mẫu: E:\Projects\Docs\School\Nhập môn CNPM\Đồ án\Demo\Flight-Booking-System\web\phi_chuc_nang\so_lieu_22_11\20261122_053847_668-TT01_mau.xlsx
+{"trang": ["ChuyenBay", "TrungGian", "HuongDan"], "cotChuyenBay": ["Mã chuyến bay", "Giá vé", "Mã sân bay đi", "Mã sân bay đến", "Ngày giờ khởi hành", "Thời gian bay (phút)", "Số ghế H1", "Số ghế H2"], "cotTrungGian": ["Mã chuyến bay", "Thứ tự dừng", "Mã sân bay", "Thời gian dừng (phút)", "Ghi chú"], "huongDan": ["Hướng dẫn nhập lịch chuyến bay", "Trang ChuyenBay: mỗi dòng là một chuyến bay, nhập từ dòng 2, không đổi tên và thứ tự các cột.", "Mã chuyến bay: tối đa 10 ký tự gồm chữ in hoa và số, chưa có trong phần mềm. Ví dụ: CB900.", "Giá vé: số nguyên dương, tính bằng đồng. Ví dụ: 1500000.", "Mã sân bay đi, mã sân bay đến: lấy trong danh sách sân bay, hai sân bay phải khác nhau.", "Danh sách sân bay hiện có: CXR (Cam Ranh), DAD (Đà Nẵng), DLI (Liên Khương), HAN (Nội Bài), HPH (Cát Bi), HUI (Phú Bài), PQC (Phú Quốc), SGN (Tân Sơn Nhất), VCA (Cần Thơ), VII (Vinh).", "Ngày giờ khởi hành: theo dạng dd/MM/yyyy HH:mm, phải sau thời điểm nhập. Ví dụ: 25/12/2026 08:30.", "Thời gian bay: số phút, không nhỏ hơn 30 phút (QĐ1), không quá 1440 phút.", "Mỗi cột Số ghế ứng với một hạng vé: H1 (Hạng 1), H2 (Hạng 2). Nhập số nguyên từ 0 đến 1000, để trống hoặc 0 nếu chuyến bay không có hạng đó; ít nhất một hạng lớn hơn 0.", "Trang TrungGian: mỗi dòng là một sân bay trung gian của một chuyến bay ở trang ChuyenBay; chuyến bay bay thẳng thì không cần dòng nào.", "Mỗi chuyến bay có tối đa 2 sân bay trung gian, thời gian dừng từ 10 đến 20 phút (QĐ1).", "Sân bay trung gian không trùng nhau và khác sân bay đi, sân bay đến. Thứ tự dừng đánh số từ 1.", "Sau khi nhập, phần mềm thông báo số chuyến bay đã thêm và danh sách dòng bị lỗi kèm lý do."], "daDien": [["T261695436", "1500000", "SGN", "HAN", "02/12/2026 08:30", "130", "20", "150"], ["T9562EF6EE", "1200000", "HAN", "SGN", "02/12/2026 08:30", "125", "10", "100"], ["T02B1AAD77", "900000", "SGN", "DAD", "02/12/2026 08:30", "20", "10", "50"]]}
+Nhập: HTTP 200, 183.4 ms, phản hồi {"soDaThem":2,"dongLoi":[{"dong":4,"lyDo":"Thời gian bay phải từ 30 phút trở lên (QĐ1)."}]}
+Đọc lại T261695436: HTTP 200  {"maChuyenBay":"T261695436","giaVe":1500000,"maSanBayDi":"SGN","tenSanBayDi":"Tân Sơn Nhất","maSanBayDen":"HAN","tenSanBayDen":"Nội Bài","ngayGioKhoiHanh":"2026-12-02T08:30:00","thoiGianBay":130,"gheTheoHang":[{"maHangVe":"H1","tenHangVe":"Hạng 1","soLuongGhe":20,"soGheTrong":20,"soDaBanVaDat":0},{"maHangVe":"H2","tenHangVe":"Hạng 2","soLuongGhe":150,"soGheTrong":150,"soDaBanVaDat":0}],"trungGian":[{"thuTu":1,"maSanBay":"DAD","tenSanBay":"Đà Nẵng","thoiGianDung":15,"ghiChu":"Đón khách"},{"thuTu":2,"maSanBay":"CXR","tenSanBay":"Cam Ranh","thoiGianDung":15,"ghiChu":"Dừng kỹ thuật"}]}
+Đọc lại T9562EF6EE: HTTP 200  {"maChuyenBay":"T9562EF6EE","giaVe":1200000,"maSanBayDi":"HAN","tenSanBayDi":"Nội Bài","maSanBayDen":"SGN","tenSanBayDen":"Tân Sơn Nhất","ngayGioKhoiHanh":"2026-12-02T08:30:00","thoiGianBay":125,"gheTheoHang":[{"maHangVe":"H1","tenHangVe":"Hạng 1","soLuongGhe":10,"soGheTrong":10,"soDaBanVaDat":0},{"maHangVe":"H2","tenHangVe":"Hạng 2","soLuongGhe":100,"soGheTrong":100,"soDaBanVaDat":0}],"trungGian":[]}
+Đọc lại T02B1AAD77: HTTP 404 KHONG_TIM_THAY {"ma":"KHONG_TIM_THAY","thongBao":"Không tìm thấy chuyến bay.","chiTiet":{}}
+CSDL|T261695436|1500000|2026-12-02 08:30|130
+CSDL|T9562EF6EE|1200000|2026-12-02 08:30|125
+TRUNGGIAN|T261695436|1|DAD|15|Đón khách
+TRUNGGIAN|T261695436|2|CXR|15|Dừng kỹ thuật
+GHE|T261695436|H1|20
+GHE|T261695436|H2|150
+GHE|T9562EF6EE|H1|10
+GHE|T9562EF6EE|H2|100
+
+== TT02 ==
+TT02_thang_11.xlsx: HTTP 200, 272.4 ms, 28857 byte
+{"trang":[{"ten":"DanhSachChuyenBay","soDong":584,"dongDau":["Danh sách chuyến bay","Ngày xuất: 22/11/2026 05:38"],"cot":["STT","Mã chuyến bay","Sân bay đi","Sân bay đến","Khởi hành","Thời gian bay (phút)","Số ghế trống","Số ghế đặt"],"soDongDuLieu":580,"dongDauTien":[1,"HQ00012359","Nội Bài","Tân Sơn Nhất","2026-11-01 09:59:00",130,114,86],"dongCuoi":[580,"HQ00012911","Nội Bài","Tân Sơn Nhất","2026-11-30 19:11:00",130,109,91],"tongCot3":0,"tongCot4":0,"coChuCoDau":true}]}
+TT02_khong_tieu_chi.xlsx: HTTP 200, 398.2 ms, 44105 byte
+{"trang":[{"ten":"DanhSachChuyenBay","soDong":1005,"dongDau":["Danh sách chuyến bay","Ngày xuất: 22/11/2026 05:38","Chỉ xuất 1000 chuyến bay đầu tiên theo giờ khởi hành. Thu hẹp tiêu chí tra cứu để xuất phần còn lại."],"cot":["STT","Mã chuyến bay","Sân bay đi","Sân bay đến","Khởi hành","Thời gian bay (phút)","Số ghế trống","Số ghế đặt"],"soDongDuLieu":1000,"dongDauTien":[1,"HQ00000011","Nội Bài","Tân Sơn Nhất","2025-01-01 08:11:00",130,114,86],"dongCuoi":[1000,"HQ00001010","Nội Bài","Tân Sơn Nhất","2025-02-24 12:50:00",130,114,86],"tongCot3":0,"tongCot4":0,"coChuCoDau":true}]}
+SQL so chuyen bay thang 11|580
+SQL tong so chuyen bay|20025
+
+== TT03 ==
+Báo cáo tháng excel: HTTP 200, 168.9 ms
+Báo cáo năm excel: HTTP 200, 851.5 ms
+Báo cáo tháng pdf: HTTP 200, 318.8 ms
+Báo cáo năm pdf: HTTP 200, 460.2 ms
+20261122_053847_668-TT03_thang_6.xlsx: {"trang":[{"ten":"BaoCaoThang","soDong":560,"dongDau":["Báo cáo doanh thu bán vé các chuyến bay","Tháng 6 năm 2026","Số chuyến bay: 554. Tổng số vé: 47644. Tổng doanh thu: 56.508.042.500 đồng.","Ngày lập: 22/11/2026 05:38"],"cot":["STT","Chuyến bay","Số vé","Doanh thu","Tỉ lệ"],"soDongDuLieu":554,"dongDauTien":[1,"HQ00009535",86,108927000,0.19],"dongCuoi":[554,"HQ00010088",86,107198000,0.19],"tongCot3":47644,"tongCot4":56508042500,"coChuCoDau":true}]}
+20261122_053847_668-TT03_nam_2026.xlsx: {"trang":[{"ten":"BaoCaoNam","soDong":18,"dongDau":["Báo cáo doanh thu năm","Năm 2026","Số chuyến bay: 6772. Tổng doanh thu: 688.212.442.000 đồng.","Ngày lập: 22/11/2026 05:38"],"cot":["Tháng","Số chuyến bay","Doanh thu","Tỉ lệ"],"soDongDuLieu":12,"dongDauTien":[1,572,58409078000,8.49],"dongCuoi":[12,581,58922819500,8.56],"tongCot3":688212442000,"tongCot4":100.0,"coChuCoDau":true}]}
+20261122_053847_668-TT03_thang_6.pdf: {"soTrang":18,"khoGiayPt":[595.0,842.0],"laA4":true,"dongDau":["Báo cáo doanh thu bán vé các chuyến bay","Tháng 6 năm 2026","Số chuyến bay: 554. Tổng số vé: 47644. Tổng doanh thu: 56.508.042.500 đồng.","Ngày lập: 22/11/2026 05:38","STT Chuyến bay Số vé Doanh thu Tỉ lệ"],"dongCuoi":["553 HQ00010087 86 106.333.500 0,19%","554 HQ00010088 86 107.198.000 0,19%","Trang 18 / 18"],"coChuCoDau":true,"soDongDuLieu":554}
+20261122_053847_668-TT03_nam_2026.pdf: {"soTrang":1,"khoGiayPt":[595.0,842.0],"laA4":true,"dongDau":["Báo cáo doanh thu năm","Năm 2026","Số chuyến bay: 6772. Tổng doanh thu: 688.212.442.000 đồng.","Ngày lập: 22/11/2026 05:38","Tháng Số chuyến bay Doanh thu Tỉ lệ"],"dongCuoi":["11 580 56.782.278.000 8,25%","12 581 58.922.819.500 8,56%","Trang 1 / 1"],"coChuCoDau":true,"soDongDuLieu":12}
+20261122_041045_247-HQ06_nam_pdf_1.pdf: {"soTrang":1,"khoGiayPt":[595.0,842.0],"laA4":true,"dongDau":["Báo cáo doanh thu năm","Năm 2026","Số chuyến bay: 6748. Tổng doanh thu: 688.173.892.000 đồng.","Ngày lập: 22/11/2026 04:10","Tháng Số chuyến bay Doanh thu Tỉ lệ"],"dongCuoi":["11 558 56.766.528.000 8,25%","12 579 58.900.019.500 8,55%","Trang 1 / 1"],"coChuCoDau":true,"soDongDuLieu":12}
+20261122_041045_247-HQ06_thang_excel_1.xlsx: {"trang":[{"ten":"BaoCaoThang","soDong":560,"dongDau":["Báo cáo doanh thu bán vé các chuyến bay","Tháng 6 năm 2026","Số chuyến bay: 554. Tổng số vé: 47644. Tổng doanh thu: 56.508.042.500 đồng.","Ngày lập: 22/11/2026 04:10"],"cot":["STT","Chuyến bay","Số vé","Doanh thu","Tỉ lệ"],"soDongDuLieu":554,"dongDauTien":[1,"HQ00009535",86,108927000,0.19],"dongCuoi":[554,"HQ00010088",86,107198000,0.19],"tongCot3":47644,"tongCot4":56508042500,"coChuCoDau":true}]}
+20261122_041045_247-HQ06_thang_pdf_1.pdf: {"soTrang":18,"khoGiayPt":[595.0,842.0],"laA4":true,"dongDau":["Báo cáo doanh thu bán vé các chuyến bay","Tháng 6 năm 2026","Số chuyến bay: 554. Tổng số vé: 47644. Tổng doanh thu: 56.508.042.500 đồng.","Ngày lập: 22/11/2026 04:10","STT Chuyến bay Số vé Doanh thu Tỉ lệ"],"dongCuoi":["553 HQ00010087 86 106.333.500 0,19%","554 HQ00010088 86 107.198.000 0,19%","Trang 18 / 18"],"coChuCoDau":true,"soDongDuLieu":554}
+SQL thang 6|chuyen bay khoi hanh 554
+SQL thang 6|chuyen bay co ve 554|so ve 47644|doanh thu 56508042500
+SQL nam 2026|thang 1|chuyen bay 572|doanh thu 58409078000
+SQL nam 2026|thang 2|chuyen bay 517|doanh thu 52729313000
+SQL nam 2026|thang 3|chuyen bay 572|doanh thu 58324357000
+SQL nam 2026|thang 4|chuyen bay 554|doanh thu 56521874500
+SQL nam 2026|thang 5|chuyen bay 572|doanh thu 58335595500
+SQL nam 2026|thang 6|chuyen bay 554|doanh thu 56508042500
+SQL nam 2026|thang 7|chuyen bay 572|doanh thu 58410807000
+SQL nam 2026|thang 8|chuyen bay 572|doanh thu 58276809500
+SQL nam 2026|thang 9|chuyen bay 554|doanh thu 56511500500
+SQL nam 2026|thang 10|chuyen bay 572|doanh thu 58479967000
+SQL nam 2026|thang 11|chuyen bay 580|doanh thu 56782278000
+SQL nam 2026|thang 12|chuyen bay 581|doanh thu 58922819500
+SQL nam 2026|tong chuyen bay 6772
+SQL nam 2026|tong doanh thu 688212442000
+

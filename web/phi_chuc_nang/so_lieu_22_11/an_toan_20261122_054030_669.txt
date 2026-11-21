@@ -1,0 +1,56 @@
+﻿== AT02: xóa dữ liệu đang được dùng ==
+  1 AT02 xóa sân bay SGN -> 409 DANG_DUOC_SU_DUNG (mong 409 DANG_DUOC_SU_DUNG) Đạt 70.6 ms
+  2 AT02 xóa hạng vé H1 -> 409 DANG_DUOC_SU_DUNG (mong 409 DANG_DUOC_SU_DUNG) Đạt 14.3 ms
+  3 AT02 xóa chuyến bay đã có vé HQ12341 -> 409 DA_CO_VE_HOAC_PHIEU (mong 409 DA_CO_VE_HOAC_PHIEU) Đạt 7.6 ms
+  4 AT02 Quản lý tạo chuyến bay TBA7C03669 -> 201  (mong 201) Đạt 20 ms
+  5 AT02 bán vé trên TBA7C03669 -> 201  (mong 201) Đạt 13.6 ms
+  6 AT02 hủy vé VE02000038 -> 204  (mong 204) Đạt 10.9 ms
+  7 AT02 lập phiếu trên TBA7C03669 -> 201  (mong 201) Đạt 13.8 ms
+  8 AT02 hủy phiếu PD02000023 -> 204  (mong 204) Đạt 7.1 ms
+  9 AT02 xóa chuyến bay chỉ có vé, phiếu Đã hủy TBA7C03669 -> 409 DA_CO_VE_HOAC_PHIEU (mong 409 DA_CO_VE_HOAC_PHIEU) Đạt 2.9 ms
+ 10 AT02 Quản lý tạo chuyến bay T816E944F0 -> 201  (mong 201) Đạt 12.6 ms
+ 11 AT02 xóa chuyến bay trống T816E944F0 -> 204  (mong 204) Đạt 19.5 ms
+ 12 AT02 thêm sân bay mới QZX -> 201  (mong 201) Đạt 23.2 ms
+ 13 AT02 xóa sân bay mới QZX -> 204  (mong 204) Đạt 41.5 ms
+CSDL|SGN con 1
+CSDL|H1 con 1
+CSDL|HQ12341 con 1
+CSDL|TBA7C03669 con 1|ve 1|phieu 1
+CSDL|T816E944F0 con 0|ghe 0
+CSDL|QZX con 0|so san bay 10
+
+== AT03: hủy không xóa dữ liệu ==
+ 14 AT03 Quản lý tạo chuyến bay TA45F8691A -> 201  (mong 201) Đạt 13.6 ms
+ 15 AT03 bán vé trên TA45F8691A -> 201  (mong 201) Đạt 13.1 ms
+ 16 AT03 hủy vé VE02000039 -> 204  (mong 204) Đạt 7.1 ms
+ 17 AT03 lập phiếu trên TA45F8691A -> 201  (mong 201) Đạt 12.7 ms
+ 18 AT03 hủy phiếu PD02000024 -> 204  (mong 204) Đạt 6.4 ms
+ 19 AT03 lập phiếu trên TA45F8691A -> 201  (mong 201) Đạt 12.2 ms
+ 20 AT03 bán vé từ phiếu PD02000025 -> 201  (mong 201) Đạt 16.6 ms
+ 21 AT03 bán lần hai từ phiếu PD02000025 -> 409 PHIEU_HET_HAN (mong 409) Đạt 2.7 ms
+VE|VE02000039|Đã hủy|phieu -
+VE|VE02000040|Đã bán|phieu PD02000025
+PHIEU|PD02000024|Đã hủy
+PHIEU|PD02000025|Đã hủy
+UC06|PD00600001-PD00601000|con 1000|Da huy 1000
+
+Vé VE02000039, phiếu PD02000024, phiếu PD02000025 thành vé VE02000040
+== AT04: xóa phiếu Đã hủy trước 2025-01-01 ==
+Trước khi xóa:
+PHIEU TRUOC MOC|tong 5488|Da huy chua thanh ve 3808|Da huy da thanh ve 1680|Cho thanh toan 0
+PHIEU|tong 2000025|Cho thanh toan 36990
+
+ 22 AT04 đếm phiếu Đã hủy trước 2025-01-01 -> 200  (mong 200) Đạt 63.9 ms
+    phản hồi {"soPhieu":3808}
+ 23 AT04 xóa phiếu Đã hủy trước 2025-01-01 -> 200  (mong 200) Đạt 273.1 ms
+    phản hồi {"soDaXoa":3808}
+Sau khi xóa:
+PHIEU TRUOC MOC|tong 1680|Da huy chua thanh ve 0|Da huy da thanh ve 1680|Cho thanh toan 0
+PHIEU|tong 1996217|Cho thanh toan 36990
+
+ 24 AT04 đếm lại sau khi xóa -> 200  (mong 200) Đạt 34.3 ms
+    phản hồi {"soPhieu":0}
+Tổng 24 lượt, 24 đạt, 0 không đạt
+AT02: 13 lượt, 13 đạt
+AT03: 8 lượt, 8 đạt
+AT04: 3 lượt, 3 đạt

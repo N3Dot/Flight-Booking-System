@@ -54,6 +54,15 @@ HQ02 và HQ03 dùng chuyến `HQBAN100`. Chuyến này ở quy mô chuẩn bắt
 
 So giá trị lớn nhất với ngưỡng 5 giây của HQ01–HQ03 và HQ07, 10 giây của HQ04 và HQ05, 15 giây của HQ06. Nếu mã hiện tại giới hạn số dòng tra cứu, đọc cột `SoKetQua` và thông báo trên UI khi so với số liệu Bảng 5.20.
 
+## Tương thích, bảo mật, an toàn (mục 5.2.4, 5.2.5, 5.2.8)
+
+Ba script chạy trên `QLBANVE_HQ` đã nạp và bản HQ do bước 03 khởi động. `-Ra` chọn thư mục ghi bằng chứng, mặc định `ket_qua/`.
+
+- Chuẩn bị Python riêng cho thư mục này (không cài ra ngoài): `uv venv .venv --python <python.exe>` rồi `uv pip install --python .venv\Scripts\python.exe openpyxl pypdf`.
+- `.\08_tuong_thich.ps1 [-SoLieuCu so_lieu_22_11]`: TT01 tải tập tin mẫu, `08_tuong_thich.py` điền 3 chuyến bay (2 sân bay trung gian, 1 chuyến bay 20 phút) rồi nhập và đọc lại; TT02 xuất danh sách chuyến bay tháng 11 và không tiêu chí; TT03 tải báo cáo tháng 6, năm hiện tại dạng Excel, PDF. Mọi tập tin được mở bằng openpyxl, pypdf và đối chiếu SQL trong `tuong_thich_*.txt`.
+- `.\09_bao_mat.ps1`: khoảng 75 lượt gọi BMT01–BMT09, mỗi lượt một dòng trong `bao_mat_*.csv` (HTTP, mã lỗi, mong đợi). Tài khoản thử có mật khẩu sinh ngẫu nhiên, không ghi ra tệp, và bị khóa khi kết thúc.
+- `.\10_an_toan.ps1 [-Phan AT01,LichTuDong,AT02,AT03,AT04]`: AT01 chạy `10_an_toan.sql` (BACKUP, RESTORE sang `QLBANVE_HQ_PHUCHOI`, so 10 bảng và CHECKSUM_AGG của VE, TAIKHOAN) rồi xóa CSDL phục hồi và tệp .bak; `LichTuDong` tạo tác vụ Task Scheduler theo mục 6.1.6, chạy `Start-ScheduledTask`, `RESTORE VERIFYONLY`, rồi xóa tác vụ và tệp. Trước lần đầu, cho SQL Server quyền ghi `ket_qua\sao_luu`: `icacls ket_qua\sao_luu /grant "NT SERVICE\MSSQL$SQLEXPRESS:(OI)(CI)M"`. **AT04 xóa thật** các phiếu Đã hủy trước `-MocXoa` (mặc định 2025-01-01).
+
 ## Xóa CSDL HQ
 
 Sau khi dừng HQ, chạy lệnh sau. Tên CSDL được kiểm ngay trong SQL trước khi yêu cầu xóa và lệnh xóa dùng tên cố định.
