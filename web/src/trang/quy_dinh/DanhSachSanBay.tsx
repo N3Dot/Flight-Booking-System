@@ -55,7 +55,7 @@ function HopThoaiSanBay({ cheDo, onDong }: { cheDo: CheDo; onDong: () => void })
     const l: Record<string, string> = {};
     if (!laSua && !/^[A-Z]{3}$/.test(ma)) l.maSanBay = 'Mã sân bay phải gồm đúng 3 chữ cái in hoa.';
     if (!ten.trim()) l.tenSanBay = 'Chưa nhập tên sân bay.';
-    else if (ten.trim().length > 50) l.tenSanBay = 'Tên sân bay tối đa 50 ký tự.';
+    else if (ten.trim().length > 100) l.tenSanBay = 'Tên sân bay tối đa 100 ký tự.';
     return l;
   };
   const loiHien = { ...(daGui ? kiemTra() : {}), ...loi };
@@ -142,7 +142,7 @@ function HopThoaiSanBay({ cheDo, onDong }: { cheDo: CheDo; onDong: () => void })
           batBuoc
           data-tu-focus={laSua ? true : undefined}
           placeholder="Ví dụ Buôn Ma Thuột"
-          maxLength={50}
+          maxLength={100}
           value={ten}
           loi={loiHien.tenSanBay}
           goiY="Không trùng tên sân bay đã có."

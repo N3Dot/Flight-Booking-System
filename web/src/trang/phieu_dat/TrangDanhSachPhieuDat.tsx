@@ -83,7 +83,9 @@ export function TrangDanhSachPhieuDat() {
   }, [data]);
   const chamTran = thongKe.tong >= SO_KET_QUA_TOI_DA;
 
+  const [lanTim, datLanTim] = useState(0);
   const tim = () => {
+    datLanTim((n) => n + 1);
     datChon(null);
     const moi = sangTieuChi(nhap);
     if (JSON.stringify(moi) === JSON.stringify(tieuChi)) qc.invalidateQueries({ queryKey: khoaTruyVan.phieuDat(moi) });
@@ -250,6 +252,7 @@ export function TrangDanhSachPhieuDat() {
             }
           />
           <BangDuLieu<PhieuDat>
+            lanTim={lanTim}
             className={`${s.bang} ${s.bangGon}`}
             nhan="Danh sách phiếu đặt chỗ"
             duLieu={data}

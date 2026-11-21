@@ -73,7 +73,9 @@ export function TrangDanhSachVe() {
   // giống XL_BanVe.huyVe: không hủy vé của chuyến bay đã khởi hành
   const daKhoiHanh = (v: Ve) => !!v.ngayGioKhoiHanh && docIso(v.ngayGioKhoiHanh) <= bayGio;
 
+  const [lanTim, datLanTim] = useState(0);
   const tim = () => {
+    datLanTim((n) => n + 1);
     if (nhap.tuNgay && nhap.denNgay && nhap.tuNgay > nhap.denNgay) {
       datLoiNgay('Đến ngày phải sau hoặc bằng Từ ngày.');
       return;
@@ -240,6 +242,7 @@ export function TrangDanhSachVe() {
             }
           />
           <BangDuLieu<Ve>
+            lanTim={lanTim}
             className={s.bang}
             nhan="Danh sách vé"
             duLieu={data}

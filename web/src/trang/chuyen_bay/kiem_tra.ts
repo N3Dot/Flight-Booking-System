@@ -29,6 +29,9 @@ export interface DuLieuBieuMau {
 export type BangLoi = Record<string, string>;
 
 const GIA_VE_TOI_DA = 999_999_999_999;
+// giả định 12: cùng con số với máy chủ (XL_ChuyenBay); ô tham số QĐ1 "thời gian bay tối thiểu" cũng chặn ở đây
+export const SO_GHE_TOI_DA = 1000;
+export const THOI_GIAN_BAY_TOI_DA = 1440;
 let demId = 0;
 export const taoIdDong = () => `tg${(demId += 1)}`;
 
@@ -104,10 +107,11 @@ export function kiemTraBieuMau(f: DuLieuBieuMau, nc: NguCanhKiemTra): BangLoi {
 
   if (!f.ngayGioKhoiHanh) loi.ngayGioKhoiHanh = 'Chưa nhập ngày giờ khởi hành.';
   else if (isNaN(docIso(f.ngayGioKhoiHanh).getTime())) loi.ngayGioKhoiHanh = 'Ngày giờ khởi hành không hợp lệ.';
-  else if (nc.cheDo === 'them' && docIso(f.ngayGioKhoiHanh) <= nc.bayGio) loi.ngayGioKhoiHanh = 'Ngày giờ khởi hành phải sau thời điểm hiện tại.';
+  else if (docIso(f.ngayGioKhoiHanh) <= nc.bayGio) loi.ngayGioKhoiHanh = 'Ngày giờ khởi hành phải sau thời điểm hiện tại.';
 
   if (!f.thoiGianBay.trim()) loi.thoiGianBay = 'Chưa nhập thời gian bay.';
   else if (!laSoNguyen(f.thoiGianBay) || Number(f.thoiGianBay) <= 0) loi.thoiGianBay = 'Thời gian bay phải là số nguyên dương (phút).';
+  else if (Number(f.thoiGianBay) > THOI_GIAN_BAY_TOI_DA) loi.thoiGianBay = `Thời gian bay không được vượt quá ${THOI_GIAN_BAY_TOI_DA} phút.`;
   else if (xetThoiGianBay && Number(f.thoiGianBay) < ts.thoiGianBayToiThieu) loi.thoiGianBay = `Thời gian bay phải từ ${ts.thoiGianBayToiThieu} phút trở lên (QĐ1).`;
 
   let coHang = false;
@@ -119,7 +123,8 @@ export function kiemTraBieuMau(f: DuLieuBieuMau, nc: NguCanhKiemTra): BangLoi {
       const so = Number(gt);
       if (so > 0) coHang = true;
       const daDung = nc.daDung[h.maHangVe] ?? 0;
-      if (so < daDung) loi[khoa] = `Tối thiểu ${daDung} ghế (đã bán và đặt).`;
+      if (so > SO_GHE_TOI_DA) loi[khoa] = `Tối đa ${SO_GHE_TOI_DA} ghế.`;
+      else if (so < daDung) loi[khoa] = `Tối thiểu ${daDung} ghế (đã bán và đặt).`;
     }
   }
   if (!coHang && !Object.keys(loi).some((k) => k.startsWith('ghe.'))) loi.gheTheoHang = 'Phải có ít nhất một hạng vé có số lượng ghế lớn hơn 0.';

@@ -1,5 +1,5 @@
 // Biểu mẫu Lịch chuyến bay (BM1) cho chế độ thêm và sửa (MH_ThemSuaChuyenBay)
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { AlertCircle, CalendarClock, Info, Lock, MapPin, PlaneLanding, PlaneTakeoff, Plus, ShieldCheck, Trash2 } from 'lucide-react';
@@ -14,6 +14,7 @@ import { ONhap } from '@/thanh_phan/ONhap';
 import { hienToast } from '@/thanh_phan/toast_kho';
 import { dinhDangSo, dinhDangTien } from '@/tien_ich/dinh_dang';
 import { dungBayGio } from '@/tien_ich/hook';
+import { dungHoiKhiRoiTrang } from '@/tien_ich/hoi_khi_roi_trang';
 import { dungPhimTat } from '@/tien_ich/phim_tat';
 import { sangIso } from '@/tien_ich/thoi_gian';
 import {
@@ -50,49 +51,6 @@ function nhanGiaVe(moi: string, cu: string): string {
   return hopLe ? t.replace(/\./g, '').slice(0, 12) : t.slice(0, 20);
 }
 
-/**
- * Đang nhập dở mà bấm liên kết trong trang hoặc nút Back thì hỏi trước khi bỏ dữ liệu
- * (beforeunload chỉ chặn được tải lại trang và đóng thẻ).
- */
-function dungHoiKhiRoiTrang(daDoi: boolean, hoi: () => Promise<boolean>, dieuHuong: (duongDan: string) => void) {
-  const ham = useRef({ hoi, dieuHuong });
-  ham.current = { hoi, dieuHuong };
-  useEffect(() => {
-    if (!daDoi) return;
-    let dangRoi = false;
-    const chanLienKet = (e: MouseEvent) => {
-      const a = (e.target as Element | null)?.closest?.('a[href]') as HTMLAnchorElement | null;
-      if (!a || dangRoi || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || a.target === '_blank' || a.origin !== location.origin) return;
-      const den = a.pathname + a.search + a.hash;
-      if (den === location.pathname + location.search + location.hash) return;
-      e.preventDefault();
-      e.stopPropagation();
-      void ham.current.hoi().then((dongY) => {
-        if (!dongY) return;
-        dangRoi = true;
-        ham.current.dieuHuong(den);
-      });
-    };
-    // thêm một mục lịch sử trùng địa chỉ để lần bấm Back đầu tiên dừng lại ở biểu mẫu
-    history.pushState(history.state, '', location.href);
-    const chanBack = () => {
-      if (dangRoi) return;
-      void ham.current.hoi().then((dongY) => {
-        if (dongY) {
-          dangRoi = true;
-          history.back();
-        } else history.pushState(history.state, '', location.href);
-      });
-    };
-    document.addEventListener('click', chanLienKet, true);
-    window.addEventListener('popstate', chanBack);
-    return () => {
-      document.removeEventListener('click', chanLienKet, true);
-      window.removeEventListener('popstate', chanBack);
-    };
-  }, [daDoi]);
-}
-
 const chonHet = (e: React.FocusEvent<HTMLInputElement>) => e.target.select();
 
 export interface ThuocTinhBieuMau {
@@ -122,12 +80,6 @@ export function BieuMauChuyenBay({ cheDo, quyDinh, chiTiet }: ThuocTinhBieuMau) 
     JSON.stringify({ ...goc, trungGian: goc.trungGian.map(({ id: _, ...c }) => c) });
 
   // nhắc trước khi rời trang khi đang nhập dở
-  useEffect(() => {
-    if (!daDoi) return;
-    const chan = (e: BeforeUnloadEvent) => e.preventDefault();
-    window.addEventListener('beforeunload', chan);
-    return () => window.removeEventListener('beforeunload', chan);
-  }, [daDoi]);
   dungHoiKhiRoiTrang(
     daDoi,
     () =>
@@ -234,7 +186,9 @@ export function BieuMauChuyenBay({ cheDo, quyDinh, chiTiet }: ThuocTinhBieuMau) 
               ? 'Lịch chuyến bay vi phạm quy định 1'
               : e.ma === 'DA_CO_VE_HOAC_PHIEU'
                 ? 'Không thể giảm số ghế'
-                : 'Không lưu được chuyến bay';
+                : e.ma === 'CHUYEN_BAY_DA_KHOI_HANH'
+                  ? 'Chuyến bay đã khởi hành'
+                  : 'Không lưu được chuyến bay';
         // máy chủ chỉ báo ngắn "Mã chuyến bay đã tồn tại", trùng với tiêu đề nên ghi rõ mã và cách xử lý
         const noiDung = e.ma === 'TRUNG_MA' ? `Chuyến bay ${yc.maChuyenBay} đã có trong lịch. Vui lòng nhập mã chuyến bay khác.` : e.thongBao;
         await baoLoi(tieuDe, noiDung);
@@ -285,7 +239,7 @@ export function BieuMauChuyenBay({ cheDo, quyDinh, chiTiet }: ThuocTinhBieuMau) 
   const tongGhe = hangVe.reduce((t, h) => t + (Number(f.ghe[h.maHangVe]) || 0), 0);
   const tongDaDung = Object.values(daDung).reduce((a, b) => a + b, 0);
   const thoiGianBay = Number(f.thoiGianBay) || null;
-  const minNgayGio = cheDo === 'them' ? sangIso(bayGio).slice(0, 16) : undefined;
+  const minNgayGio = sangIso(bayGio).slice(0, 16);
 
   const dsKiemTra = [
     {
@@ -410,7 +364,7 @@ export function BieuMauChuyenBay({ cheDo, quyDinh, chiTiet }: ThuocTinhBieuMau) 
                 min={minNgayGio}
                 value={f.ngayGioKhoiHanh}
                 loi={loi('ngayGioKhoiHanh')}
-                goiY={cheDo === 'them' ? 'Phải sau thời điểm hiện tại.' : 'Định dạng ngày/tháng/năm giờ:phút.'}
+                goiY="Phải sau thời điểm hiện tại."
                 onChange={(e) => {
                   doi('ngayGioKhoiHanh', e.target.value);
                   danhDau('ngayGioKhoiHanh');

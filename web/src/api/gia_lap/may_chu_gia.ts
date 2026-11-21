@@ -22,6 +22,7 @@ import type {
   YeuCauLuuChuyenBay,
 } from '@/kieu/api';
 import { congNgay, dauNgay, docIso, sangIso, soNgayGiua } from '@/tien_ich/thoi_gian';
+import { SO_GHE_TOI_DA, THOI_GIAN_BAY_TOI_DA } from '@/trang/chuyen_bay/kiem_tra';
 import type { PhanHoiTho, PhuongThuc, ThamSo } from '../may_khach';
 import {
   type ChuyenBayGia,
@@ -231,12 +232,14 @@ function kiemTraChuyenBay(yc: Partial<YeuCauLuuChuyenBay>, laThem: boolean) {
   if (!db.sanBay.some((s) => s.maSanBay === yc.maSanBayDen)) chiTiet.maSanBayDen = 'Vui lòng chọn sân bay đến.';
   else if (yc.maSanBayDen === yc.maSanBayDi) chiTiet.maSanBayDen = 'Sân bay đến phải khác sân bay đi.';
   if (!yc.ngayGioKhoiHanh || isNaN(docIso(yc.ngayGioKhoiHanh).getTime())) chiTiet.ngayGioKhoiHanh = 'Vui lòng chọn ngày giờ khởi hành.';
-  else if (laThem && docIso(yc.ngayGioKhoiHanh) <= bayGio()) chiTiet.ngayGioKhoiHanh = 'Ngày giờ khởi hành phải sau thời điểm hiện tại.';
+  else if (docIso(yc.ngayGioKhoiHanh) <= bayGio()) chiTiet.ngayGioKhoiHanh = 'Ngày giờ khởi hành phải sau thời điểm hiện tại.';
   if (!yc.thoiGianBay || yc.thoiGianBay <= 0) chiTiet.thoiGianBay = 'Vui lòng nhập thời gian bay.';
+  else if (yc.thoiGianBay > THOI_GIAN_BAY_TOI_DA) chiTiet.thoiGianBay = `Thời gian bay không được vượt quá ${THOI_GIAN_BAY_TOI_DA} phút.`;
   // giả định 12: số ghế mỗi hạng là số nguyên không âm, ít nhất một hạng lớn hơn 0
   const ghe = yc.gheTheoHang ?? [];
   if (ghe.some((g) => !db.hangVe.some((h) => h.maHangVe === g.maHangVe))) chiTiet.gheTheoHang = 'Có hạng vé không có trong danh sách hạng vé.';
   else if (ghe.some((g) => !Number.isInteger(g.soLuongGhe) || g.soLuongGhe < 0)) chiTiet.gheTheoHang = 'Số lượng ghế của mỗi hạng phải là số nguyên không âm.';
+  else if (ghe.some((g) => g.soLuongGhe > SO_GHE_TOI_DA)) chiTiet.gheTheoHang = `Số lượng ghế của mỗi hạng không được vượt quá ${SO_GHE_TOI_DA}.`;
   else if (!ghe.some((g) => g.soLuongGhe > 0)) chiTiet.gheTheoHang = 'Phải có ít nhất một hạng vé có số lượng ghế lớn hơn 0.';
   kiemTraChiTiet(chiTiet);
 
@@ -366,7 +369,11 @@ them('PUT', '/api/quy-dinh/tham-so/{ten}', 'quanLy', ({ p, than }) => {
   if (than?.giaTriMoi === undefined || than?.giaTriMoi === null || than?.giaTriMoi === '') kiemTraChiTiet({ giaTriMoi: 'Chưa nhập giá trị mới.' });
   const gt = Number(than?.giaTriMoi);
   if (!Number.isInteger(gt) || gt < 0) kiemTraChiTiet({ giaTriMoi: 'Giá trị mới phải là số nguyên không âm.' });
-  const toiDa = ten === 'soSanBayTrungGianToiDa' ? 255 : ten === 'thoiGianDatVeChamNhat' || ten === 'thoiGianHuyDatVe' ? 365 : 100000;
+  const toiDa =
+    ten === 'soSanBayTrungGianToiDa' ? 255
+    : ten === 'thoiGianDatVeChamNhat' || ten === 'thoiGianHuyDatVe' ? 365
+    : ten === 'thoiGianBayToiThieu' ? THOI_GIAN_BAY_TOI_DA
+    : 100000;
   if (gt > toiDa) kiemTraChiTiet({ giaTriMoi: `Giá trị mới không được lớn hơn ${toiDa}.` });
   const moi = { ...db.thamSo, [ten]: gt };
   if (moi.thoiGianDungToiThieu > moi.thoiGianDungToiDa)
@@ -583,6 +590,7 @@ them('POST', '/api/chuyen-bay', 'quanLy', ({ than }) => {
 }, 201);
 them('PUT', '/api/chuyen-bay/{ma}', 'quanLy', ({ p, than }) => {
   const cb = timChuyenBay(p[0]);
+  if (docIso(cb.ngayGioKhoiHanh) <= bayGio()) throw loi(409, 'CHUYEN_BAY_DA_KHOI_HANH', 'Không thể sửa chuyến bay đã khởi hành.');
   kiemTraChuyenBay(than ?? {}, false);
   const yc = than as YeuCauLuuChuyenBay;
   for (const g of cb.gheTheoHang) {

@@ -106,7 +106,9 @@ export function TrangDanhSachChuyenBay() {
     },
   });
 
+  const [lanTim, datLanTim] = useState(0);
   const tim = () => {
+    datLanTim((n) => n + 1);
     const loi: typeof loiTim = {};
     if (di && den && di === den) loi.den = 'Sân bay đến phải khác sân bay đi.';
     if (tuNgay && denNgay && denNgay < tuNgay) loi.denNgay = 'Đến ngày phải sau hoặc bằng Từ ngày.';
@@ -303,6 +305,7 @@ export function TrangDanhSachChuyenBay() {
           }
         />
         <BangDuLieu<ChuyenBayTomTat>
+          lanTim={lanTim}
           nhan="Danh sách chuyến bay"
           duLieu={data}
           dangTai={isPending}
@@ -416,6 +419,8 @@ export function TrangDanhSachChuyenBay() {
                         bienThe="trong"
                         kichThuoc="nho"
                         className={s.nutIcon}
+                        disabled={daBay}
+                        title={daBay ? 'Chuyến bay đã khởi hành, không sửa được' : undefined}
                         onClick={() => dieuHuong(`/chuyen-bay/${d.maChuyenBay}/sua`)}
                       >
                         <Pencil size={16} />

@@ -40,7 +40,10 @@ const CHU_DE: ChuDe[] = [
     buoc: [
       <>Nhập <b>tên đăng nhập</b> và <b>mật khẩu</b> do Quản lý cấp, rồi nhấn Enter hoặc nút Đăng nhập.</>,
       <>Nếu báo sai thông tin, kiểm tra phím Caps Lock (ô mật khẩu sẽ nhắc khi Caps Lock đang bật).</>,
+      <>Mật khẩu tài khoản phải có từ <b>10 đến 100 ký tự</b> và không được dùng mật khẩu mặc định của phần mềm.</>,
+      <>Đăng nhập sai <b>5 lần trong 1 phút</b> từ cùng một máy với cùng tên đăng nhập thì bị khóa tạm <b>5 phút</b>.</>,
       <>Tài khoản bị khóa thì không đăng nhập được, vui lòng liên hệ Quản lý để mở khóa.</>,
+      <>Sau khi máy chủ khởi động lại, mọi người phải đăng nhập lại.</>,
       <>Kết thúc ca làm việc, bấm <b>Đăng xuất</b> ở góc phải thanh trên cùng.</>,
     ],
   },
@@ -50,6 +53,7 @@ const CHU_DE: ChuDe[] = [
     icon: <IconMayBay kichThuoc={40} />,
     buoc: [
       <>Vào <b>Chuyến bay</b> (Alt+1), lọc theo sân bay đi, sân bay đến, khoảng ngày hoặc mã chuyến bay (Ctrl+F để tới ô tìm).</>,
+      <>Tra cứu chuyến bay, vé và phiếu đặt chỗ chỉ hiện tối đa <b>1.000 dòng</b>. Muốn xem các dòng khác, hãy thu hẹp tiêu chí tra cứu.</>,
       <>Quản lý bấm <b>Thêm chuyến bay</b> (Ctrl+N), nhập theo biểu mẫu Lịch chuyến bay; thời gian bay, số sân bay trung gian và thời gian dừng phải đúng quy định.</>,
       <>Có thể <b>Nhập Excel</b> theo tập tin mẫu; các dòng không hợp lệ được liệt kê kèm lý do.</>,
       <>Chỉ xóa được chuyến bay chưa có vé hoặc phiếu đặt chỗ. Nhân viên chỉ xem chi tiết chuyến bay.</>,

@@ -69,6 +69,8 @@ public class XL_ThayDoiQD
         {
             case nameof(ThamSoQuyDinh.ThoiGianBayToiThieu):
                 thamSo.ThoiGianBayToiThieu = giaTriMoi;
+                // mức tối thiểu vượt cận trên của thời gian bay thì không nhận được chuyến bay nào
+                toiDa = XL_ChuyenBay.THOI_GIAN_BAY_TOI_DA;
                 break;
             case nameof(ThamSoQuyDinh.SoSanBayTrungGianToiDa):
                 thamSo.SoSanBayTrungGianToiDa = giaTriMoi;

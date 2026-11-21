@@ -229,8 +229,9 @@ export function TrangXemChuyenBay() {
   const chiTiet = useQuery({ queryKey: khoaTruyVan.chuyenBayChiTiet(ma), queryFn: () => apiChuyenBay.chiTiet(ma) });
   const cb = chiTiet.data;
   const trong = cb?.gheTheoHang.reduce((t, g) => t + g.soGheTrong, 0) ?? 0;
-  const khongBan = !cb || docIso(cb.ngayGioKhoiHanh) <= bayGio || trong <= 0;
-  const lyDo = cb && docIso(cb.ngayGioKhoiHanh) <= bayGio ? 'Chuyến bay đã khởi hành' : 'Chuyến bay đã hết chỗ';
+  const daBay = !!cb && docIso(cb.ngayGioKhoiHanh) <= bayGio;
+  const khongBan = !cb || daBay || trong <= 0;
+  const lyDo = daBay ? 'Chuyến bay đã khởi hành' : 'Chuyến bay đã hết chỗ';
 
   return (
     <KhungTrang
@@ -249,7 +250,14 @@ export function TrangXemChuyenBay() {
                 Đặt vé
               </Nut>
               <ChiKhiCoQuyen quyen={CHI_QUAN_LY}>
-                <Nut bienThe="phu" muiTen={false} iconTrai={<Pencil size={17} />} den={`/chuyen-bay/${ma}/sua`} disabled={!cb}>
+                <Nut
+                  bienThe="phu"
+                  muiTen={false}
+                  iconTrai={<Pencil size={17} />}
+                  den={`/chuyen-bay/${ma}/sua`}
+                  disabled={!cb || daBay}
+                  title={daBay ? 'Chuyến bay đã khởi hành, không sửa được' : undefined}
+                >
                   Sửa
                 </Nut>
               </ChiKhiCoQuyen>

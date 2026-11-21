@@ -19,6 +19,8 @@ export interface CotBang<T> {
 }
 
 export interface ThuocTinhBang<T> {
+  /** tăng mỗi lần người dùng bấm Tìm: bảng quay về trang 1 kể cả khi kết quả giống lần trước */
+  lanTim?: number;
   cot: CotBang<T>[];
   duLieu: T[] | undefined;
   khoaDong: (dong: T) => string;
@@ -76,8 +78,10 @@ export function BangDuLieu<T>({
   soDongXuong = 5,
   nhan,
   className,
+  lanTim,
 }: ThuocTinhBang<T>) {
   const [trang, datTrang] = useState(1);
+  useEffect(() => datTrang(1), [lanTim]);
   const tong = duLieu?.length ?? 0;
   const soTrang = kichThuocTrang ? Math.max(1, Math.ceil(tong / kichThuocTrang)) : 1;
 
