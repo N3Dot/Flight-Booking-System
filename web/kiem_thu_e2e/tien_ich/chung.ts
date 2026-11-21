@@ -19,7 +19,8 @@ const goc = Date.now();
 /** Mã gồm tiền tố và chữ số, tối đa 10 ký tự, khác nhau giữa các lần gọi và các lần chạy. */
 export function maMoi(tienTo = 'KT'): string {
   dem += 1;
-  const duoi = ((goc / 1000) % 1e6 | 0).toString(36).toUpperCase() + String(dem).padStart(2, '0');
+  // bộ đếm 3 chữ số: mã ...17 không còn là phần đầu của mã ...170 khi cả bộ gọi hàm này hơn 100 lần
+  const duoi = ((goc / 1000) % 1e6 | 0).toString(36).toUpperCase() + String(dem % 1000).padStart(3, '0');
   return (tienTo + duoi).slice(0, 10);
 }
 
@@ -234,6 +235,14 @@ export class ApiThu {
     await this.goi('post', '/api/tai-khoan', { tenDangNhap, matKhau, nhomQuyen });
   }
 
+  async taiKhoan(): Promise<{ tenDangNhap: string; nhomQuyen: string; trangThai: string }[]> {
+    return this.goi('get', '/api/tai-khoan');
+  }
+
+  async khoaTaiKhoan(tenDangNhap: string) {
+    await this.goi('post', `/api/tai-khoan/${tenDangNhap}/khoa`);
+  }
+
   async xoaSanBayNeuCo(ma: string) {
     await this.yc.delete(`/api/san-bay/${ma}`);
   }
@@ -241,4 +250,23 @@ export class ApiThu {
   async xoaHangVeNeuCo(ma: string) {
     await this.yc.delete(`/api/hang-ve/${ma}`);
   }
+}
+
+/**
+ * Gọi trong test.describe của tập tin có tạo tài khoản thử: sau mỗi ca, khóa các tài khoản được tạo trong lúc chạy.
+ * Phần mềm không có chức năng xóa tài khoản, nên không để lại tài khoản thử (nhất là Quản lý) còn đăng nhập được.
+ */
+export function khoaTaiKhoanThuSauMoiCa(test: { beforeAll(ham: () => Promise<void>): void; afterEach(ham: () => Promise<void>): void }) {
+  let coSan = new Set<string>();
+  test.beforeAll(async () => {
+    const api = await ApiThu.moi();
+    coSan = new Set((await api.taiKhoan()).map((tk) => tk.tenDangNhap));
+    await api.dong();
+  });
+  test.afterEach(async () => {
+    const api = await ApiThu.moi();
+    for (const tk of await api.taiKhoan())
+      if (!coSan.has(tk.tenDangNhap) && tk.trangThai === 'HoatDong') await api.khoaTaiKhoan(tk.tenDangNhap);
+    await api.dong();
+  });
 }

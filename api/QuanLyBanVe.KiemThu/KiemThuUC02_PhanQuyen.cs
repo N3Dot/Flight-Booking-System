@@ -42,9 +42,19 @@ public class KiemThuUC02_PhanQuyen : KiemThuCoSo
     [Fact(DisplayName = "BMT02 ngoại lệ 6a: tên đăng nhập đã tồn tại")]
     public void TrungTenDangNhap()
     {
-        LoiNghiepVu loi = batLoi(() => xl.themTaiKhoan("nhanvien", "Matkhau@1", TaiKhoan.NHAN_VIEN));
+        LoiNghiepVu loi = batLoi(() => xl.themTaiKhoan("nhanvien", "MatKhau@12", TaiKhoan.NHAN_VIEN));
         Assert.Equal(MaLoi.TRUNG_MA, loi.Ma);
         Assert.Equal("Tên đăng nhập đã tồn tại.", loi.Message);
+    }
+
+    [Theory(DisplayName = "BMT02: mật khẩu tối thiểu 10 ký tự và không dùng mật khẩu mặc định của phần mềm")]
+    [InlineData("Ngan@1234")]      // 9 ký tự
+    [InlineData("Quanly@123")]     // mật khẩu mặc định của tài khoản quanly
+    [InlineData("nhanvien@123")]   // mật khẩu mặc định, khác hoa thường
+    public void MatKhauYeu(string matKhau)
+    {
+        Assert.Contains("matKhau", batLoi(() => xl.themTaiKhoan("banve02", matKhau, TaiKhoan.NHAN_VIEN)).ChiTiet.Keys);
+        Assert.Contains("matKhauMoi", batLoi(() => xl.suaTaiKhoan("nhanvien", TaiKhoan.NHAN_VIEN, matKhau)).ChiTiet.Keys);
     }
 
     [Fact(DisplayName = "BMT02 ngoại lệ 6a: thiếu thông tin hoặc tên đăng nhập có khoảng trắng")]

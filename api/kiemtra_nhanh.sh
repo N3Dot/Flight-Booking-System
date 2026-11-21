@@ -21,10 +21,10 @@ goi() {
     local mo_ta="$1" mong_doi="$2" cookie="$3" phuong_thuc="$4" duong_dan="$5" than="${6:-}"
     local ma
     if [ -n "$than" ]; then
-        ma=$(curl -s -o "$THAN" -w '%{http_code}' -X "$phuong_thuc" -b "$cookie" -c "$cookie" \
+        ma=$(curl -s -H 'X-Requested-With: XMLHttpRequest' -o "$THAN" -w '%{http_code}' -X "$phuong_thuc" -b "$cookie" -c "$cookie" \
             -H 'Content-Type: application/json' -d "$than" "$GOC$duong_dan")
     else
-        ma=$(curl -s -o "$THAN" -w '%{http_code}' -X "$phuong_thuc" -b "$cookie" -c "$cookie" "$GOC$duong_dan")
+        ma=$(curl -s -H 'X-Requested-With: XMLHttpRequest' -o "$THAN" -w '%{http_code}' -X "$phuong_thuc" -b "$cookie" -c "$cookie" "$GOC$duong_dan")
     fi
     local tom_tat
     tom_tat=$(tr -d '\n' < "$THAN" | sed -E 's/^(.{200}).*/\1 .../')
@@ -41,7 +41,7 @@ goi() {
 tai() {
     local mo_ta="$1" cookie="$2" duong_dan="$3"
     local ket_qua
-    ket_qua=$(curl -s -o "$TAM/tap_tin" -w '%{http_code} %{content_type} %{size_download} byte' -b "$cookie" "$GOC$duong_dan")
+    ket_qua=$(curl -s -H 'X-Requested-With: XMLHttpRequest' -o "$TAM/tap_tin" -w '%{http_code} %{content_type} %{size_download} byte' -b "$cookie" "$GOC$duong_dan")
     if [ "${ket_qua%% *}" = "200" ]; then
         SO_DAT=$((SO_DAT + 1))
         echo "[ĐẠT]   $mo_ta: $ket_qua"
@@ -151,12 +151,12 @@ goi "Trả lại giá trị cũ ($GIA_TRI_CU)" 204 "$QL" PUT /api/quy-dinh/tham-
 goi "Thời gian dừng tối thiểu lớn hơn tối đa" 400 "$QL" PUT /api/quy-dinh/tham-so/thoiGianDungToiThieu '{"giaTriMoi":999}'
 goi "Nhân viên không được đổi quy định" 403 "$NV" PUT /api/quy-dinh/tham-so/thoiGianBayToiThieu '{"giaTriMoi":1}'
 # xóa sân bay, hạng vé thử còn sót từ lần chạy trước (nếu có)
-curl -s -o /dev/null -X DELETE -b "$QL" "$GOC/api/san-bay/KTT"
+curl -s -H 'X-Requested-With: XMLHttpRequest' -o /dev/null -X DELETE -b "$QL" "$GOC/api/san-bay/KTT"
 goi "Thêm sân bay" 201 "$QL" POST /api/san-bay '{"maSanBay":"KTT","tenSanBay":"Sân bay kiểm tra"}'
 goi "Sửa tên sân bay" 204 "$QL" PUT /api/san-bay/KTT '{"tenSanBay":"Sân bay kiểm tra (đã sửa)"}'
 goi "Xóa sân bay chưa dùng" 204 "$QL" DELETE /api/san-bay/KTT
 goi "Không xóa sân bay đang được dùng" 409 "$QL" DELETE /api/san-bay/SGN
-curl -s -o /dev/null -X DELETE -b "$QL" "$GOC/api/hang-ve/KT"
+curl -s -H 'X-Requested-With: XMLHttpRequest' -o /dev/null -X DELETE -b "$QL" "$GOC/api/hang-ve/KT"
 goi "Thêm hạng vé kèm tỉ lệ đơn giá" 201 "$QL" POST /api/hang-ve '{"maHangVe":"KT","tenHangVe":"Hạng kiểm tra","tiLeDonGia":90}'
 goi "Sửa tên hạng vé" 204 "$QL" PUT /api/hang-ve/KT '{"tenHangVe":"Hạng kiểm tra (đã sửa)"}'
 goi "Xóa hạng vé chưa dùng" 204 "$QL" DELETE /api/hang-ve/KT
@@ -166,7 +166,7 @@ muc "UC02 Phân quyền"
 goi "Danh sách tài khoản" 200 "$QL" GET /api/tai-khoan
 goi "Nhân viên không được xem tài khoản" 403 "$NV" GET /api/tai-khoan
 # tạo tài khoản kiemtra nếu chưa có (lần chạy trước có thể đã tạo)
-curl -s -o /dev/null -X POST -b "$QL" -H 'Content-Type: application/json' \
+curl -s -H 'X-Requested-With: XMLHttpRequest' -o /dev/null -X POST -b "$QL" -H 'Content-Type: application/json' \
     -d '{"tenDangNhap":"kiemtra","matKhau":"Kiemtra@123","nhomQuyen":"NhanVien"}' "$GOC/api/tai-khoan"
 goi "Thêm tài khoản trùng tên đăng nhập" 409 "$QL" POST /api/tai-khoan '{"tenDangNhap":"kiemtra","matKhau":"Kiemtra@123","nhomQuyen":"NhanVien"}'
 goi "Mở khóa tài khoản kiemtra" 204 "$QL" POST /api/tai-khoan/kiemtra/mo-khoa

@@ -1,7 +1,7 @@
 // Bổ sung UC01 Đăng nhập: thông báo lỗi, ô bỏ trống, chữ hoa thường, khoảng trắng, chèn SQL, phím Enter, ô mật khẩu ẩn,
 // mở lại trang đăng nhập, nút Back sau khi đăng xuất và phiên hết hạn giữa chừng (BMT01).
 import { expect, request, test, type Page } from '../tien_ich/trinh_dien';
-import { DIA_CHI, TAI_KHOAN, dangNhap, dangNhapGiaoDien, hopThoai, tenDangNhapMoi } from '../tien_ich/chung';
+import { ApiThu, DIA_CHI, TAI_KHOAN, dangNhap, dangNhapGiaoDien, hopThoai, tenDangNhapMoi, khoaTaiKhoanThuSauMoiCa } from '../tien_ich/chung';
 
 const CHEN_SQL = "' OR 1=1 --";
 
@@ -36,6 +36,7 @@ async function goiDangNhapApi(ten: string, matKhau: string) {
 }
 
 test.describe('Bổ sung UC01 Đăng nhập', () => {
+  khoaTaiKhoanThuSauMoiCa(test);
   test('UC01.6 Tên đăng nhập không tồn tại báo giống hệt sai mật khẩu (BMT01)', async ({ page }) => {
     await dangNhapGiaoDien(page, TAI_KHOAN.quanLy.ten, 'SaiMatKhau@1');
     await expect(hopLoi(page)).toBeVisible();
@@ -207,5 +208,22 @@ test.describe('Bổ sung UC01 Đăng nhập', () => {
     await expect(baoLoi).toBeHidden();
     await expect(page.getByRole('textbox', { name: 'Tên đăng nhập' })).toBeVisible();
     expect(loiTrang).toEqual([]);
+  });
+
+  test('UC01.16 Sai mật khẩu 5 lần liên tiếp thì bị khóa tạm, nhập đúng cũng chưa vào được; tài khoản khác không bị ảnh hưởng (BMT01)', async ({ page }) => {
+    const ten = tenDangNhapMoi('sn');
+    const api = await ApiThu.moi();
+    await api.themTaiKhoan(ten, 'Kiemthu@123');
+    await api.dong();
+    for (let lan = 1; lan <= 5; lan++) {
+      await dangNhapGiaoDien(page, ten, 'SaiMatKhau@' + lan);
+      await expect(page.getByRole('alert').filter({ hasText: 'Sai tên đăng nhập hoặc mật khẩu' })).toBeVisible();
+    }
+    await dangNhapGiaoDien(page, ten, 'Kiemthu@123');
+    await expect(page.getByRole('alert').filter({ hasText: /Đăng nhập sai quá nhiều lần.*5 phút/ })).toBeVisible();
+    await expect(page).toHaveURL(/\/dang-nhap/);
+
+    await dangNhapGiaoDien(page, TAI_KHOAN.nhanVien.ten, TAI_KHOAN.nhanVien.matKhau);
+    await expect(page).toHaveURL(/\/$/);
   });
 });

@@ -353,33 +353,30 @@ test.describe('Bổ sung UC03 Quản lý chuyến bay', () => {
       }
     });
 
-    test('UC03.19 Giá vé 999.999.999.999 lưu được, thêm một chữ số thì bị chặn hoặc báo lỗi (cột decimal(12,0))', async ({ page }) => {
+    test('UC03.19 Giá vé lớn nhất mà giá tiền hạng đắt nhất còn vừa cột tiền thì lưu được, lớn hơn thì báo lỗi (cột decimal(12,0))', async ({ page }) => {
+      // Hạng 1 có tỉ lệ 105%: giá vé lớn nhất là 952.380.952.380 (x 105% = 999.999.999.999)
       const ma = maMoi('KT');
       await dangNhap(page, 'quanLy', '/chuyen-bay/them');
-      await dienBieuMau(page, { ma, giaVe: '999999999999' });
+      await dienBieuMau(page, { ma, giaVe: '952380952380' });
       await luuThanhCong(page, ma);
       await page.goto(`/chuyen-bay/${ma}`);
-      await expect(page.getByRole('main')).toContainText('999.999.999.999');
+      await expect(page.getByRole('main')).toContainText('952.380.952.380');
 
       const maVuot = maMoi('KT');
       await page.goto('/chuyen-bay/them');
       await dienBieuMau(page, { ma: maVuot, giaVe: '999999999999' });
+      await nutLuu(page).click();
+      await expect(loiO(page, 'giaVe')).toContainText('Giá vé quá lớn: giá tiền Hạng 1');
+      await expect(page).toHaveURL(/\/chuyen-bay\/them$/);
+      expect(await trangThaiChuyenBay(page, maVuot)).toBe(404);
+      // ô không nhận chữ số thứ 13
       const oGia = page.getByRole('textbox', { name: 'Giá vé (VND)' });
       await oGia.press('End');
       await oGia.pressSequentially('9');
-      const chuSo = (await oGia.inputValue()).replace(/\D/g, '');
-      await nutLuu(page).click();
-      // không bao giờ ra lỗi hệ thống
-      await expect(hopThoai(page, 'Lưu chuyến bay không thành công')).toHaveCount(0);
-      if (chuSo.length > 12) {
-        await expect(loiO(page, 'giaVe')).toContainText('không được vượt quá 999.999.999.999');
-        expect(await trangThaiChuyenBay(page, maVuot)).toBe(404);
-      } else {
-        // ô không nhận chữ số thứ 13
-        expect(chuSo).toBe('999999999999');
-      }
-      await xemCsdl(page, `chuyến bay ${ma} lưu giá vé lớn nhất`,
-        { bang: 'CHUYENBAY', cot: 'MaChuyenBay', giaTri: ma, soDong: 1, dung: { GiaVe: 999999999999 } });
+      expect((await oGia.inputValue()).replace(/\D/g, '')).toBe('999999999999');
+      await xemCsdl(page, `chuyến bay ${ma} lưu giá vé lớn nhất, chuyến bay ${maVuot} không được lưu`,
+        { bang: 'CHUYENBAY', cot: 'MaChuyenBay', giaTri: ma, soDong: 1, dung: { GiaVe: 952380952380 } },
+        { bang: 'CHUYENBAY', cot: 'MaChuyenBay', giaTri: maVuot, soDong: 0 });
     });
 
     test('UC03.20 Số ghế: cả hai hạng 0 bị từ chối, một hạng 0 lưu được và hạng đó không bán, số âm bị từ chối (giả định 12)', async ({ page }) => {

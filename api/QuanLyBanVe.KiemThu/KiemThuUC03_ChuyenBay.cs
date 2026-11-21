@@ -161,6 +161,72 @@ public class KiemThuUC03_ChuyenBay : KiemThuCoSo
         Assert.Equal(3, dsTrungGian.Count);
     }
 
+    [Fact(DisplayName = "NV01 QĐ1: chuyến bay lưu trước khi quy định đổi vẫn sửa được phần khác; phần lịch bay vừa đổi mới xét QĐ1")]
+    public void SuaChuyenBaySauKhiDoiQuyDinh()
+    {
+        xl.themChuyenBay(lich(thoiGianBay: 40), ghe(), trungGian(("DAD", 12)));
+        var xlQuyDinh = lay<XL_ThayDoiQD>();
+        xlQuyDinh.capNhatThamSo("ThoiGianBayToiThieu", 60);
+        xlQuyDinh.capNhatThamSo("ThoiGianDungToiThieu", 15);
+
+        // giữ nguyên 40 phút bay và 12 phút dừng (nay đã dưới mức mới): vẫn sửa được giá vé, số ghế
+        xl.suaChuyenBay("CB900", lich(giaVe: 2_000_000m, thoiGianBay: 40), ghe(12, 40), trungGian(("DAD", 12)));
+        Assert.Equal(2_000_000m, xl.layThongTin("CB900", out _, out _, out _).GiaVe);
+
+        // đổi thời gian bay thì thời gian bay phải theo mức mới; thời gian dừng không đổi nên không bị xét
+        LoiNghiepVu loiBay = batLoi(() => xl.suaChuyenBay("CB900", lich(thoiGianBay: 50), ghe(), trungGian(("DAD", 12))));
+        Assert.Equal(MaLoi.VI_PHAM_QD1, loiBay.Ma);
+        Assert.Equal(new[] { "thoiGianBay" }, loiBay.ChiTiet.Keys);
+        // đổi sân bay trung gian thì thời gian dừng phải theo mức mới
+        LoiNghiepVu loiDung = batLoi(() => xl.suaChuyenBay("CB900", lich(thoiGianBay: 40), ghe(), trungGian(("CXR", 12))));
+        Assert.Equal(new[] { "trungGian" }, loiDung.ChiTiet.Keys);
+        xl.suaChuyenBay("CB900", lich(thoiGianBay: 60), ghe(), trungGian(("CXR", 15)));
+    }
+
+    [Fact(DisplayName = "NV01: giá tiền của hạng đắt nhất (giá vé x tỉ lệ đơn giá) không vượt 999.999.999.999 đồng")]
+    public void GiaTienHangDatNhatVuaCotTien()
+    {
+        // Hạng 1 có tỉ lệ 105%: 999.999.999.999 x 105% vượt cột tiền của vé
+        LoiNghiepVu loi = batLoi(() => xl.themChuyenBay(lich(giaVe: 999_999_999_999m), ghe(), bayThang()));
+        Assert.Contains("Hạng 1", loi.ChiTiet["giaVe"]);
+        // chuyến bay không bán Hạng 1 thì giá vé lớn nhất vẫn lưu được
+        xl.themChuyenBay(lich(giaVe: 999_999_999_999m), ghe(h1: 0), bayThang());
+        // 952.380.952.380 x 105% = 999.999.999.999
+        xl.themChuyenBay(lich(ma: "CB901", giaVe: 952_380_952_380m), ghe(), bayThang());
+    }
+
+    [Fact(DisplayName = "NV04: tra cứu và xuất Excel chỉ lấy tối đa 1.000 chuyến bay đầu theo giờ khởi hành")]
+    public void TraCuuToiDa1000Dong()
+    {
+        csdl.thucThi(@"
+            INSERT INTO CHUYENBAY (MaChuyenBay, GiaVe, MaSanBayDi, MaSanBayDen, NgayGioKhoiHanh, ThoiGianBay)
+            SELECT TOP (1005) 'T' + CAST(ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS varchar(9)), 1000000, 'SGN', 'HAN',
+                DATEADD(MINUTE, ROW_NUMBER() OVER (ORDER BY (SELECT NULL)), '2026-12-01'), 60
+            FROM sys.all_objects a CROSS JOIN sys.all_objects b;");
+
+        DataTable bang = xl.timKiem(new TieuChiTim());
+        Assert.Equal(DAL_ChuyenBay.SO_DONG_TOI_DA, bang.Rows.Count);
+        Assert.Equal("T1", bang.Rows[0]["MaChuyenBay"]);
+
+        using var tapBang = new XLWorkbook(new MemoryStream(xl.xuatExcel(new TieuChiTim())));
+        Assert.Contains(tapBang.Worksheet(1).CellsUsed(), o => o.GetString().Contains("Chỉ xuất 1000 chuyến bay đầu tiên"));
+    }
+
+    [Fact(DisplayName = "TT01: trang tính có vùng dữ liệu quá lớn (một ô lạc ở dòng rất xa) bị từ chối ngay")]
+    public void NhapTuExcel_VungDuLieuQuaLon()
+    {
+        using var tapBang = new XLWorkbook();
+        IXLWorksheet trang = tapBang.AddWorksheet(XL_ChuyenBay.TRANG_CHUYEN_BAY);
+        trang.Cell(1, 1).Value = "Mã chuyến bay";
+        trang.Cell(1_000_000, 1).Value = "x";
+        using var boNho = new MemoryStream();
+        tapBang.SaveAs(boNho);
+        boNho.Position = 0;
+
+        LoiNghiepVu loi = batLoi(() => xl.nhapTuExcel(boNho));
+        Assert.Contains("vùng dữ liệu quá lớn", loi.ChiTiet["tapTin"]);
+    }
+
     [Fact(DisplayName = "NV01 UC03.2: sửa chuyến bay cập nhật thông tin, không kiểm tra ngày giờ so với hiện tại")]
     public void SuaChuyenBay()
     {

@@ -244,7 +244,7 @@ test.describe('Bổ sung UC07 Báo cáo doanh thu', () => {
     expect(soTien(o[3])).toBe(1_050_000);
   });
 
-  test('UC07.7 Tổng cột tỉ lệ của báo cáo tháng và năm bằng 100%, sai số chỉ do làm tròn từng dòng (BM5.1, BM5.2)', async ({ page }) => {
+  test('UC07.7 Tổng cột tỉ lệ của báo cáo tháng và năm đúng bằng 100% (BM5.1, BM5.2)', async ({ page }) => {
     const nay = mocVN(0);
     await dangNhap(page, 'quanLy', '/bao-cao');
     for (const loai of ['thang', 'nam'] as const) {
@@ -254,8 +254,8 @@ test.describe('Bổ sung UC07 Báo cáo doanh thu', () => {
       const tongTiLe = dong.reduce((t, d) => t + soTiLe(d[4]), 0);
       expect(soTien(tong[3]), `báo cáo ${loai} có doanh thu`).toBeGreaterThan(0);
       expect(tong[4]).toBe('100,00%');
-      // mỗi dòng làm tròn đến 0,01% nên lệch tối đa 0,005% mỗi dòng
-      const choPhep = dong.length * 0.005 + 1e-9;
+      // phần lệch do làm tròn từng dòng được dồn vào dòng doanh thu lớn nhất; 0,005 chỉ để trừ sai số cộng số thực
+      const choPhep = 0.005;
       expect(Math.abs(tongTiLe - 100), `tổng tỉ lệ ${dong.length} dòng của báo cáo ${loai} là ${tongTiLe.toFixed(2)}%`).toBeLessThanOrEqual(choPhep);
     }
   });

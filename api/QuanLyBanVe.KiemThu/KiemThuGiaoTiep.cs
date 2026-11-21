@@ -39,7 +39,10 @@ public class KiemThuGiaoTiep : IDisposable
 
     private HttpClient taoMayKhach()
     {
-        return mayChu.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true, AllowAutoRedirect = false });
+        HttpClient mayKhach = mayChu.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true, AllowAutoRedirect = false });
+        // giao diện gắn header này vào mọi yêu cầu; yêu cầu ghi thiếu nó bị từ chối
+        mayKhach.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
+        return mayKhach;
     }
 
     private async Task<HttpClient> dangNhap(string tenDangNhap, string matKhau)
@@ -132,6 +135,62 @@ public class KiemThuGiaoTiep : IDisposable
         await kiemTraLoi(await mayKhach.GetAsync("/api/phien"), HttpStatusCode.Unauthorized, "CHUA_DANG_NHAP");
     }
 
+    [Fact(DisplayName = "BMT01: đăng xuất hủy phiên ở máy chủ, cookie cũ gửi lại không còn dùng được")]
+    public async Task DangXuatHuyPhienOMayChu()
+    {
+        HttpClient mayKhach = taoMayKhach();
+        HttpResponseMessage phanHoi = await mayKhach.PostAsJsonAsync("/api/dang-nhap", new { tenDangNhap = "quanly", matKhau = "Quanly@123" });
+        string cookie = Assert.Single(phanHoi.Headers.GetValues("Set-Cookie")).Split(';')[0];
+
+        // một máy khác cầm bản sao cookie: còn dùng được khi chưa đăng xuất
+        HttpClient keGian = mayChu.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = false });
+        keGian.DefaultRequestHeaders.Add("Cookie", cookie);
+        Assert.Equal(HttpStatusCode.OK, (await keGian.GetAsync("/api/phien")).StatusCode);
+
+        Assert.Equal(HttpStatusCode.NoContent, (await mayKhach.PostAsync("/api/dang-xuat", null)).StatusCode);
+        await kiemTraLoi(await keGian.GetAsync("/api/phien"), HttpStatusCode.Unauthorized, "CHUA_DANG_NHAP");
+    }
+
+    [Fact(DisplayName = "BMT02: đặt lại mật khẩu thì các phiên đang đăng nhập của tài khoản đó hết hiệu lực")]
+    public async Task DatLaiMatKhauHuyPhien()
+    {
+        HttpClient quanLy = await dangNhapQuanLy();
+        HttpClient nhanVien = await dangNhapNhanVien();
+        Assert.Equal(HttpStatusCode.NoContent,
+            (await quanLy.PutAsJsonAsync("/api/tai-khoan/nhanvien", new { nhomQuyen = "NhanVien", matKhauMoi = "MatKhauMoi@2026" })).StatusCode);
+        await kiemTraLoi(await nhanVien.GetAsync("/api/phien"), HttpStatusCode.Unauthorized, "CHUA_DANG_NHAP");
+        await dangNhap("nhanvien", "MatKhauMoi@2026");
+    }
+
+    [Fact(DisplayName = "BMT01: sai mật khẩu 5 lần trong một phút thì khóa tạm, nhập đúng cũng bị từ chối 429")]
+    public async Task DangNhapSaiNhieuLan()
+    {
+        HttpClient mayKhach = taoMayKhach();
+        for (int lan = 0; lan < 5; lan++)
+            await kiemTraLoi(await mayKhach.PostAsJsonAsync("/api/dang-nhap", new { tenDangNhap = "nhanvien", matKhau = "sai-mat-khau" }),
+                HttpStatusCode.Unauthorized, "SAI_THONG_TIN_DANG_NHAP");
+
+        JsonElement khoa = await kiemTraLoi(
+            await mayKhach.PostAsJsonAsync("/api/dang-nhap", new { tenDangNhap = "nhanvien", matKhau = "Nhanvien@123" }),
+            HttpStatusCode.TooManyRequests, "DANG_NHAP_SAI_NHIEU_LAN");
+        Assert.Contains("5 phút", khoa.GetProperty("thongBao").GetString());
+        // tài khoản khác từ cùng máy không bị ảnh hưởng
+        await dangNhapQuanLy();
+    }
+
+    [Fact(DisplayName = "Bảo mật: yêu cầu ghi thiếu header X-Requested-With bị từ chối; phản hồi có header bảo mật")]
+    public async Task HeaderBaoMat()
+    {
+        HttpClient khongHeader = mayChu.CreateClient();
+        await kiemTraLoi(await khongHeader.PostAsJsonAsync("/api/dang-nhap", new { tenDangNhap = "quanly", matKhau = "Quanly@123" }),
+            HttpStatusCode.BadRequest, "THIEU_HEADER_YEU_CAU");
+
+        HttpResponseMessage phanHoi = await khongHeader.GetAsync("/api/phien");
+        Assert.Equal("DENY", Assert.Single(phanHoi.Headers.GetValues("X-Frame-Options")));
+        Assert.Equal("nosniff", Assert.Single(phanHoi.Headers.GetValues("X-Content-Type-Options")));
+        Assert.Contains("default-src 'self'", Assert.Single(phanHoi.Headers.GetValues("Content-Security-Policy")));
+    }
+
     [Fact(DisplayName = "BMT01: sai thông tin trả 401 SAI_THONG_TIN_DANG_NHAP, tài khoản khóa trả 403 TAI_KHOAN_BI_KHOA")]
     public async Task DangNhapKhongThanhCong()
     {
@@ -162,7 +221,7 @@ public class KiemThuGiaoTiep : IDisposable
         var tuChoi = new List<HttpResponseMessage>
         {
             await nhanVien.GetAsync("/api/tai-khoan"),
-            await nhanVien.PostAsJsonAsync("/api/tai-khoan", new { tenDangNhap = "moi", matKhau = "MatKhau@1", nhomQuyen = "QuanLy" }),
+            await nhanVien.PostAsJsonAsync("/api/tai-khoan", new { tenDangNhap = "moi", matKhau = "MatKhau@12", nhomQuyen = "QuanLy" }),
             await nhanVien.PostAsync("/api/tai-khoan/quanly/khoa", null),
             await nhanVien.PostAsJsonAsync("/api/chuyen-bay", lichChuyenBay("CB900")),
             await nhanVien.PutAsJsonAsync("/api/chuyen-bay/CB900", lichChuyenBay("CB900")),
@@ -204,12 +263,12 @@ public class KiemThuGiaoTiep : IDisposable
         await kiemTraLoi(await quanLy.PostAsync("/api/tai-khoan/quanly/khoa", null), HttpStatusCode.Conflict, "KHONG_DUOC_TU_KHOA");
         await kiemTraLoi(await quanLy.PutAsJsonAsync("/api/tai-khoan/quanly", new { nhomQuyen = "NhanVien" }),
             HttpStatusCode.Conflict, "KHONG_DUOC_TU_DOI_QUYEN");
-        await kiemTraLoi(await quanLy.PostAsJsonAsync("/api/tai-khoan", new { tenDangNhap = "nhanvien", matKhau = "MatKhau@1", nhomQuyen = "NhanVien" }),
+        await kiemTraLoi(await quanLy.PostAsJsonAsync("/api/tai-khoan", new { tenDangNhap = "nhanvien", matKhau = "MatKhau@12", nhomQuyen = "NhanVien" }),
             HttpStatusCode.Conflict, "TRUNG_MA");
 
         Assert.Equal(HttpStatusCode.Created, (await quanLy.PostAsJsonAsync("/api/tai-khoan",
-            new { tenDangNhap = "banve01", matKhau = "MatKhau@1", nhomQuyen = "NhanVien" })).StatusCode);
-        HttpClient banVe01 = await dangNhap("banve01", "MatKhau@1");
+            new { tenDangNhap = "banve01", matKhau = "MatKhau@12", nhomQuyen = "NhanVien" })).StatusCode);
+        HttpClient banVe01 = await dangNhap("banve01", "MatKhau@12");
 
         // khóa nhanvien: phiên đang mở của nhanvien không dùng tiếp được
         Assert.Equal(HttpStatusCode.OK, (await nhanVien.GetAsync("/api/ve")).StatusCode);
@@ -222,7 +281,7 @@ public class KiemThuGiaoTiep : IDisposable
         Assert.Equal(HttpStatusCode.NoContent,
             (await quanLy.PutAsJsonAsync("/api/tai-khoan/banve01", new { nhomQuyen = "QuanLy", matKhauMoi = "" })).StatusCode);
         await kiemTraLoi(await banVe01.GetAsync("/api/phien"), HttpStatusCode.Unauthorized, "CHUA_DANG_NHAP");
-        HttpClient banVe01Moi = await dangNhap("banve01", "MatKhau@1");
+        HttpClient banVe01Moi = await dangNhap("banve01", "MatKhau@12");
         Assert.Equal(HttpStatusCode.OK, (await banVe01Moi.GetAsync("/api/tai-khoan")).StatusCode);
     }
 

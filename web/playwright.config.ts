@@ -24,6 +24,8 @@ export default defineConfig({
   use: {
     ...devices['Desktop Chrome'],
     baseURL: DIA_CHI,
+    // máy chủ từ chối yêu cầu ghi không có header này (chống giả mạo yêu cầu từ trang khác)
+    extraHTTPHeaders: { 'X-Requested-With': 'XMLHttpRequest' },
     locale: 'vi-VN',
     timezoneId: 'Asia/Ho_Chi_Minh',
     viewport: { width: 1440, height: 900 },

@@ -15,6 +15,7 @@ import {
   nhapNgay,
   tenDangNhapMoi,
   toast,
+  khoaTaiKhoanThuSauMoiCa,
   type HanhKhachThu,
 } from '../tien_ich/chung';
 
@@ -219,6 +220,7 @@ function bangBaoCao(page: Page) {
 }
 
 test.describe('Bổ sung kịch bản đầu cuối', () => {
+  khoaTaiKhoanThuSauMoiCa(test);
   test('KB.1 Thêm chuyến bay, đặt 2 phiếu, bán từ phiếu, hủy phiếu còn lại, hủy một vé, lập báo cáo: số ghế, tình trạng và doanh thu khớp sau từng bước (BM1, BM2, BM3, BM4, BM5.1)', async ({ page }) => {
     test.setTimeout(240_000);
     const ma = maMoi('KB');

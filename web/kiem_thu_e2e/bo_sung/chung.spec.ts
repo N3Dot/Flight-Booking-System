@@ -1,7 +1,7 @@
 // Bổ sung chức năng chung và yêu cầu phi chức năng kiểm qua giao diện: trang không tìm thấy, F5 và Back/Forward,
 // chữ có thẻ script, chuỗi chèn SQL ở ô tìm kiếm, bố cục ở các khung màn hình thường gặp.
 import { expect, test, xemCsdl, type Locator, type Page } from '../tien_ich/trinh_dien';
-import { ApiThu, bamTrongHopThoai, dangNhap, hopThoai, nhapNgay, soCanCuocMoi, tenDangNhapMoi, toast } from '../tien_ich/chung';
+import { ApiThu, bamTrongHopThoai, dangNhap, hopThoai, nhapNgay, soCanCuocMoi, tenDangNhapMoi, toast, khoaTaiKhoanThuSauMoiCa } from '../tien_ich/chung';
 
 const SCRIPT = '<script>alert(1)</script>';
 const ANH_LOI = '<img src=x onerror=alert(1)>';
@@ -27,6 +27,7 @@ async function khongChayMa(page: Page, ghi: ReturnType<typeof theoDoiTrang>) {
 }
 
 test.describe('Bổ sung chức năng chung và phi chức năng', () => {
+  khoaTaiKhoanThuSauMoiCa(test);
   test('CHUNG.5 Mở đường dẫn không tồn tại thì hiện trang Không tìm thấy có nút về trang chính', async ({ page }) => {
     const ghi = theoDoiTrang(page);
     for (const vaiTro of ['nhanVien', 'quanLy'] as const) {
@@ -246,6 +247,8 @@ test.describe('Bổ sung chức năng chung và phi chức năng', () => {
   });
 
   test('CHUNG.13 Các màn hình chính ở khung 1366×768 và 1920×1080 không vỡ bố cục, không bị che nút (Bảng 5.23)', async ({ page }) => {
+    // ca này mở 12 màn hình ở hai khung nhìn (khoảng 30 giây), nới giới hạn để không trượt oan khi máy bận
+    test.setTimeout(180_000);
     const nut = (ten: string, vaiTro: 'button' | 'link' = 'button') => (p: Page) => p.getByRole('main').getByRole(vaiTro, { name: ten, exact: true }).first();
     const manHinh: { duongDan: string; cacNut: ((p: Page) => Locator)[] }[] = [
       { duongDan: '/', cacNut: [] },
