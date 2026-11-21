@@ -5,7 +5,8 @@ JSON dùng tên camelCase, tiếng Việt không dấu, khớp tên thuộc tín
 Ngày giờ theo ISO 8601 giờ địa phương không kèm múi giờ (`2026-11-12T14:30:00`). Tiền là số nguyên VND.
 
 ## Quy ước chung
-- Xác thực bằng cookie HttpOnly `qlbv_phien` sau khi đăng nhập. Chưa đăng nhập: 401. Sai nhóm quyền: 403.
+- Xác thực bằng cookie HttpOnly `qlbv_phien` sau khi đăng nhập. Chưa đăng nhập: 401. Sai nhóm quyền: 403. Phiên giữ ở máy chủ, cookie chỉ mang khóa phiên: đăng xuất hoặc đặt lại mật khẩu là phiên hết hiệu lực ngay.
+- Mọi yêu cầu POST, PUT, DELETE tới `/api` phải có header `X-Requested-With` (giá trị bất kỳ, giao diện gửi `XMLHttpRequest`); thiếu thì 400 `THIEU_HEADER_YEU_CAU`.
 - Nhóm quyền: `QuanLy`, `NhanVien`. Trạng thái tài khoản: `HoatDong`, `DaKhoa`. Tình trạng vé: `DaBan`, `DaHuy`. Tình trạng phiếu: `ChoThanhToan`, `DaHuy`. Loại giấy tờ: `CCCD`, `HoChieu`.
 - Lỗi luôn có dạng `{ "ma": "MA_LOI", "thongBao": "câu tiếng Việt hiển thị cho người dùng", "chiTiet": { "tenTruong": "lỗi của ô" } }`.
   400 dữ liệu không hợp lệ (có `chiTiet`), 409 vi phạm quy định nghiệp vụ, 404 không tìm thấy.
@@ -102,7 +103,8 @@ Máy chủ chạy bộ kiểm thử Playwright trong thư mục `web` (cần `np
 | GET | `/api/kiem-thu/csdl?bang=&cot=&giaTri=` | `{cauLenh, cacCot, cacDong}`: tối đa 50 dòng của một bảng trong danh sách cho phép, lọc `cot = giaTri` nếu có; cột `MatKhau` luôn hiện `(đã ẩn)`. Bảng hoặc cột lạ: 404 |
 
 ## Ghi chú theo máy chủ đã cài đặt
-- Đăng nhập thất bại: 401 `SAI_THONG_TIN_DANG_NHAP`; tài khoản bị khóa: 403 `TAI_KHOAN_BI_KHOA`.
+- Đăng nhập thất bại: 401 `SAI_THONG_TIN_DANG_NHAP`; tài khoản bị khóa: 403 `TAI_KHOAN_BI_KHOA`; sai 5 lần trong một phút (cùng máy, cùng tên đăng nhập) hoặc 30 lần (cùng máy): 429 `DANG_NHAP_SAI_NHIEU_LAN`, khóa tạm 5 phút.
+- Mật khẩu khi thêm tài khoản hoặc đặt lại: 10 đến 100 ký tự, không trùng mật khẩu mặc định của các tài khoản ban đầu.
 - Mã lỗi chung thêm: `DU_LIEU_KHONG_HOP_LE` (400), `CHUA_DANG_NHAP` (401), `KHONG_CO_QUYEN` (403), `KHONG_TIM_THAY` (404), `VI_PHAM_QD6` (409, phải còn ít nhất 2 sân bay và 1 hạng vé), `LOI_HE_THONG` (500, 503).
 - `chiTiet` luôn là một đối tượng (có thể rỗng); khóa là tên ô phẳng (`hoTen`, `soGiayTo`, `dienThoai`...) kể cả khi thân yêu cầu có `hanhKhach` lồng. Lỗi 409 gắn được vào ô cũng kèm `chiTiet`.
 - Sửa chuyến bay mà giảm số ghế dưới số đã bán và đã đặt, hoặc bỏ hạng đã có vé: 409 `DA_CO_VE_HOAC_PHIEU`.
@@ -112,7 +114,10 @@ Máy chủ chạy bộ kiểm thử Playwright trong thư mục `web` (cần `np
 - `thong-tin-ban` luôn trả 200; khi không được phép thì `duocPhep` là false kèm `maLoi`, `thongBao`. Chuyến bay không tồn tại: 404.
 - `phieu-dat/con-han` không có phiếu thì trả mảng rỗng.
 - Tài khoản bị khóa hoặc bị đổi nhóm quyền thì phiên đang mở trả 401 ở yêu cầu kế tiếp.
-- Tra cứu: `maChuyenBay` lọc theo chứa; `maVe`, `maPhieuDat` theo tiền tố; `soGiayTo` khớp đúng. `GET /api/phieu-dat` không có tiêu chí thì trả mọi tình trạng. Danh sách vé và phiếu trả tối đa 1000 dòng mới nhất.
+- Tra cứu: `maChuyenBay` lọc theo chứa; `maVe`, `maPhieuDat` theo tiền tố; `soGiayTo` khớp đúng. `GET /api/phieu-dat` không có tiêu chí thì trả mọi tình trạng. Danh sách vé và phiếu trả tối đa 1000 dòng mới nhất; tra cứu và xuất Excel chuyến bay trả tối đa 1000 chuyến bay đầu theo giờ khởi hành.
+- Sửa chuyến bay: QĐ1 chỉ xét phần lịch bay vừa đổi (thời gian bay, các sân bay trung gian) so với bản đang lưu. Giá vé nhân tỉ lệ đơn giá của hạng đắt nhất mà chuyến bay có bán không được vượt 999.999.999.999.
+- Báo cáo: phần lệch do làm tròn tỉ lệ từng dòng được dồn vào dòng có doanh thu lớn nhất, tổng cột tỉ lệ đúng 100%.
+- Lỗi SQL Server do hết thời gian chờ hoặc mất kết nối trả 503 `LOI_HE_THONG`.
 - Ngày giờ nhận cả dạng không có giây (`2026-11-22T08:30`).
 - POST tạo mới trả 201 kèm thân nhỏ (`{maChuyenBay}`, `{tenDangNhap}`, `{maSanBay}`, `{maHangVe}`).
 - `mau-excel` chỉ Quản lý tải được.

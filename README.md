@@ -30,7 +30,7 @@ Phím tắt chung: F1 mở Trợ giúp, Alt+1 Chuyến bay, Alt+2 Bán vé, Alt+
 
 ## Công nghệ
 
-- Máy chủ: ASP.NET Core trên .NET 10 (C#), ba tầng: giao tiếp (`GiaoTiep/`), xử lý nghiệp vụ (`XuLy/`, các lớp `XL_`), truy xuất dữ liệu (`TruyXuat/`, các lớp `DAL_`) cùng các lớp DTO. Truy cập SQL Server bằng Microsoft.Data.SqlClient với câu lệnh có tham số; Excel bằng ClosedXML, PDF bằng QuestPDF (bản Community); mật khẩu băm PBKDF2; phiên đăng nhập bằng cookie HttpOnly.
+- Máy chủ: ASP.NET Core trên .NET 10 (C#), ba tầng: giao tiếp (`GiaoTiep/`), xử lý nghiệp vụ (`XuLy/`, các lớp `XL_`), truy xuất dữ liệu (`TruyXuat/`, các lớp `DAL_`) cùng các lớp DTO. Truy cập SQL Server bằng Microsoft.Data.SqlClient với câu lệnh có tham số; Excel bằng ClosedXML, PDF bằng QuestPDF (bản Community); mật khẩu băm PBKDF2; phiên đăng nhập giữ ở máy chủ, trình duyệt chỉ giữ cookie HttpOnly mang khóa phiên (xem mục Bảo mật).
 - Cơ sở dữ liệu: SQL Server 2022 Express, cơ sở dữ liệu `QLBANVECHUYENBAY` gồm 10 bảng.
 - Giao diện: React 18, TypeScript 5.6, Vite 6, React Router 6, TanStack Query 5, CSS Modules, biểu tượng lucide-react.
 - Kiểm thử: xUnit cho tầng xử lý và API; Playwright cho kiểm thử giao diện đầu cuối.
@@ -132,6 +132,23 @@ Ví dụ nạp lại dữ liệu mẫu trước buổi demo:
 
 3. Xem địa chỉ IP của máy chủ bằng `ipconfig` (ví dụ `192.168.1.10`), máy khác mở `http://192.168.1.10:5080`.
 
+Chạy bằng HTTP thì mật khẩu và cookie phiên đi qua mạng ở dạng đọc được. Khi mở cho máy khác, nên chạy HTTPS:
+
+1. Tạo chứng chỉ phát triển trên máy chủ (một lần): `dotnet dev-certs https --trust`.
+2. Đổi `"Urls"` thành `"https://0.0.0.0:5443;http://0.0.0.0:5080"` rồi chạy lại máy chủ, mở cổng 5443 trên tường lửa như bước 2.
+3. Máy khác mở `https://192.168.1.10:5443`. Chứng chỉ phát triển chỉ được tin cậy trên máy chủ, nên trình duyệt máy khác sẽ cảnh báo; dùng lâu dài thì cài chứng chỉ do đơn vị cấp cho tên máy chủ.
+
+Khi `Urls` có địa chỉ `https`, máy chủ tự chuyển `http` sang `https`, chỉ gửi cookie phiên qua HTTPS và bật HSTS.
+
+## Bảo mật
+
+- **Mật khẩu:** tối thiểu 10 ký tự, không được trùng mật khẩu mặc định của ba tài khoản ban đầu. Lưu dạng băm PBKDF2.
+- **Đăng nhập sai nhiều lần:** sai 5 lần trong một phút với cùng một tên đăng nhập từ cùng một máy (hoặc 30 lần từ một máy với mọi tên) thì bị khóa tạm 5 phút, kể cả khi sau đó nhập đúng. Bộ đếm nằm trong bộ nhớ máy chủ.
+- **Phiên đăng nhập:** giữ ở máy chủ, hết hạn sau 8 giờ không dùng. Đăng xuất là hủy phiên ngay ở máy chủ; đặt lại mật khẩu thì mọi phiên của tài khoản đó bị hủy. Khởi động lại máy chủ thì mọi người đăng nhập lại.
+- **Yêu cầu ghi tới API** (POST, PUT, DELETE) phải có header `X-Requested-With`; giao diện tự gắn. Cùng với cookie `SameSite=Lax`, trang web khác không gửi thay người dùng được.
+- **Header bảo mật** ở mọi phản hồi: `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Content-Security-Policy: default-src 'self'` (thêm `data:` cho ảnh và phông chữ).
+- **Tài khoản SQL riêng (tùy chọn):** mặc định máy chủ kết nối SQL Server bằng quyền Windows của người chạy. Muốn hạn chế quyền, chạy `db/03_tai_khoan_sql.sql` theo hướng dẫn ở đầu tập tin để tạo tài khoản chỉ đọc và ghi dữ liệu trên `QLBANVECHUYENBAY`, rồi đặt chuỗi kết nối vào `appsettings.Development.json`.
+
 ## Tài khoản mặc định
 
 | Tên đăng nhập | Mật khẩu | Nhóm quyền | Trạng thái |
@@ -228,7 +245,15 @@ Chọn và chạy các trường hợp kiểm thử giao diện ngay trên web, 
 
 Danh sách chia hai phần: **Theo báo cáo (Chương 5)** gồm 50 ca trong `web/kiem_thu_e2e`, và **Bổ sung ngoài báo cáo** gồm các ca trong `web/kiem_thu_e2e/bo_sung` (giá trị biên, đoán lỗi, kịch bản đầu cuối).
 
-Mỗi lúc chỉ chạy được một lần. Bộ kiểm thử ghi dữ liệu thử vào cơ sở dữ liệu như khi chạy bằng lệnh; dùng xong nên nạp lại dữ liệu mẫu. Muốn tắt hẳn trang này (ví dụ khi dùng thật), đổi `"KiemThu": { "Bat": true }` thành `false` trong `api/QuanLyBanVe.Api/appsettings.json` rồi chạy lại máy chủ: nút ở mép phải và trang đều không còn dùng được.
+Mỗi lúc chỉ chạy được một lần. Bộ kiểm thử ghi dữ liệu thử vào cơ sở dữ liệu như khi chạy bằng lệnh; dùng xong nên nạp lại dữ liệu mẫu. 
+
+Trang Kiểm thử **mặc định tắt** (`"KiemThu": { "Bat": false }` trong `appsettings.json`), vì nó chạy trên chính cơ sở dữ liệu đang dùng và cho Quản lý xem thẳng dữ liệu các bảng. Muốn bật trên máy phát triển, tạo tập tin `api/QuanLyBanVe.Api/appsettings.Development.json` (không đưa lên git) với nội dung dưới đây rồi chạy lại máy chủ:
+
+```json
+{ "KiemThu": { "Bat": true } }
+```
+
+Các ca có tạo tài khoản thử tự khóa những tài khoản đó sau mỗi ca (phần mềm không có chức năng xóa tài khoản).
 
 - Kiểm tra nhanh các luồng chính bằng curl khi máy chủ đang chạy (cần bash, ví dụ Git Bash trên Windows):
 

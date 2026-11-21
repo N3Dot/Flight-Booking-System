@@ -110,6 +110,23 @@ if ($soDong -lt 0 -or $NapLaiDuLieu) {
     Buoc 2 "Bo qua nap du lieu mau (them -NapLaiDuLieu neu muon xoa va nap lai)"
 }
 
+# ---- chuoi ket noi: SQL Server khong phai localhost\SQLEXPRESS thi ghi vao appsettings.Development.json
+# (tap tin rieng cua may, khong dua len git) de cac lan chay sau, ke ca "dotnet run", van dung dung may chu SQL.
+# Chuoi ket noi tu dat trong tap tin do (vd dung tai khoan SQL) duoc giu nguyen.
+$tepRieng = Join-Path $goc "api\QuanLyBanVe.Api\appsettings.Development.json"
+$chuoiMoi = "Server=$MayChuSql;Database=$tenCsdl;Trusted_Connection=True;TrustServerCertificate=True"
+$cauHinh = if (Test-Path $tepRieng) { Get-Content $tepRieng -Raw -Encoding UTF8 | ConvertFrom-Json } else { $null }
+if (-not $cauHinh) { $cauHinh = [pscustomobject]@{} }
+$chuoiCu = if ($cauHinh.ConnectionStrings) { $cauHinh.ConnectionStrings.QLBANVE } else { $null }
+if ($chuoiCu -and $chuoiCu -notmatch 'Trusted_Connection') {
+    Write-Host "Giu nguyen chuoi ket noi rieng trong appsettings.Development.json."
+} elseif ($chuoiCu -ne $chuoiMoi -and ($chuoiCu -or $MayChuSql -ne "localhost\SQLEXPRESS")) {
+    if (-not $cauHinh.ConnectionStrings) { $cauHinh | Add-Member -NotePropertyName ConnectionStrings -NotePropertyValue ([pscustomobject]@{}) }
+    $cauHinh.ConnectionStrings | Add-Member -NotePropertyName QLBANVE -NotePropertyValue $chuoiMoi -Force
+    [IO.File]::WriteAllText($tepRieng, ($cauHinh | ConvertTo-Json -Depth 10), (New-Object Text.UTF8Encoding $false))
+    Write-Host "Da ghi chuoi ket noi toi '$MayChuSql' vao appsettings.Development.json."
+}
+
 # ---- 3: dung giao dien, chep vao wwwroot cua may chu
 Buoc 3 "Dung giao dien"
 Push-Location (Join-Path $goc "web")
@@ -134,10 +151,6 @@ if ($KhongChay) {
 
 # ---- 4: chay may chu
 Buoc 4 "Chay may chu tai $diaChi (Ctrl+C de dung)"
-if ($MayChuSql -ne "localhost\SQLEXPRESS") {
-    # ghi de chuoi ket noi trong appsettings.json cho lan chay nay
-    $env:ConnectionStrings__QLBANVE = "Server=$MayChuSql;Database=$tenCsdl;Trusted_Connection=True;TrustServerCertificate=True"
-}
 Write-Host "Tai khoan mac dinh: quanly / Quanly@123 (Quan ly), nhanvien / Nhanvien@123 (Nhan vien ban ve)."
 Write-Host "Trinh duyet se tu mo khi may chu san sang."
 
