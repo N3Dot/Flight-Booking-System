@@ -31,6 +31,8 @@ public static class DangKyDichVu
         dichVu.AddScoped(nhaCungCap => new KetNoiCSDL(layChuoiKetNoi(nhaCungCap)));
         dichVu.AddScoped<PhienLamViec>();
         dichVu.AddSingleton<DongHoHeThong>();
+        dichVu.AddSingleton<KhoPhien>();
+        dichVu.AddSingleton<GioiHanDangNhap>();
 
         dichVu.AddScoped<DAL_SanBay>();
         dichVu.AddScoped<DAL_ChuyenBay>();

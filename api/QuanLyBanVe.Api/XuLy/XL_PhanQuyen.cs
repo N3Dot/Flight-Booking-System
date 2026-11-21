@@ -8,15 +8,19 @@ namespace QuanLyBanVe.Api.XuLy;
 /// <summary>UC02 Phân quyền: thêm, sửa, khóa, mở khóa tài khoản (chỉ Quản lý).</summary>
 public class XL_PhanQuyen
 {
-    private const int DO_DAI_MAT_KHAU_TOI_THIEU = 6;
+    private const int DO_DAI_MAT_KHAU_TOI_THIEU = 10;
+    // mật khẩu của các tài khoản ban đầu ghi trong tài liệu cài đặt, ai cũng biết nên không cho đặt lại
+    private static readonly string[] MAT_KHAU_MAC_DINH = { "Quanly@123", "Nhanvien@123", "Nhanvien2@123" };
     private static readonly Regex mauTenDangNhap = new("^[A-Za-z0-9._-]{1,30}$", RegexOptions.Compiled);
 
     private readonly KetNoiCSDL ketNoi;
     private readonly DAL_TaiKhoan dalTaiKhoan;
     private readonly PhienLamViec phien;
+    private readonly KhoPhien khoPhien;
 
-    public XL_PhanQuyen(KetNoiCSDL ketNoi, DAL_TaiKhoan dalTaiKhoan, PhienLamViec phien)
+    public XL_PhanQuyen(KetNoiCSDL ketNoi, DAL_TaiKhoan dalTaiKhoan, PhienLamViec phien, KhoPhien khoPhien)
     {
+        this.khoPhien = khoPhien;
         this.ketNoi = ketNoi;
         this.dalTaiKhoan = dalTaiKhoan;
         this.phien = phien;
@@ -64,6 +68,8 @@ public class XL_PhanQuyen
             if (haQuyenQuanLy) kiemTraConQuanLyKhac(taiKhoan.TenDangNhap);
             dalTaiKhoan.capNhat(taiKhoan.TenDangNhap, nhomQuyen!, matKhauDaMaHoa);
         });
+        // đặt lại mật khẩu thì các phiên đang đăng nhập bằng mật khẩu cũ hết hiệu lực
+        if (matKhauDaMaHoa != null) khoPhien.huyCuaTaiKhoan(taiKhoan.TenDangNhap);
     }
 
     public void khoaTaiKhoan(string tenDN)
@@ -124,6 +130,10 @@ public class XL_PhanQuyen
         else if (matKhau.Length < DO_DAI_MAT_KHAU_TOI_THIEU || matKhau.Length > 100)
         {
             loi[truongMatKhau] = "Mật khẩu phải có từ " + DO_DAI_MAT_KHAU_TOI_THIEU + " đến 100 ký tự.";
+        }
+        else if (MAT_KHAU_MAC_DINH.Contains(matKhau, StringComparer.OrdinalIgnoreCase))
+        {
+            loi[truongMatKhau] = "Không dùng mật khẩu mặc định của phần mềm. Hãy đặt mật khẩu khác.";
         }
 
         if (nhomQuyen != TaiKhoan.QUAN_LY && nhomQuyen != TaiKhoan.NHAN_VIEN)

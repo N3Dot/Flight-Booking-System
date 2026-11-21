@@ -14,9 +14,11 @@ public class PhienController : ControllerBase
 {
     private readonly XL_DangNhap xlDangNhap;
     private readonly PhienLamViec phien;
+    private readonly GioiHanDangNhap gioiHan;
 
-    public PhienController(XL_DangNhap xlDangNhap, PhienLamViec phien)
+    public PhienController(XL_DangNhap xlDangNhap, PhienLamViec phien, GioiHanDangNhap gioiHan)
     {
+        this.gioiHan = gioiHan;
         this.xlDangNhap = xlDangNhap;
         this.phien = phien;
     }
@@ -25,7 +27,24 @@ public class PhienController : ControllerBase
     [AllowAnonymous]
     public async Task<IActionResult> dangNhap([FromBody] YeuCauDangNhap yeuCau)
     {
-        TaiKhoan taiKhoan = xlDangNhap.dangNhap(yeuCau.TenDangNhap, yeuCau.MatKhau);
+        string diaChi = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
+        string tenDN = yeuCau.TenDangNhap ?? "";
+        int soGiay = gioiHan.soGiayConKhoa(diaChi, tenDN);
+        if (soGiay > 0)
+            throw new LoiNghiepVu(LoaiLoi.QuaNhieuLanThu, MaLoi.DANG_NHAP_SAI_NHIEU_LAN,
+                "Đăng nhập sai quá nhiều lần. Vui lòng thử lại sau " + (soGiay + 59) / 60 + " phút.");
+
+        TaiKhoan taiKhoan;
+        try
+        {
+            taiKhoan = xlDangNhap.dangNhap(yeuCau.TenDangNhap, yeuCau.MatKhau);
+        }
+        catch (LoiNghiepVu loi) when (loi.Ma == MaLoi.SAI_THONG_TIN_DANG_NHAP)
+        {
+            gioiHan.ghiLanSai(diaChi, tenDN);
+            throw;
+        }
+        gioiHan.ghiLanDung(diaChi, tenDN);
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, XacThuc.taoDanhTinh(taiKhoan));
         return Ok(new { tenDangNhap = taiKhoan.TenDangNhap, nhomQuyen = ChuyenDoi.ma(taiKhoan.NhomQuyen) });
     }

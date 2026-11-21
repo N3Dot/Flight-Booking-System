@@ -12,7 +12,9 @@ public enum LoaiLoi
     /// <summary>Không tìm thấy đối tượng (404).</summary>
     KhongTimThay,
     /// <summary>Vi phạm quy định nghiệp vụ (409).</summary>
-    ViPhamQuyDinh
+    ViPhamQuyDinh,
+    /// <summary>Thử quá nhiều lần, bị khóa tạm (429).</summary>
+    QuaNhieuLanThu
 }
 
 /// <summary>Các mã lỗi trả về cho giao diện.</summary>
@@ -26,6 +28,8 @@ public static class MaLoi
 
     public const string SAI_THONG_TIN_DANG_NHAP = "SAI_THONG_TIN_DANG_NHAP";
     public const string TAI_KHOAN_BI_KHOA = "TAI_KHOAN_BI_KHOA";
+    public const string DANG_NHAP_SAI_NHIEU_LAN = "DANG_NHAP_SAI_NHIEU_LAN";
+    public const string THIEU_HEADER_YEU_CAU = "THIEU_HEADER_YEU_CAU";
     public const string TRUNG_MA = "TRUNG_MA";
     public const string VI_PHAM_QD1 = "VI_PHAM_QD1";
     public const string VI_PHAM_QD6 = "VI_PHAM_QD6";
