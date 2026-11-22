@@ -104,6 +104,12 @@ Máy chủ chạy bộ kiểm thử Playwright trong thư mục `web` (cần `np
 | POST | `/api/kiem-thu/dung` | 204, dừng lần chạy đang có (kể cả trình duyệt kiểm thử) |
 | GET | `/api/kiem-thu/csdl?bang=&cot=&giaTri=` | `{cauLenh, cacCot, cacDong}`: tối đa 50 dòng của một bảng trong danh sách cho phép, lọc `cot = giaTri` nếu có; cột `MatKhau` luôn hiện `(đã ẩn)`. Bảng hoặc cột lạ: 404 |
 
+## Sao lưu dữ liệu (chỉ Quản lý, giả định 19)
+
+| Phương thức | Đường dẫn | Ghi chú |
+|---|---|---|
+| POST | `/api/sao-luu` | `{tapTin, thoiDiem}`: SQL Server ghi bản sao lưu COPY_ONLY, có tổng kiểm, tên `<CSDL>_yyyyMMdd_HHmmss_tay.bak` vào thư mục `SaoLuu:ThuMuc` (trống: thư mục sao lưu mặc định của SQL Server). Thiếu quyền sao lưu hoặc SQL Server không ghi được vào thư mục: 409 `KHONG_SAO_LUU_DUOC`. Không có đường dẫn phục hồi |
+
 ## Ghi chú theo máy chủ đã cài đặt
 - Đăng nhập thất bại: 401 `SAI_THONG_TIN_DANG_NHAP`; tài khoản bị khóa: 403 `TAI_KHOAN_BI_KHOA`; sai 5 lần trong một phút (cùng máy, cùng tên đăng nhập) hoặc 30 lần (cùng máy): 429 `DANG_NHAP_SAI_NHIEU_LAN`, khóa tạm 5 phút.
 - Mật khẩu khi thêm tài khoản hoặc đặt lại: 10 đến 100 ký tự, không trùng mật khẩu mặc định của các tài khoản ban đầu.

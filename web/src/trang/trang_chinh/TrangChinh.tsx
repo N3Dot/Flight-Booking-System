@@ -47,6 +47,7 @@ const LOI_TAT_QUAN_LY: ThuocTinhTheDoc[] = [
   { nhan: 'Dọn dẹp', tieuDe: 'Xóa phiếu đặt chỗ đã hủy trước một mốc thời gian', moTa: 'Giữ dữ liệu gọn nhẹ', hinh: <IconBiaKepDongHo kichThuoc={132} />, den: '/phieu-dat?xoaDaHuy=1' },
   { nhan: 'Báo cáo', tieuDe: 'Xuất báo cáo doanh thu ra Excel hoặc PDF', moTa: 'Theo tháng và theo năm', hinh: <IconBieuDoXu kichThuoc={132} />, den: '/bao-cao' },
   { nhan: 'Quy định', tieuDe: 'Cập nhật thời gian đặt vé và hủy đặt vé', moTa: 'Áp dụng ngay sau khi lưu', hinh: <IconBanhRangDanhSach kichThuoc={132} />, den: '/quy-dinh' },
+  { nhan: 'Sao lưu', tieuDe: 'Sao lưu dữ liệu ngay', moTa: 'Thêm một bản sao lưu ngoài lịch hằng ngày', hinh: <IconThuMucBang kichThuoc={132} />, den: '/sao-luu' },
 ];
 
 const LOI_TAT_NHAN_VIEN: ThuocTinhTheDoc[] = [

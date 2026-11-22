@@ -166,7 +166,7 @@ async function taiVe(page: Page, nut: 'Xuất Excel' | 'Xuất PDF'): Promise<{ 
 const dangSoPdf = (n: number) => n.toLocaleString('de-DE', { maximumFractionDigits: 0 });
 const dangTiLePdf = (n: number) => `${n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
 
-test.describe('Bổ sung UC07 Báo cáo doanh thu', () => {
+test.describe('Bổ sung UC07 Lập báo cáo doanh thu', () => {
   test('UC07.4 Tháng không có chuyến bay nào: báo cáo rỗng, tổng bằng 0, không lỗi chia cho 0 (BM5.1)', async ({ page }) => {
     // năm đã qua trong danh sách chọn: không thể thêm chuyến bay khởi hành trong quá khứ nên luôn rỗng
     const nam = mocVN(0).nam - 3;

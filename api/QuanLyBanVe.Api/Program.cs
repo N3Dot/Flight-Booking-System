@@ -53,6 +53,10 @@ var app = builder.Build();
 
 string thuMucNhatKy = Path.Combine(app.Environment.ContentRootPath, app.Configuration["NhatKy:ThuMuc"] ?? "nhat_ky");
 TienIch_NhatKy.datDuongDan(Path.Combine(thuMucNhatKy, "huy_phieu_tu_dong.log"));
+// phiên đăng nhập ghi xuống tập tin để khởi động lại máy chủ không bắt mọi người đăng nhập lại
+app.Services.GetRequiredService<KhoPhien>().datTapTin(
+    Path.Combine(app.Environment.ContentRootPath, app.Configuration["Phien:ThuMuc"] ?? "phien", "phien.dat"),
+    app.Services.GetRequiredService<Microsoft.AspNetCore.DataProtection.IDataProtectionProvider>());
 
 // CSDL sẵn sàng muộn hơn máy chủ (vd máy vừa khởi động) thì thử lại ở nền, 15 giây một lần trong 5 phút
 if (!taoTaiKhoanBanDau(app))

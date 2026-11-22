@@ -38,6 +38,7 @@ public static class MaLoi
     public const string QUA_HAN_DAT_VE = "QUA_HAN_DAT_VE";
     public const string PHIEU_HET_HAN = "PHIEU_HET_HAN";
     public const string GIAY_TO_DA_THUOC_NGUOI_KHAC = "GIAY_TO_DA_THUOC_NGUOI_KHAC";
+    public const string KHONG_SAO_LUU_DUOC = "KHONG_SAO_LUU_DUOC";
     public const string DANG_DUOC_SU_DUNG = "DANG_DUOC_SU_DUNG";
     public const string DA_CO_VE_HOAC_PHIEU = "DA_CO_VE_HOAC_PHIEU";
     public const string KHONG_DUOC_TU_KHOA = "KHONG_DUOC_TU_KHOA";

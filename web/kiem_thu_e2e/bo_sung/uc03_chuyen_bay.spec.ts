@@ -1051,4 +1051,32 @@ test.describe('Bổ sung UC03 Quản lý chuyến bay', () => {
       await api.dong();
     }
   });
+
+  test('UC03.49 Nút chọn nhanh 7 ngày tới điền sẵn hai ô ngày và tìm ngay trong một thao tác; sau đó vẫn sửa tay được ô Đến ngày (TD04)', async ({ page }) => {
+    const api = await ApiThu.moi();
+    const goc = 'Q' + Array.from({ length: 5 }, () => String.fromCharCode(65 + Math.floor(Math.random() * 26))).join('');
+    const [gan, xa] = [`${goc}01`, `${goc}02`];
+    try {
+      await api.themChuyenBay({ maChuyenBay: gan, lechNgay: 2 });
+      await api.themChuyenBay({ maChuyenBay: xa, lechNgay: 9 });
+      await dangNhap(page, 'nhanVien', '/chuyen-bay');
+      const bang = page.getByRole('table', { name: 'Danh sách chuyến bay' });
+      await page.getByRole('textbox', { name: 'Mã chuyến bay' }).fill(goc);
+
+      await page.getByRole('group', { name: 'Chọn nhanh khoảng ngày' }).getByRole('button', { name: '7 ngày tới' }).click();
+      await expect(page.getByText('Tìm thấy 1 chuyến bay thỏa tiêu chí.')).toBeVisible();
+      await expect(bang).toContainText(gan);
+      await expect(bang).not.toContainText(xa);
+      await expect(page.getByLabel('Từ ngày').first()).toHaveValue(mocVN(0).vn);
+      await expect(page.getByLabel('Đến ngày').first()).toHaveValue(mocVN(6).vn);
+
+      // khoảng tự chọn vẫn dùng được như cũ
+      await nhapNgay(page, 'Đến ngày', mocVN(10).vn);
+      await page.getByRole('button', { name: 'Tìm', exact: true }).click();
+      await expect(page.getByText('Tìm thấy 2 chuyến bay thỏa tiêu chí.')).toBeVisible();
+    } finally {
+      for (const ma of [gan, xa]) await api.xoaChuyenBayNeuCo(ma);
+      await api.dong();
+    }
+  });
 });

@@ -45,6 +45,7 @@ public static class DangKyDichVu
         dichVu.AddScoped<DAL_ThamSoQuyDinh>();
         dichVu.AddScoped<DAL_TaiKhoan>();
         dichVu.AddScoped<DAL_KiemThu>();
+        dichVu.AddScoped<DAL_SaoLuu>();
 
         dichVu.AddScoped<XL_DangNhap>();
         dichVu.AddScoped<XL_PhanQuyen>();
@@ -55,6 +56,7 @@ public static class DangKyDichVu
         dichVu.AddScoped<XL_BaoCao>();
         dichVu.AddScoped<XL_ThayDoiQD>();
         dichVu.AddScoped<XL_KiemThu>();
+        dichVu.AddScoped<XL_SaoLuu>();
         return dichVu;
     }
 }

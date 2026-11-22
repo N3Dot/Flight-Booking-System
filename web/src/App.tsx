@@ -18,6 +18,7 @@ import { TrangDatVe } from '@/trang/phieu_dat/TrangDatVe';
 // các trang ít mở (bốn trang của Quản lý và Trợ giúp): tách khỏi tập tin JS chính, tải khi mở trang
 const TrangBaoCao = lazy(() => import('@/trang/bao_cao/TrangBaoCao').then((m) => ({ default: m.TrangBaoCao })));
 const TrangKiemThu = lazy(() => import('@/trang/kiem_thu/TrangKiemThu').then((m) => ({ default: m.TrangKiemThu })));
+const TrangSaoLuu = lazy(() => import('@/trang/sao_luu/TrangSaoLuu').then((m) => ({ default: m.TrangSaoLuu })));
 const TrangQuyDinh = lazy(() => import('@/trang/quy_dinh/TrangQuyDinh').then((m) => ({ default: m.TrangQuyDinh })));
 const TrangTaiKhoan = lazy(() => import('@/trang/tai_khoan/TrangTaiKhoan').then((m) => ({ default: m.TrangTaiKhoan })));
 const TrangTroGiup = lazy(() => import('@/trang/tro_giup/TrangTroGiup').then((m) => ({ default: m.TrangTroGiup })));
@@ -41,6 +42,7 @@ export function App() {
             <Route path="bao-cao" element={<Suspense fallback={null}><TrangBaoCao /></Suspense>} />
             <Route path="quy-dinh" element={<Suspense fallback={null}><TrangQuyDinh /></Suspense>} />
             <Route path="tai-khoan" element={<Suspense fallback={null}><TrangTaiKhoan /></Suspense>} />
+            <Route path="sao-luu" element={<Suspense fallback={null}><TrangSaoLuu /></Suspense>} />
             <Route path="kiem-thu" element={<Suspense fallback={null}><TrangKiemThu /></Suspense>} />
           </Route>
           <Route path="tro-giup" element={<Suspense fallback={null}><TrangTroGiup /></Suspense>} />

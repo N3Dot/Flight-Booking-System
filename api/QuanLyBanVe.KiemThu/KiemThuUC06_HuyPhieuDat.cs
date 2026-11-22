@@ -1,5 +1,10 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using QuanLyBanVe.Api.TienIch;
 using QuanLyBanVe.Api.DTO;
 using QuanLyBanVe.Api.TruyXuat;
 using QuanLyBanVe.Api.XuLy;
@@ -162,5 +167,72 @@ public class KiemThuUC06_HuyPhieuDat : KiemThuCoSo
         Assert.Equal(1000, soDaHuy);
         Assert.True(dongHoBam.Elapsed < TimeSpan.FromSeconds(10), "Mất " + dongHoBam.Elapsed.TotalSeconds + " giây");
         Assert.Equal(0, csdl.dem("SELECT COUNT(*) FROM PHIEUDATCHO WHERE TinhTrang = N'Chờ thanh toán'"));
+    }
+
+    private static IConfiguration cauHinhDinhThoi(bool bat) => new ConfigurationBuilder()
+        .AddInMemoryCollection(new Dictionary<string, string?> { ["BoDinhThoi:Bat"] = bat ? "true" : "false", ["BoDinhThoi:ChuKyPhut"] = "15" })
+        .Build();
+
+    /// <summary>Ghi lại các dòng nhật ký mức Error để kiểm tra bộ định thời báo lỗi mà không dừng.</summary>
+    private sealed class NhatKyGhiLoi : ILogger<BoDinhThoi>
+    {
+        public int SoLoi;
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel muc) => true;
+        public void Log<TState>(LogLevel muc, EventId id, TState trangThai, Exception? loi, Func<TState, Exception?, string> dinhDang)
+        {
+            if (muc == LogLevel.Error) Interlocked.Increment(ref SoLoi);
+        }
+    }
+
+    /// <summary>Một phiếu đặt lúc 8 giờ hôm nay, đồng hồ đặt sang 8 giờ 1 phút hôm sau nên phiếu đã quá 24 giờ.</summary>
+    private PhieuDatCho phieuQuaHan()
+    {
+        taoChuyenBay("CB520", HOM_NAY.AddDays(8).AddHours(7), gheH1: 0, gheH2: 5);
+        dongHo.BayGio = HOM_NAY.AddHours(8);
+        PhieuDatCho phieu = xlDatVe.datVe("CB520", "H2", khach(1), out _);
+        dongHo.BayGio = HOM_NAY.AddDays(1).AddHours(8).AddMinutes(1);
+        return phieu;
+    }
+
+    [Fact(DisplayName = "UC06 Đồng hồ hệ thống: bộ định thời chạy một lần kiểm tra ngay khi máy chủ khởi động (giả định 7) và dừng gọn khi máy chủ dừng")]
+    public async Task BoDinhThoi_KiemTraKhiKhoiDong()
+    {
+        PhieuDatCho phieu = phieuQuaHan();
+        var nhatKy = new NhatKyGhiLoi();
+        using var boDinhThoi = new BoDinhThoi(lay<IServiceScopeFactory>(), cauHinhDinhThoi(bat: true), nhatKy);
+
+        await boDinhThoi.StartAsync(CancellationToken.None);
+        for (int i = 0; i < 100 && tinhTrang(phieu) != PhieuDatCho.DA_HUY; i++) await Task.Delay(100);
+        await boDinhThoi.StopAsync(CancellationToken.None);
+
+        Assert.Equal(PhieuDatCho.DA_HUY, tinhTrang(phieu));
+        Assert.Equal(0, nhatKy.SoLoi);
+        Assert.True(boDinhThoi.ExecuteTask!.IsCompletedSuccessfully);
+    }
+
+    [Fact(DisplayName = "UC06 Đồng hồ hệ thống: BoDinhThoi:Bat = false thì không hủy phiếu nào; một lần kiểm tra bị lỗi chỉ ghi nhật ký, bộ định thời không dừng")]
+    public async Task BoDinhThoi_TatVaLoiMotLan()
+    {
+        PhieuDatCho phieu = phieuQuaHan();
+        using (var tat = new BoDinhThoi(lay<IServiceScopeFactory>(), cauHinhDinhThoi(bat: false), NullLogger<BoDinhThoi>.Instance))
+        {
+            await tat.StartAsync(CancellationToken.None);
+            await Task.Delay(500);
+            await tat.StopAsync(CancellationToken.None);
+        }
+        Assert.Equal(PhieuDatCho.CHO_THANH_TOAN, tinhTrang(phieu));
+
+        // phạm vi dịch vụ thiếu XL_HuyPhieuDat: lần kiểm tra đầu ném lỗi bên trong bộ định thời
+        using ServiceProvider thieu = new ServiceCollection().AddSingleton<DongHoHeThong>(dongHo).BuildServiceProvider();
+        var nhatKy = new NhatKyGhiLoi();
+        using var loi = new BoDinhThoi(thieu.GetRequiredService<IServiceScopeFactory>(), cauHinhDinhThoi(bat: true), nhatKy);
+        await loi.StartAsync(CancellationToken.None);
+        for (int i = 0; i < 50 && nhatKy.SoLoi == 0; i++) await Task.Delay(100);
+
+        Assert.Equal(1, nhatKy.SoLoi);
+        Assert.False(loi.ExecuteTask!.IsCompleted);
+        await loi.StopAsync(CancellationToken.None);
+        Assert.True(loi.ExecuteTask.IsCompletedSuccessfully);
     }
 }

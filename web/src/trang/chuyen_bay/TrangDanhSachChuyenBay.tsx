@@ -29,6 +29,19 @@ import s from './ChuyenBay.module.css';
 
 const SO_DONG_MOI_TRANG = 10;
 
+// TD04: chọn khoảng ngày thường dùng trong một thao tác và tìm luôn; hai ô ngày vẫn chọn tay được
+const ngayCach = (d: Date, soNgay: number) => sangNgayIso(new Date(d.getFullYear(), d.getMonth(), d.getDate() + soNgay));
+const thang = (d: Date, lech: number) => ({
+  tu: sangNgayIso(new Date(d.getFullYear(), d.getMonth() + lech, 1)),
+  den: sangNgayIso(new Date(d.getFullYear(), d.getMonth() + lech + 1, 0)),
+});
+const KHOANG_NHANH: { nhan: string; tinh: (homNay: Date) => { tu: string; den: string } }[] = [
+  { nhan: 'Hôm nay', tinh: (d) => ({ tu: ngayCach(d, 0), den: ngayCach(d, 0) }) },
+  { nhan: '7 ngày tới', tinh: (d) => ({ tu: ngayCach(d, 0), den: ngayCach(d, 6) }) },
+  { nhan: 'Tháng này', tinh: (d) => thang(d, 0) },
+  { nhan: 'Tháng sau', tinh: (d) => thang(d, 1) },
+];
+
 /** Đọc tiêu chí từ URL. Chưa có tuNgay thì mặc định từ hôm nay (mở màn hình hiện chuyến từ hôm nay trở đi). */
 function docTieuChi(p: URLSearchParams): TieuChiTimChuyenBay {
   const lay = (k: string) => p.get(k)?.trim() || undefined;
@@ -52,8 +65,8 @@ export function TrangDanhSachChuyenBay() {
   // ô nhập trên thanh tìm (chỉ áp dụng khi bấm Tìm)
   const [di, datDi] = useState<string | null>(tieuChi.sanBayDi ?? null);
   const [den, datDen] = useState<string | null>(tieuChi.sanBayDen ?? null);
-  const [tuNgay, datTuNgay] = useState(tieuChi.tuNgay ?? '');
-  const [denNgay, datDenNgay] = useState(tieuChi.denNgay ?? '');
+  const [tuNgayO, datTuNgay] = useState(tieuChi.tuNgay ?? '');
+  const [denNgayO, datDenNgay] = useState(tieuChi.denNgay ?? '');
   const [ma, datMa] = useState(tieuChi.maChuyenBay ?? '');
   const [loiTim, datLoiTim] = useState<{ den?: string; denNgay?: string }>({});
   const [chon, datChon] = useState<string | null>(null);
@@ -107,7 +120,10 @@ export function TrangDanhSachChuyenBay() {
   });
 
   const [lanTim, datLanTim] = useState(0);
-  const tim = () => {
+  // khoang: khoảng ngày của nút chọn nhanh, dùng thay cho hai ô ngày vì state chưa kịp đổi khi tìm ngay
+  const tim = (khoang?: { tu: string; den: string }) => {
+    const tuNgay = khoang?.tu ?? tuNgayO;
+    const denNgay = khoang?.den ?? denNgayO;
     datLanTim((n) => n + 1);
     const loi: typeof loiTim = {};
     if (di && den && di === den) loi.den = 'Sân bay đến phải khác sân bay đi.';
@@ -205,9 +221,27 @@ export function TrangDanhSachChuyenBay() {
     >
       <div className={s.thanhTim} ref={oTimDau}>
         <ThanhTimKiem
-          onSubmit={tim}
+          onSubmit={() => tim()}
           chuThich={
             <>
+              <div className={s.chonNhanh} role="group" aria-label="Chọn nhanh khoảng ngày">
+                Chọn nhanh:
+                {KHOANG_NHANH.map((k) => (
+                  <Nut
+                    key={k.nhan}
+                    bienThe="phu"
+                    kichThuoc="nho"
+                    onClick={() => {
+                      const khoang = k.tinh(new Date());
+                      datTuNgay(khoang.tu);
+                      datDenNgay(khoang.den);
+                      tim(khoang);
+                    }}
+                  >
+                    {k.nhan}
+                  </Nut>
+                ))}
+              </div>
               Mở trang sẽ hiện các chuyến bay khởi hành từ hôm nay. Bỏ trống ô ngày để xem mọi chuyến bay. Nhấn <b>Ctrl+F</b> để tới ô tìm.
             </>
           }
@@ -244,14 +278,14 @@ export function TrangDanhSachChuyenBay() {
             />
           </ThanhTimKiem.O>
           <ThanhTimKiem.O rong={196}>
-            <ONgay className={LOP_O_PHANG} nhan="Từ ngày" value={tuNgay} onChange={(e) => datTuNgay(e.target.value)} />
+            <ONgay className={LOP_O_PHANG} nhan="Từ ngày" value={tuNgayO} onChange={(e) => datTuNgay(e.target.value)} />
           </ThanhTimKiem.O>
           <ThanhTimKiem.O rong={196}>
             <ONgay
               className={LOP_O_PHANG}
               nhan="Đến ngày"
-              value={denNgay}
-              min={tuNgay || undefined}
+              value={denNgayO}
+              min={tuNgayO || undefined}
               loi={loiTim.denNgay}
               onChange={(e) => {
                 datDenNgay(e.target.value);

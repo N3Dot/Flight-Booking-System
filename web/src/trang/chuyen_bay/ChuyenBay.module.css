@@ -1145,3 +1145,11 @@ tr:hover .sanBay b {
     grid-template-columns: 1fr;
   }
 }
+
+.chonNhanh {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}

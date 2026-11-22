@@ -13,6 +13,7 @@ import type {
   KetQuaBanVe,
   KetQuaDatVe,
   KetQuaNhapExcel,
+  KetQuaSaoLuu,
   LoaiGiayTo,
   MucDichBan,
   NguoiDung,
@@ -144,6 +145,11 @@ export const apiKiemThu = {
   trangThai: () => goiApi<TrangThaiKiemThu>('GET', '/api/kiem-thu/trang-thai'),
   chay: (yc: YeuCauChayKiemThu) => goiApi<void>('POST', '/api/kiem-thu/chay', { than: yc }),
   dung: () => goiApi<void>('POST', '/api/kiem-thu/dung'),
+};
+
+/* ---------- Sao lưu dữ liệu (chỉ Quản lý) ---------- */
+export const apiSaoLuu = {
+  saoLuu: () => goiApi<KetQuaSaoLuu>('POST', '/api/sao-luu'),
 };
 
 /** Khóa truy vấn dùng chung cho TanStack Query, để làm mới đúng chỗ sau khi ghi */

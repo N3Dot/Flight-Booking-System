@@ -1,4 +1,4 @@
--- Tùy chọn: tạo tài khoản SQL Server riêng cho phần mềm, chỉ có quyền đọc và ghi dữ liệu trên QLBANVECHUYENBAY
+-- Tùy chọn: tạo tài khoản SQL Server riêng cho phần mềm, chỉ có quyền đọc, ghi dữ liệu và sao lưu QLBANVECHUYENBAY
 -- (không tạo, sửa, xóa được bảng và không đụng được cơ sở dữ liệu khác). Dùng khi không muốn máy chủ web
 -- chạy bằng quyền Windows của người cài đặt. SQL Server phải bật chế độ xác thực "SQL Server and Windows".
 -- Chạy bằng tài khoản quản trị SQL Server, mật khẩu tự đặt và truyền qua tham số, không ghi vào tập tin:
@@ -17,6 +17,8 @@ IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name = N'$(TenDangNha
 GO
 ALTER ROLE db_datareader ADD MEMBER [$(TenDangNhap)];
 ALTER ROLE db_datawriter ADD MEMBER [$(TenDangNhap)];
+-- nút Sao lưu dữ liệu của Quản lý chạy BACKUP DATABASE; vai trò này chỉ cho sao lưu, không cho phục hồi
+ALTER ROLE db_backupoperator ADD MEMBER [$(TenDangNhap)];
 -- lấy số kế tiếp của mã hành khách, mã vé, mã phiếu đặt chỗ
 GRANT UPDATE ON OBJECT::dbo.SEQ_HANHKHACH TO [$(TenDangNhap)];
 GRANT UPDATE ON OBJECT::dbo.SEQ_VE TO [$(TenDangNhap)];

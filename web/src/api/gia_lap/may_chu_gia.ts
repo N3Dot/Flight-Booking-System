@@ -866,6 +866,14 @@ them('GET', '/api/bao-cao/nam/xuat', 'quanLy', ({ thamSo }) => {
 /* Thông báo */
 them('GET', '/api/thong-bao', 'dangNhap', () => [...db.nhatKy].sort((a, b) => b.thoiDiem.localeCompare(a.thoiDiem)).slice(0, 20));
 
+/* Sao lưu: chế độ giả lập không có SQL Server nên chỉ trả tên tập tin mẫu */
+them('POST', '/api/sao-luu', 'quanLy', () => {
+  const bayGio = new Date();
+  const so = (n: number) => String(n).padStart(2, '0');
+  const ten = `${bayGio.getFullYear()}${so(bayGio.getMonth() + 1)}${so(bayGio.getDate())}_${so(bayGio.getHours())}${so(bayGio.getMinutes())}${so(bayGio.getSeconds())}`;
+  return { tapTin: `(giả lập) QLBANVECHUYENBAY_${ten}_tay.bak`, thoiDiem: sangIso(bayGio) };
+});
+
 /* ---------- điểm vào ---------- */
 const cho = (ms: number) => new Promise((r) => setTimeout(r, ms));
 

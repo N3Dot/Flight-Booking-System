@@ -23,6 +23,8 @@ export default defineConfig({
   reporter: [['list']],
   use: {
     ...devices['Desktop Chrome'],
+    // KENH=chrome hoặc KENH=msedge: chạy bằng Chrome, Edge đã cài trên máy thay cho Chromium của Playwright (CN05)
+    ...(process.env.KENH ? { channel: process.env.KENH } : {}),
     baseURL: DIA_CHI,
     // máy chủ từ chối yêu cầu ghi không có header này (chống giả mạo yêu cầu từ trang khác)
     extraHTTPHeaders: { 'X-Requested-With': 'XMLHttpRequest' },
