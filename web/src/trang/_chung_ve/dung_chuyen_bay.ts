@@ -1,6 +1,6 @@
 // Nạp danh sách chuyến bay cho ô chọn ở trang Bán vé, Đặt vé.
 // Bán vé: các chuyến chưa khởi hành. Đặt vé: các chuyến khởi hành cách hôm nay không ít hơn thời gian đặt vé chậm nhất (QĐ3).
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { apiChuyenBay, apiQuyDinh, khoaTruyVan } from '@/api/dich_vu';
 import type { ChuyenBayTomTat, MucDichBan, TieuChiTimChuyenBay } from '@/kieu/api';
@@ -72,14 +72,37 @@ export function dungChuyenBayDeBan(mucDich: MucDichBan, loc: LocChuyenBay, maCan
 }
 
 /** Mọi chuyến bay, dùng cho ô lọc Chuyến bay ở các trang danh sách */
-export function dungLuaChonMoiChuyenBay() {
-  const { data, isPending } = useQuery({ queryKey: khoaTruyVan.chuyenBay({}), queryFn: () => apiChuyenBay.traCuu({}) });
+export function dungLuaChonMoiChuyenBay(tuKhoa = '', maDangChon: string | null = null) {
+  const tuKhoaChuan = tuKhoa.trim().toUpperCase();
+  const [maTim, datMaTim] = useState('');
+  useEffect(() => {
+    if (!tuKhoaChuan) {
+      datMaTim('');
+      return;
+    }
+    const henGio = setTimeout(() => datMaTim(tuKhoaChuan), 300);
+    return () => clearTimeout(henGio);
+  }, [tuKhoaChuan]);
+
+  const tieuChi = tuKhoaChuan && maTim ? { maChuyenBay: maTim } : {};
+  const { data, isPending } = useQuery({
+    queryKey: khoaTruyVan.chuyenBay(tieuChi),
+    queryFn: () => apiChuyenBay.traCuu(tieuChi),
+  });
+  const trongDs = data?.some((cb) => cb.maChuyenBay === maDangChon);
+  // Giữ nhãn chuyến đã chọn khi chuyến đó không nằm trong kết quả tra cứu hiện tại
+  const them = useQuery({
+    queryKey: khoaTruyVan.chuyenBay({ maChuyenBay: maDangChon ?? '' }),
+    queryFn: () => apiChuyenBay.traCuu({ maChuyenBay: maDangChon ?? '' }),
+    enabled: !!maDangChon && !trongDs,
+  });
+  const chuyenThem = trongDs ? undefined : them.data?.find((cb) => cb.maChuyenBay === maDangChon);
   const luaChon = useMemo(
     () =>
-      [...(data ?? [])]
+      (chuyenThem ? [chuyenThem, ...(data ?? [])] : [...(data ?? [])])
         .sort((a, b) => b.ngayGioKhoiHanh.localeCompare(a.ngayGioKhoiHanh))
         .map((cb) => ({ ...luaChonChuyenBay(cb), phu: undefined })),
-    [data],
+    [data, chuyenThem],
   );
   return { luaChon, dangTai: isPending };
 }

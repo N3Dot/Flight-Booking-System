@@ -304,6 +304,13 @@ SQL Server Express không có dịch vụ lập lịch riêng, nên việc sao l
    Register-ScheduledTask -TaskName "Sao luu QLBANVECHUYENBAY" -Action $hanhDong -Trigger $lich -User $tk.UserName -Password $tk.GetNetworkCredential().Password -RunLevel Highest
    ```
 
+   Nếu tài khoản Windows không đặt mật khẩu, Windows không nhận mật khẩu trống; khi đó bỏ lệnh `Get-Credential` và đăng ký theo kiểu S4U (vẫn chạy với quyền cao nhất cả khi không có ai đăng nhập):
+
+   ```powershell
+   $nguoi = New-ScheduledTaskPrincipal -UserId "$env:USERDOMAIN\$env:USERNAME" -LogonType S4U -RunLevel Highest
+   Register-ScheduledTask -TaskName "Sao luu QLBANVECHUYENBAY" -Action $hanhDong -Trigger $lich -Principal $nguoi
+   ```
+
    Chạy thử ngay: `Start-ScheduledTask -TaskName "Sao luu QLBANVECHUYENBAY"`, rồi kiểm tra tập tin vừa tạo:
 
    ```powershell

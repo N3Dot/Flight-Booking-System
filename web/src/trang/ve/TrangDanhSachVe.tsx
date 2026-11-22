@@ -55,7 +55,8 @@ export function TrangDanhSachVe() {
   const [chon, datChon] = useState<string | null>(null);
   const [dangHuy, datDangHuy] = useState<string | null>(null);
   const [loiNgay, datLoiNgay] = useState<string | undefined>();
-  const chuyenBay = dungLuaChonMoiChuyenBay();
+  const [tuKhoaChuyenBay, datTuKhoaChuyenBay] = useState('');
+  const chuyenBay = dungLuaChonMoiChuyenBay(tuKhoaChuyenBay, nhap.maChuyenBay);
   const bayGio = dungBayGio();
 
   const { data, isPending, isFetching, error } = useQuery({
@@ -196,6 +197,7 @@ export function TrangDanhSachVe() {
                 giaTri={nhap.maChuyenBay}
                 onDoi={(x) => datNhap({ ...nhap, maChuyenBay: x })}
                 luaChon={chuyenBay.luaChon}
+                onDoiTuKhoa={datTuKhoaChuyenBay}
                 dangTai={chuyenBay.dangTai}
                 placeholder="Tất cả"
                 iconTrai={<PlaneTakeoff size={18} />}

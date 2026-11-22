@@ -18,6 +18,7 @@ export interface LuaChon {
 export interface ThuocTinhOChon extends ThuocTinhTruong {
   giaTri: string | null;
   onDoi: (giaTri: string | null) => void;
+  onDoiTuKhoa?: (tuKhoa: string) => void;
   luaChon: LuaChon[];
   placeholder?: string;
   iconTrai?: React.ReactNode;
@@ -37,6 +38,7 @@ export function OChon({
   className,
   giaTri,
   onDoi,
+  onDoiTuKhoa,
   luaChon,
   placeholder = 'Gõ để tìm...',
   iconTrai,
@@ -66,7 +68,8 @@ export function OChon({
   const dong = useCallback(() => {
     datMo(false);
     datTuKhoa('');
-  }, []);
+    if (tuKhoa) onDoiTuKhoa?.('');
+  }, [onDoiTuKhoa, tuKhoa]);
   dungBamRaNgoai(goc, dong, mo);
 
   useEffect(() => {
@@ -131,6 +134,7 @@ export function OChon({
           value={mo ? tuKhoa : chuHienThi(dangChon)}
           onChange={(e) => {
             datTuKhoa(e.target.value);
+            onDoiTuKhoa?.(e.target.value);
             if (!mo) datMo(true);
           }}
           onFocus={() => datMo(true)}

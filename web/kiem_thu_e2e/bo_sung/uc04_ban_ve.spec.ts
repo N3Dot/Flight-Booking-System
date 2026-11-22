@@ -609,6 +609,21 @@ test.describe('Bổ sung UC04 Quản lý bán vé', () => {
     await expect(bang.locator('tbody tr')).toHaveCount(0);
   });
 
+  test('UC04.31 Tìm và chọn chuyến bay ngoài danh sách ban đầu theo một phần mã (BMT04)', async ({ page }) => {
+    // Mô phỏng chuyến CB101 nằm ngoài danh sách ban đầu bị giới hạn.
+    await page.route('**/api/chuyen-bay', (route) => route.fulfill({ json: [] }));
+    await dangNhap(page, 'nhanVien', '/ve');
+    const oChon = page.getByRole('combobox', { name: 'Chuyến bay' });
+    const yeuCau = page.waitForRequest((req) => {
+      const url = new URL(req.url());
+      return req.method() === 'GET' && url.pathname === '/api/chuyen-bay' && url.searchParams.get('maChuyenBay') === 'B101';
+    });
+    await oChon.fill('b101');
+    await yeuCau;
+    await page.getByRole('option', { name: /^CB101\b/ }).click();
+    await expect(oChon).toHaveValue(/^CB101 · /);
+  });
+
   test('UC04.24 Màn hình Sửa vé: chuyến bay và hạng vé không sửa được, chỉ sửa thông tin hành khách (giả định 8)', async ({ page }) => {
     const api = await ApiThu.moi();
     const cb = await api.themChuyenBay();
