@@ -2,6 +2,7 @@
 // Máy chủ vẫn kiểm tra lại, ở đây chỉ để báo lỗi sớm ngay dưới từng ô.
 import type { ChuyenBayChiTiet, HangVe, ThamSoQuyDinh, YeuCauLuuChuyenBay } from '@/kieu/api';
 import { docIso } from '@/tien_ich/thoi_gian';
+import { giaTienTheoHang } from '@/tien_ich/dinh_dang';
 
 export type CheDoBieuMau = 'them' | 'sua';
 
@@ -97,7 +98,7 @@ export function kiemTraBieuMau(f: DuLieuBieuMau, nc: NguCanhKiemTra): BangLoi {
   else {
     // giá tiền của hạng đắt nhất mà chuyến bay có bán (giá vé x tỉ lệ đơn giá) cũng phải vừa cột tiền của vé, phiếu
     const dat = nc.hangVe.filter((h) => Number(f.ghe[h.maHangVe]) > 0).sort((a, b) => b.tiLeDonGia - a.tiLeDonGia)[0];
-    if (dat && Math.round((Number(f.giaVe) * dat.tiLeDonGia) / 100) > GIA_VE_TOI_DA)
+    if (dat && giaTienTheoHang(Number(f.giaVe), dat.tiLeDonGia) > GIA_VE_TOI_DA)
       loi.giaVe = `Giá vé quá lớn: giá tiền ${dat.tenHangVe} (${dat.tiLeDonGia}% giá vé) vượt quá 999.999.999.999 đồng.`;
   }
 

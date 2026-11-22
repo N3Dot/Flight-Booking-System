@@ -12,7 +12,7 @@ import { OChon, type LuaChon } from '@/thanh_phan/OChon';
 import { ONgay } from '@/thanh_phan/ONgay';
 import { ONhap } from '@/thanh_phan/ONhap';
 import { hienToast } from '@/thanh_phan/toast_kho';
-import { dinhDangSo, dinhDangTien } from '@/tien_ich/dinh_dang';
+import { dinhDangSo, dinhDangTien, giaTienTheoHang } from '@/tien_ich/dinh_dang';
 import { dungBayGio } from '@/tien_ich/hook';
 import { dungHoiKhiRoiTrang } from '@/tien_ich/hoi_khi_roi_trang';
 import { dungPhimTat } from '@/tien_ich/phim_tat';
@@ -422,7 +422,7 @@ export function BieuMauChuyenBay({ cheDo, quyDinh, chiTiet }: ThuocTinhBieuMau) 
                         </span>
                       </span>
                     </td>
-                    <td className={`${s.giaHang} ${s.phai}`}>{giaVe ? dinhDangTien(Math.round((giaVe * h.tiLeDonGia) / 100)) : '--'}</td>
+                    <td className={`${s.giaHang} ${s.phai}`}>{giaVe ? dinhDangTien(giaTienTheoHang(giaVe, h.tiLeDonGia)) : '--'}</td>
                     {cheDo === 'sua' && (
                       <td className={`${s.soDung} ${s.phai}`}>
                         <b>{dinhDangSo(daDung[h.maHangVe] ?? 0)}</b> ghế

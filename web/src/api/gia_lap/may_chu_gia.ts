@@ -22,6 +22,7 @@ import type {
   YeuCauLuuChuyenBay,
 } from '@/kieu/api';
 import { congNgay, dauNgay, docIso, sangIso, soNgayGiua } from '@/tien_ich/thoi_gian';
+import { giaTienTheoHang } from '@/tien_ich/dinh_dang';
 import { SO_GHE_TOI_DA, THOI_GIAN_BAY_TOI_DA } from '@/trang/chuyen_bay/kiem_tra';
 import type { PhanHoiTho, PhuongThuc, ThamSo } from '../may_khach';
 import {
@@ -88,7 +89,7 @@ const bayGio = () => new Date();
 const tenSanBay = (ma: string) => db.sanBay.find((s) => s.maSanBay === ma)?.tenSanBay ?? ma;
 const tenHang = (ma: string) => db.hangVe.find((h) => h.maHangVe === ma)?.tenHangVe ?? ma;
 const tiLeHang = (ma: string) => db.hangVe.find((h) => h.maHangVe === ma)?.tiLeDonGia ?? 100;
-const giaTien = (cb: ChuyenBayGia, maHang: string) => Math.round((cb.giaVe * tiLeHang(maHang)) / 100);
+const giaTien = (cb: ChuyenBayGia, maHang: string) => giaTienTheoHang(cb.giaVe, tiLeHang(maHang));
 
 function timChuyenBay(ma: string): ChuyenBayGia {
   const cb = db.chuyenBay.find((c) => c.maChuyenBay === ma);

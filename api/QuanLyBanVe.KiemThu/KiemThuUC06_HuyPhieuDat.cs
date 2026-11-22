@@ -1,3 +1,5 @@
+using System.Data;
+using Microsoft.Data.SqlClient;
 using QuanLyBanVe.Api.DTO;
 using QuanLyBanVe.Api.TruyXuat;
 using QuanLyBanVe.Api.XuLy;
@@ -99,6 +101,45 @@ public class KiemThuUC06_HuyPhieuDat : KiemThuCoSo
         (DateTime thoiDiem, string noiDung) = Assert.Single(xl.layThongBao(20));
         Assert.Equal(lanChay, thoiDiem);
         Assert.Contains("2 phiếu", noiDung);
+    }
+
+    [Fact(DisplayName = "CT-03 đường D5 của kichHoatDinhKy: phiếu quá hạn vừa bị máy khác hủy trước thì không tính, không ghi nhật ký")]
+    public async Task DuongChay_MayKhacHuyTruoc()
+    {
+        taoChuyenBay("CB500", HOM_NAY.AddDays(8), gheH1: 0, gheH2: 5);
+        dongHo.BayGio = HOM_NAY.AddHours(8);
+        PhieuDatCho phieu = xlDatVe.datVe("CB500", "H2", khach(1), out _);
+
+        // máy khác giữ khóa cập nhật trên phiếu: máy này vẫn đọc được phiếu nhưng lệnh hủy phải chờ
+        await using var mayKhac = new SqlConnection(csdl.ChuoiKetNoi);
+        await mayKhac.OpenAsync();
+        await using SqlTransaction giaoDich = mayKhac.BeginTransaction();
+        await using var khoa = new SqlCommand("SELECT TinhTrang FROM PHIEUDATCHO WITH (UPDLOCK, ROWLOCK) WHERE MaPhieuDat = @ma; SELECT @@SPID;", mayKhac, giaoDich);
+        khoa.Parameters.Add("@ma", SqlDbType.VarChar, 10).Value = phieu.MaPhieuDat;
+        int spidMayKhac;
+        await using (SqlDataReader doc = await khoa.ExecuteReaderAsync())
+        {
+            await doc.NextResultAsync();
+            await doc.ReadAsync();
+            spidMayKhac = Convert.ToInt32(doc.GetValue(0));
+        }
+
+        Task<int> chay = Task.Run(() => xl.kichHoatDinhKy(HOM_NAY.AddDays(1).AddHours(8)));
+        for (int i = 0; i < 200 && !chay.IsCompleted
+            && csdl.dem($"SELECT COUNT(*) FROM sys.dm_exec_requests WHERE blocking_session_id = {spidMayKhac}") == 0; i++)
+            await Task.Delay(50);
+        Assert.False(chay.IsCompleted, "lệnh hủy của máy này phải đang chờ khóa");
+
+        await using (var huy = new SqlCommand("UPDATE PHIEUDATCHO WITH (ROWLOCK) SET TinhTrang = N'Đã hủy' WHERE MaPhieuDat = @ma", mayKhac, giaoDich))
+        {
+            huy.Parameters.Add("@ma", SqlDbType.VarChar, 10).Value = phieu.MaPhieuDat;
+            await huy.ExecuteNonQueryAsync();
+        }
+        await giaoDich.CommitAsync();
+
+        Assert.Equal(0, await chay);
+        Assert.Equal(PhieuDatCho.DA_HUY, tinhTrang(phieu));
+        Assert.False(File.Exists(csdl.TapTinNhatKy));
     }
 
     // đo độ phủ thì loại ca này bằng --filter "Loai!=HieuNang" vì công cụ đo làm chậm mã

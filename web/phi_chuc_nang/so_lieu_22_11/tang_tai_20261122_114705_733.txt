@@ -1,0 +1,29 @@
+﻿Tăng tải 20261122_114705_733 | mức 400 | 2 lượt | tra cứu /api/chuyen-bay?sanBayDi=SGN&sanBayDen=HAN&tuNgay=2026-01-01&denNgay=2026-12-31
+Mức 400 | chuyến đo TB3D83528F | 1000 ghế H1
+  Đăng nhập 400 phiên trước khi phát lệnh: 27.9 s (không tính vào thời gian đo)
+  TangDan N=400 TraCuu lượt 1: nhỏ nhất 1812.9 | lớn nhất 3318.6 ms | HTTP 200x400
+  TangDan N=400 BanVe lượt 1: nhỏ nhất 78.2 | lớn nhất 646.6 ms | HTTP 201x400
+  TangDan N=400 TraCuu lượt 2: nhỏ nhất 263.1 | lớn nhất 3187.7 ms | HTTP 200x400
+  TangDan N=400 BanVe lượt 2: nhỏ nhất 207.8 | lớn nhất 599.6 ms | HTTP 201x400
+  CSDL TB3D83528F: tổng ghế 1000 | vé Đã bán 800 | MaVe khác nhau 800 | yêu cầu 201 800 | khớp mã vé True => Đạt
+Hồi phục sau mức 400 | tải về 5 | chuyến TB3D83528F
+  HoiPhuc N=5 TraCuu lượt 1: nhỏ nhất 37.8 | lớn nhất 70.1 ms | HTTP 200x5
+  HoiPhuc N=5 BanVe lượt 1: nhỏ nhất 27.7 | lớn nhất 37.3 ms | HTTP 201x5
+  CSDL TB3D83528F: tổng ghế 1000 | vé Đã bán 805 | MaVe khác nhau 805 | yêu cầu 201 805 | khớp mã vé True => Đạt
+BẢNG TỔNG HỢP (mili giây, gộp các lượt của cùng mức)
+
+GiaiDoan Muc Loai   SoYeuCau NhoNhat TrungVi    P95 LonNhat Loi MaHttp 
+-------- --- ----   -------- ------- -------    --- ------- --- ------ 
+TangDan  400 TraCuu      800   263.1  2415.2 3064.1  3318.6   0 200x800
+TangDan  400 BanVe       800    78.2   565.2  594.2   646.6   0 201x800
+HoiPhuc    5 TraCuu        5    37.8    41.5   70.1    70.1   0 200x5  
+HoiPhuc    5 BanVe         5    27.7      33   37.3    37.3   0 201x5  
+
+
+
+Mức đầu tiên vượt ngưỡng (TraCuu): không có tới mức 400
+Mức đầu tiên vượt ngưỡng (BanVe): không có tới mức 400
+Yêu cầu lỗi: 0 / 1610. Mã HTTP lỗi: . Lỗi 5xx: 0
+Dòng fail/crit/Exception trong nhật ký máy chủ HQ: 0
+Kiểm tra CSDL tổng: Đạt
+Chuyến đo: N=400 TB3D83528F

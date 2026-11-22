@@ -146,6 +146,16 @@ public class KiemThuUC03_ChuyenBay : KiemThuCoSo
         }
     }
 
+    [Fact(DisplayName = "CT-03 đường P6 của kiemTraQuyDinhNhanLich: vi phạm cả thời gian bay và số sân bay trung gian thì báo đủ hai lỗi")]
+    public void QD1_ViPhamThoiGianBayVaSoTrungGian()
+    {
+        LoiNghiepVu loi = batLoi(() => xl.themChuyenBay(lich(thoiGianBay: 29), ghe(), trungGian(("DAD", 15), ("CXR", 15), ("PQC", 15))));
+        Assert.Equal(MaLoi.VI_PHAM_QD1, loi.Ma);
+        Assert.Equal(new[] { "thoiGianBay", "trungGian" }, loi.ChiTiet.Keys);
+        Assert.Contains("từ 30 phút", loi.Message);
+        Assert.Contains("tối đa 2 sân bay trung gian", loi.Message);
+    }
+
     [Fact(DisplayName = "TH02 đến TH04, HQ07: QĐ1 kiểm tra theo tham số đọc từ CSDL ở mỗi lần kiểm tra")]
     public void QD1_DocThamSoMoiLanKiemTra()
     {

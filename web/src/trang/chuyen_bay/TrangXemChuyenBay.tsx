@@ -10,7 +10,7 @@ import { ChiKhiCoQuyen } from '@/thanh_phan/BaoVeDuongDan';
 import { KhungTrang } from '@/thanh_phan/KhungTrang';
 import { NhanTrangThai } from '@/thanh_phan/NhanTrangThai';
 import { Nut } from '@/thanh_phan/Nut';
-import { dinhDangSo, dinhDangTien } from '@/tien_ich/dinh_dang';
+import { dinhDangSo, dinhDangTien, giaTienTheoHang } from '@/tien_ich/dinh_dang';
 import { dungBayGio } from '@/tien_ich/hook';
 import { conLai, dinhDangNgayGio, dinhDangThoiLuong, docIso } from '@/tien_ich/thoi_gian';
 import { KhongTimThayChuyenBay, KhungChoChuyenBay } from './KhungChoChuyenBay';
@@ -105,7 +105,7 @@ function NoiDungXem({ cb, quyDinh }: { cb: ChuyenBayChiTiet; quyDinh: QuyDinh })
                       <b>{g.tenHangVe}</b>
                     </span>
                   </td>
-                  <td className={`${s.giaHang} ${s.phai}`}>{dinhDangTien(Math.round((cb.giaVe * tiLe(g.maHangVe)) / 100))}</td>
+                  <td className={`${s.giaHang} ${s.phai}`}>{dinhDangTien(giaTienTheoHang(cb.giaVe, tiLe(g.maHangVe)))}</td>
                   <td className={`${s.soDung} ${s.phai}`}>
                     <b>{dinhDangSo(g.soLuongGhe)}</b>
                   </td>
