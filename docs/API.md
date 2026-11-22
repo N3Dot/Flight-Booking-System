@@ -124,7 +124,7 @@ Máy chủ chạy bộ kiểm thử Playwright trong thư mục `web` (cần `np
 - Tài khoản bị khóa hoặc bị đổi nhóm quyền thì phiên đang mở trả 401 ở yêu cầu kế tiếp.
 - Tra cứu: `maChuyenBay` lọc theo chứa; `maVe`, `maPhieuDat` theo tiền tố; `soGiayTo` khớp đúng. `GET /api/phieu-dat` không có tiêu chí thì trả mọi tình trạng. Danh sách vé và phiếu trả tối đa 1000 dòng mới nhất; tra cứu và xuất Excel chuyến bay trả tối đa 1000 chuyến bay đầu theo giờ khởi hành.
 - Sửa chuyến bay: QĐ1 chỉ xét phần lịch bay vừa đổi (thời gian bay, các sân bay trung gian) so với bản đang lưu. Giá vé nhân tỉ lệ đơn giá của hạng đắt nhất mà chuyến bay có bán không được vượt 999.999.999.999.
-- Báo cáo: phần lệch do làm tròn tỉ lệ từng dòng được dồn vào dòng có doanh thu lớn nhất, tổng cột tỉ lệ đúng 100%.
+- Báo cáo: phần lệch do làm tròn tỉ lệ từng dòng được dồn vào dòng có doanh thu lớn nhất, tổng cột tỉ lệ đúng 100% khi tổng doanh thu lớn hơn 0; tổng doanh thu bằng 0 thì mọi tỉ lệ là 0%.
 - Lỗi SQL Server do hết thời gian chờ hoặc mất kết nối trả 503 `LOI_HE_THONG`.
 - Ngày giờ nhận cả dạng không có giây (`2026-11-22T08:30`).
 - POST tạo mới trả 201 kèm thân nhỏ (`{maChuyenBay}`, `{tenDangNhap}`, `{maSanBay}`, `{maHangVe}`).

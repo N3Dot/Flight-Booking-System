@@ -114,59 +114,59 @@ CHƯƠNG 3. THIẾT KẾ HỆ THỐNG145
 3.4.1. Sơ đồ liên kết các màn hình249
 3.4.2. Danh sách các màn hình251
 3.4.3. Mô tả các màn hình254
-CHƯƠNG 4. CÀI ĐẶT CHƯƠNG TRÌNH336
-4.1. Môi trường và công cụ cài đặt336
-4.1.1. Môi trường phát triển và chạy thử336
-4.1.2. Thư viện và công cụ đã dùng337
-4.1.3. Phương pháp cài đặt và phong cách lập trình340
-4.2. Tổ chức mã nguồn343
-4.2.1. Cấu trúc thư mục343
-4.2.2. Ánh xạ từ thiết kế sang mã344
-4.2.3. Thống kê mã nguồn348
-4.2.4. Một số điểm cài đặt đáng chú ý349
-4.3. Kết quả cài đặt các chức năng356
-4.3.1. Đăng nhập và phân quyền356
-4.3.2. Quản lý chuyến bay360
-4.3.3. Bán vé365
-4.3.4. Đặt vé và tự động hủy phiếu369
-4.3.5. Báo cáo doanh thu372
-4.3.6. Thay đổi quy định376
-4.4. Mức độ hoàn thành378
-CHƯƠNG 5. KIỂM THỬ CHƯƠNG TRÌNH383
-5.1. Kiểm thử các chức năng đã thực hiện384
-5.1.1. Phạm vi, kế hoạch và môi trường kiểm thử384
-5.1.2. Kiểm thử tầng xử lý nghiệp vụ và truy xuất dữ liệu400
-5.1.3. Kiểm thử phần giao tiếp (API)414
-5.1.4. Kiểm thử giao diện theo use case421
-5.1.5. Đối chiếu yêu cầu với ca kiểm thử439
-5.1.6. Nhận xét447
-5.2. Kiểm thử yêu cầu phi chức năng456
-5.2.1. Tiến hóa456
-5.2.2. Môi trường và dữ liệu đo458
-5.2.3. Hiệu quả462
-5.2.4. Tương thích469
-5.2.5. Bảo mật471
-5.2.6. Công nghệ475
-5.2.7. Tiện dụng479
-5.2.8. An toàn490
-5.3. Tổng hợp kết quả kiểm thử492
-CHƯƠNG 6. HƯỚNG DẪN CÀI ĐẶT VÀ SỬ DỤNG502
-6.1. Hướng dẫn cài đặt502
-6.1.1. Yêu cầu hệ thống503
-6.1.2. Cài đặt cơ sở dữ liệu504
-6.1.3. Cài đặt và chạy máy chủ ứng dụng505
-6.1.4. Cho các máy nhân viên trong mạng nội bộ truy cập507
-6.1.5. Tài khoản ban đầu và việc cần làm ngay sau khi cài508
-6.1.6. Sao lưu và phục hồi dữ liệu509
-6.1.7. Nạp lại dữ liệu mẫu và một số lỗi thường gặp khi cài đặt512
-6.2. Hướng dẫn sử dụng514
-6.2.1. Đăng nhập, đăng xuất và bố cục chung của màn hình514
-6.2.2. Hướng dẫn dành cho Nhân viên bán vé522
-6.2.3. Hướng dẫn dành cho Quản lý534
-6.2.4. Ý nghĩa các thông báo thường gặp551
-KẾT LUẬN556
-TÀI LIỆU THAM KHẢO559
-BẢNG PHÂN CÔNG CÔNG VIỆC561
+CHƯƠNG 4. CÀI ĐẶT CHƯƠNG TRÌNH337
+4.1. Môi trường và công cụ cài đặt337
+4.1.1. Môi trường phát triển và chạy thử337
+4.1.2. Thư viện và công cụ đã dùng338
+4.1.3. Phương pháp cài đặt và phong cách lập trình341
+4.2. Tổ chức mã nguồn344
+4.2.1. Cấu trúc thư mục344
+4.2.2. Ánh xạ từ thiết kế sang mã345
+4.2.3. Thống kê mã nguồn349
+4.2.4. Một số điểm cài đặt đáng chú ý350
+4.3. Kết quả cài đặt các chức năng357
+4.3.1. Đăng nhập và phân quyền357
+4.3.2. Quản lý chuyến bay361
+4.3.3. Bán vé366
+4.3.4. Đặt vé và tự động hủy phiếu370
+4.3.5. Báo cáo doanh thu373
+4.3.6. Thay đổi quy định377
+4.4. Mức độ hoàn thành379
+CHƯƠNG 5. KIỂM THỬ CHƯƠNG TRÌNH384
+5.1. Kiểm thử các chức năng đã thực hiện385
+5.1.1. Phạm vi, kế hoạch và môi trường kiểm thử385
+5.1.2. Kiểm thử tầng xử lý nghiệp vụ và truy xuất dữ liệu401
+5.1.3. Kiểm thử phần giao tiếp (API)415
+5.1.4. Kiểm thử giao diện theo use case422
+5.1.5. Đối chiếu yêu cầu với ca kiểm thử440
+5.1.6. Nhận xét448
+5.2. Kiểm thử yêu cầu phi chức năng457
+5.2.1. Tiến hóa457
+5.2.2. Môi trường và dữ liệu đo459
+5.2.3. Hiệu quả463
+5.2.4. Tương thích470
+5.2.5. Bảo mật472
+5.2.6. Công nghệ476
+5.2.7. Tiện dụng480
+5.2.8. An toàn491
+5.3. Tổng hợp kết quả kiểm thử493
+CHƯƠNG 6. HƯỚNG DẪN CÀI ĐẶT VÀ SỬ DỤNG503
+6.1. Hướng dẫn cài đặt503
+6.1.1. Yêu cầu hệ thống504
+6.1.2. Cài đặt cơ sở dữ liệu505
+6.1.3. Cài đặt và chạy máy chủ ứng dụng506
+6.1.4. Cho các máy nhân viên trong mạng nội bộ truy cập508
+6.1.5. Tài khoản ban đầu và việc cần làm ngay sau khi cài509
+6.1.6. Sao lưu và phục hồi dữ liệu510
+6.1.7. Nạp lại dữ liệu mẫu và một số lỗi thường gặp khi cài đặt513
+6.2. Hướng dẫn sử dụng515
+6.2.1. Đăng nhập, đăng xuất và bố cục chung của màn hình515
+6.2.2. Hướng dẫn dành cho Nhân viên bán vé523
+6.2.3. Hướng dẫn dành cho Quản lý535
+6.2.4. Ý nghĩa các thông báo thường gặp552
+KẾT LUẬN557
+TÀI LIỆU THAM KHẢO560
+BẢNG PHÂN CÔNG CÔNG VIỆC562
 DANH MỤC CHỮ VIẾT TẮT
 STT
 Chữ viết tắt
@@ -351,85 +351,85 @@ Bảng 3.31. Các lớp tiện ích và lớp hỗ trợ218
 Bảng 3.32. Các lớp của phần giao tiếp222
 Bảng 3.33. Danh sách các màn hình251
 Bảng 3.34. Mô tả các đối tượng trên màn hình đăng nhập255
-Bảng 3.35. Danh sách biến cố và xử lý trên màn hình đăng nhập255
-Bảng 3.36. Mô tả các đối tượng trên màn hình chính259
-Bảng 3.37. Danh sách biến cố và xử lý trên màn hình chính262
-Bảng 3.38. Mô tả các đối tượng trên màn hình phân quyền265
-Bảng 3.39. Danh sách biến cố và xử lý trên màn hình phân quyền266
-Bảng 3.40. Mô tả các đối tượng trên màn hình thêm, sửa tài khoản269
-Bảng 3.41. Danh sách biến cố và xử lý trên màn hình thêm, sửa tài khoản271
-Bảng 3.42. Mô tả các đối tượng trên màn hình danh sách chuyến bay275
-Bảng 3.43. Danh sách biến cố và xử lý trên màn hình danh sách chuyến bay278
-Bảng 3.44. Mô tả các đối tượng trên màn hình thêm, sửa chuyến bay283
-Bảng 3.45. Danh sách biến cố và xử lý trên màn hình thêm, sửa chuyến bay286
-Bảng 3.46. Mô tả các đối tượng trên màn hình danh sách vé289
-Bảng 3.47. Danh sách biến cố và xử lý trên màn hình danh sách vé291
-Bảng 3.48. Mô tả các đối tượng trên màn hình bán vé296
-Bảng 3.49. Danh sách biến cố và xử lý trên màn hình bán vé299
-Bảng 3.50. Mô tả các đối tượng trên màn hình danh sách phiếu đặt chỗ304
-Bảng 3.51. Danh sách biến cố và xử lý trên màn hình danh sách phiếu đặt chỗ306
-Bảng 3.52. Mô tả các đối tượng trên màn hình đặt vé310
-Bảng 3.53. Danh sách biến cố và xử lý trên màn hình đặt vé312
-Bảng 3.54. Mô tả các đối tượng trên màn hình lập báo cáo doanh thu317
-Bảng 3.55. Danh sách biến cố và xử lý trên màn hình lập báo cáo doanh thu318
-Bảng 3.56. Mô tả các đối tượng trên màn hình danh sách quy định321
-Bảng 3.57. Danh sách biến cố và xử lý trên màn hình danh sách quy định323
-Bảng 3.58. Mô tả các đối tượng trên màn hình cập nhật quy định327
-Bảng 3.59. Danh sách biến cố và xử lý trên màn hình cập nhật quy định329
-Bảng 3.60. Mô tả các đối tượng trên màn hình thông báo334
-Bảng 3.61. Danh sách biến cố và xử lý trên màn hình thông báo335
-Bảng 4.1. Thư viện và công cụ đã dùng khi cài đặt337
-Bảng 4.2. Đánh giá ngôn ngữ lập trình theo năm tiêu chí341
-Bảng 4.3. Ánh xạ từ thiết kế sang mã nguồn344
-Bảng 4.4. Thống kê mã nguồn theo tầng348
-Bảng 4.5. Mức độ hoàn thành các chức năng378
-Bảng 5.1. Các mức kiểm thử và công cụ384
-Bảng 5.2. Môi trường kiểm thử386
-Bảng 5.3. Kế hoạch kiểm thử theo bảy mục390
-Bảng 5.4. Phân hoạch tương đương và giá trị biên của thời gian bay (QĐ1 với mức tối thiểu 30 phút, giả định 12)394
-Bảng 5.5. Phân hoạch tương đương và giá trị biên của ô số căn cước (giả định 9)396
-Bảng 5.6. Kiểm thử theo trạng thái của phiếu đặt chỗ, vé, tài khoản và chuyến bay397
-Bảng 5.7. Tổng hợp kiểm thử tầng xử lý nghiệp vụ và truy xuất dữ liệu401
-Bảng 5.8. Một số ca kiểm thử tiêu biểu ở tầng xử lý406
-Bảng 5.9. Độ phủ dòng lệnh của bộ kiểm thử xUnit theo thư mục mã nguồn409
-Bảng 5.10. Các đường độc lập của kiemTraQuyDinhNhanLich và ca kiểm thử tương ứng411
-Bảng 5.11. Các đường độc lập của kichHoatDinhKy và ca kiểm thử tương ứng413
-Bảng 5.12. Các ca kiểm thử phần giao tiếp trong lớp KiemThuGiaoTiep415
-Bảng 5.13. Các nhóm bước của script kiểm tra nhanh phần giao tiếp419
-Bảng 5.14. Các ca kiểm thử giao diện của UC01 Đăng nhập422
-Bảng 5.15. Các ca kiểm thử giao diện của UC02 Phân quyền423
-Bảng 5.16. Các ca kiểm thử giao diện của UC03 Quản lý chuyến bay425
-Bảng 5.17. Các ca kiểm thử giao diện của UC04 Quản lý bán vé428
-Bảng 5.18. Các ca kiểm thử giao diện của UC05 Quản lý đặt vé430
-Bảng 5.19. Các ca kiểm thử giao diện của UC07 Lập báo cáo doanh thu431
-Bảng 5.20. Các ca kiểm thử giao diện của UC08 Thay đổi quy định433
-Bảng 5.21. Các ca kiểm thử giao diện của các chức năng chung434
-Bảng 5.22. Các ca kiểm thử giao diện bổ sung436
-Bảng 5.23. Đối chiếu yêu cầu nghiệp vụ, quy định, biểu mẫu với ca kiểm thử439
-Bảng 5.24. Đối chiếu các yêu cầu tiến hóa, bảo mật, tương thích, an toàn với ca kiểm thử443
-Bảng 5.25. Tổng hợp kết quả kiểm thử chức năng447
-Bảng 5.26. Danh sách kiểm tra lỗi khi duyệt mã và kết quả duyệt ngày 22/11/2026450
-Bảng 5.27. Kết quả kiểm thử các yêu cầu tiến hóa457
-Bảng 5.28. Cấu hình máy đo so với cấu hình triển khai ở mục 1.2.3459
-Bảng 5.29. Dữ liệu đo so với mức dung lượng lưu trữ ở Bảng 1.11460
-Bảng 5.30. Kết quả đo các yêu cầu hiệu quả trên dữ liệu lớn462
-Bảng 5.31. Kết quả đo HQ04: hủy 1.000 phiếu đến hạn trong một lần kiểm tra465
-Bảng 5.32. Kết quả kiểm tra 20 yêu cầu gửi cùng lúc vào hạng vé còn 5 ghế466
-Bảng 5.33. Kết quả tăng tải dần và quá tải với tra cứu chuyến bay và bán vé467
-Bảng 5.34. Kết quả kiểm tra các yêu cầu tương thích và môi trường chạy469
-Bảng 5.35. Kết quả kiểm tra các yêu cầu bảo mật472
-Bảng 5.36. Kết quả đánh giá các yêu cầu công nghệ476
-Bảng 5.37. Số thao tác để có kết quả tra cứu và báo cáo479
-Bảng 5.38. Kết quả đánh giá các yêu cầu tiện dụng483
-Bảng 5.39. Kết quả kiểm tra phím tắt487
-Bảng 5.40. Kết quả kiểm tra các yêu cầu an toàn490
-Bảng 5.41. Tổng hợp kết quả kiểm thử theo nhóm yêu cầu493
-Bảng 5.42. Các lỗi đã phát hiện trong quá trình kiểm thử và đã sửa495
-Bảng 6.1. Yêu cầu phần cứng và phần mềm503
-Bảng 6.2. Các tài khoản ban đầu508
-Bảng 6.3. Một số lỗi thường gặp khi cài đặt và cách xử lý512
-Bảng 6.4. Các phím tắt của phần mềm520
-Bảng 6.5. Các thông báo thường gặp và cách xử lý552
+Bảng 3.35. Danh sách biến cố và xử lý trên màn hình đăng nhập256
+Bảng 3.36. Mô tả các đối tượng trên màn hình chính260
+Bảng 3.37. Danh sách biến cố và xử lý trên màn hình chính263
+Bảng 3.38. Mô tả các đối tượng trên màn hình phân quyền266
+Bảng 3.39. Danh sách biến cố và xử lý trên màn hình phân quyền267
+Bảng 3.40. Mô tả các đối tượng trên màn hình thêm, sửa tài khoản270
+Bảng 3.41. Danh sách biến cố và xử lý trên màn hình thêm, sửa tài khoản272
+Bảng 3.42. Mô tả các đối tượng trên màn hình danh sách chuyến bay276
+Bảng 3.43. Danh sách biến cố và xử lý trên màn hình danh sách chuyến bay279
+Bảng 3.44. Mô tả các đối tượng trên màn hình thêm, sửa chuyến bay284
+Bảng 3.45. Danh sách biến cố và xử lý trên màn hình thêm, sửa chuyến bay287
+Bảng 3.46. Mô tả các đối tượng trên màn hình danh sách vé290
+Bảng 3.47. Danh sách biến cố và xử lý trên màn hình danh sách vé292
+Bảng 3.48. Mô tả các đối tượng trên màn hình bán vé297
+Bảng 3.49. Danh sách biến cố và xử lý trên màn hình bán vé300
+Bảng 3.50. Mô tả các đối tượng trên màn hình danh sách phiếu đặt chỗ305
+Bảng 3.51. Danh sách biến cố và xử lý trên màn hình danh sách phiếu đặt chỗ307
+Bảng 3.52. Mô tả các đối tượng trên màn hình đặt vé311
+Bảng 3.53. Danh sách biến cố và xử lý trên màn hình đặt vé313
+Bảng 3.54. Mô tả các đối tượng trên màn hình lập báo cáo doanh thu318
+Bảng 3.55. Danh sách biến cố và xử lý trên màn hình lập báo cáo doanh thu319
+Bảng 3.56. Mô tả các đối tượng trên màn hình danh sách quy định322
+Bảng 3.57. Danh sách biến cố và xử lý trên màn hình danh sách quy định324
+Bảng 3.58. Mô tả các đối tượng trên màn hình cập nhật quy định328
+Bảng 3.59. Danh sách biến cố và xử lý trên màn hình cập nhật quy định330
+Bảng 3.60. Mô tả các đối tượng trên màn hình thông báo335
+Bảng 3.61. Danh sách biến cố và xử lý trên màn hình thông báo336
+Bảng 4.1. Thư viện và công cụ đã dùng khi cài đặt338
+Bảng 4.2. Đánh giá ngôn ngữ lập trình theo năm tiêu chí342
+Bảng 4.3. Ánh xạ từ thiết kế sang mã nguồn345
+Bảng 4.4. Thống kê mã nguồn theo tầng349
+Bảng 4.5. Mức độ hoàn thành các chức năng379
+Bảng 5.1. Các mức kiểm thử và công cụ385
+Bảng 5.2. Môi trường kiểm thử387
+Bảng 5.3. Kế hoạch kiểm thử theo bảy mục391
+Bảng 5.4. Phân hoạch tương đương và giá trị biên của thời gian bay (QĐ1 với mức tối thiểu 30 phút, giả định 12)395
+Bảng 5.5. Phân hoạch tương đương và giá trị biên của ô số căn cước (giả định 9)397
+Bảng 5.6. Kiểm thử theo trạng thái của phiếu đặt chỗ, vé, tài khoản và chuyến bay398
+Bảng 5.7. Tổng hợp kiểm thử tầng xử lý nghiệp vụ và truy xuất dữ liệu402
+Bảng 5.8. Một số ca kiểm thử tiêu biểu ở tầng xử lý407
+Bảng 5.9. Độ phủ dòng lệnh của bộ kiểm thử xUnit theo thư mục mã nguồn410
+Bảng 5.10. Các đường độc lập của kiemTraQuyDinhNhanLich và ca kiểm thử tương ứng412
+Bảng 5.11. Các đường độc lập của kichHoatDinhKy và ca kiểm thử tương ứng414
+Bảng 5.12. Các ca kiểm thử phần giao tiếp trong lớp KiemThuGiaoTiep416
+Bảng 5.13. Các nhóm bước của script kiểm tra nhanh phần giao tiếp420
+Bảng 5.14. Các ca kiểm thử giao diện của UC01 Đăng nhập423
+Bảng 5.15. Các ca kiểm thử giao diện của UC02 Phân quyền424
+Bảng 5.16. Các ca kiểm thử giao diện của UC03 Quản lý chuyến bay426
+Bảng 5.17. Các ca kiểm thử giao diện của UC04 Quản lý bán vé429
+Bảng 5.18. Các ca kiểm thử giao diện của UC05 Quản lý đặt vé431
+Bảng 5.19. Các ca kiểm thử giao diện của UC07 Lập báo cáo doanh thu432
+Bảng 5.20. Các ca kiểm thử giao diện của UC08 Thay đổi quy định434
+Bảng 5.21. Các ca kiểm thử giao diện của các chức năng chung435
+Bảng 5.22. Các ca kiểm thử giao diện bổ sung437
+Bảng 5.23. Đối chiếu yêu cầu nghiệp vụ, quy định, biểu mẫu với ca kiểm thử440
+Bảng 5.24. Đối chiếu các yêu cầu tiến hóa, bảo mật, tương thích, an toàn với ca kiểm thử444
+Bảng 5.25. Tổng hợp kết quả kiểm thử chức năng448
+Bảng 5.26. Danh sách kiểm tra lỗi khi duyệt mã và kết quả duyệt ngày 22/11/2026451
+Bảng 5.27. Kết quả kiểm thử các yêu cầu tiến hóa458
+Bảng 5.28. Cấu hình máy đo so với cấu hình triển khai ở mục 1.2.3460
+Bảng 5.29. Dữ liệu đo so với mức dung lượng lưu trữ ở Bảng 1.11461
+Bảng 5.30. Kết quả đo các yêu cầu hiệu quả trên dữ liệu lớn463
+Bảng 5.31. Kết quả đo HQ04: hủy 1.000 phiếu đến hạn trong một lần kiểm tra466
+Bảng 5.32. Kết quả kiểm tra 20 yêu cầu gửi cùng lúc vào hạng vé còn 5 ghế467
+Bảng 5.33. Kết quả tăng tải dần và quá tải với tra cứu chuyến bay và bán vé468
+Bảng 5.34. Kết quả kiểm tra các yêu cầu tương thích và môi trường chạy470
+Bảng 5.35. Kết quả kiểm tra các yêu cầu bảo mật473
+Bảng 5.36. Kết quả đánh giá các yêu cầu công nghệ477
+Bảng 5.37. Số thao tác để có kết quả tra cứu và báo cáo480
+Bảng 5.38. Kết quả đánh giá các yêu cầu tiện dụng484
+Bảng 5.39. Kết quả kiểm tra phím tắt488
+Bảng 5.40. Kết quả kiểm tra các yêu cầu an toàn491
+Bảng 5.41. Tổng hợp kết quả kiểm thử theo nhóm yêu cầu494
+Bảng 5.42. Các lỗi đã phát hiện trong quá trình kiểm thử và đã sửa496
+Bảng 6.1. Yêu cầu phần cứng và phần mềm504
+Bảng 6.2. Các tài khoản ban đầu509
+Bảng 6.3. Một số lỗi thường gặp khi cài đặt và cách xử lý513
+Bảng 6.4. Các phím tắt của phần mềm521
+Bảng 6.5. Các thông báo thường gặp và cách xử lý553
 DANH MỤC HÌNH
 Hình 1.1. Quy trình nghiệp vụ tổng quát của phòng vé31
 Hình 1.2. Biểu đồ ngữ cảnh của hệ thống32
@@ -519,92 +519,92 @@ Hình 3.24. Sơ đồ lớp chi tiết chức năng Tự động hủy phiếu �
 Hình 3.25. Sơ đồ lớp chi tiết chức năng Lập báo cáo doanh thu245
 Hình 3.26. Sơ đồ lớp chi tiết chức năng Thay đổi quy định247
 Hình 3.27. Sơ đồ liên kết các màn hình250
-Hình 3.28. Màn hình đăng nhập254
-Hình 3.29. Màn hình chính của Quản lý257
-Hình 3.30. Màn hình chính của Nhân viên bán vé, bảng thông báo đang mở258
-Hình 3.31. Màn hình phân quyền265
-Hình 3.32. Màn hình thêm tài khoản268
-Hình 3.33. Màn hình sửa tài khoản đang đăng nhập269
-Hình 3.34. Màn hình danh sách chuyến bay273
-Hình 3.35. Hộp thoại nhập lịch chuyến bay từ Excel274
-Hình 3.36. Màn hình thêm chuyến bay282
-Hình 3.37. Màn hình danh sách vé289
-Hình 3.38. Màn hình bán vé, cách bán trực tiếp294
-Hình 3.39. Màn hình bán vé, cách bán từ phiếu đặt chỗ295
-Hình 3.40. Màn hình danh sách phiếu đặt chỗ303
-Hình 3.41. Màn hình đặt vé, chế độ lập phiếu308
-Hình 3.42. Màn hình đặt vé, chế độ sửa phiếu309
-Hình 3.43. Màn hình lập báo cáo doanh thu, báo cáo tháng315
-Hình 3.44. Màn hình lập báo cáo doanh thu, báo cáo năm316
-Hình 3.45. Màn hình danh sách quy định321
-Hình 3.46. Màn hình cập nhật quy định, dạng cập nhật tham số325
-Hình 3.47. Màn hình cập nhật quy định, dạng thêm sân bay326
-Hình 3.48. Màn hình cập nhật quy định, dạng thêm hạng vé327
-Hình 3.49. Màn hình thông báo, hỏi xác nhận332
-Hình 3.50. Màn hình thông báo, báo lỗi332
-Hình 3.51. Màn hình thông báo, báo thành công và thông báo nổi333
-Hình 4.1. Lỗi nghiệp vụ được hiển thị trong hộp thoại thông báo khi xóa chuyến bay đã có vé354
-Hình 4.2. Trạng thái rỗng dùng chung khi tra cứu không có kết quả356
-Hình 4.3. Màn hình chính của Nhân viên bán vé chỉ hiện các chức năng được phép357
-Hình 4.4. Nhân viên bán vé mở đường dẫn của Quản lý thì bị chặn358
-Hình 4.5. Hỏi xác nhận trước khi khóa tài khoản banve04359
-Hình 4.6. Tài khoản banve04 ở trạng thái Đã khóa sau khi khóa360
-Hình 4.7. Thêm chuyến bay CB247 vi phạm thời gian bay tối thiểu của QĐ1361
-Hình 4.8. Thời gian dừng 25 phút tại DAD vi phạm QĐ1362
-Hình 4.9. Chuyến bay CB246 sau khi thêm thành công, tra cứu theo BM4363
-Hình 4.10. Kết quả nhập lịch chuyến bay từ tập tin Excel364
-Hình 4.11. Nội dung tập tin Excel danh sách chuyến bay365
-Hình 4.12. Hạng vé hết chỗ bị khóa trên màn hình bán vé366
-Hình 4.13. Không bán vé cho chuyến bay đã khởi hành367
-Hình 4.14. Hỏi xác nhận trước khi bán vé367
-Hình 4.15. Bán vé thành công, hiện mã vé VE00002810368
-Hình 4.16. Vé VE00002810 ở tình trạng Đã hủy sau khi hủy vé369
-Hình 4.17. Không đặt được vé vì quá thời hạn đặt vé của QĐ3370
-Hình 4.18. Đặt vé thành công, hiện mã phiếu và hạn thanh toán370
-Hình 4.19. Phiếu PD00000287 ở tình trạng Đã hủy371
-Hình 4.20. Hỏi xác nhận xóa hẳn các phiếu đã hủy trước ngày 13/10/2026372
-Hình 4.21. Báo cáo tháng 3/2025 không có chuyến bay nào373
-Hình 4.22. Trang đầu tập tin PDF báo cáo doanh thu tháng 11/2026374
-Hình 4.23. Nội dung tập tin Excel báo cáo doanh thu tháng 11/2026375
-Hình 4.24. Đổi thời gian bay tối thiểu từ 30 phút thành 45 phút376
-Hình 4.25. Tham số mới 45 phút có hiệu lực ngay ở màn hình thêm chuyến bay377
-Hình 4.26. Không xóa được sân bay đang được chuyến bay sử dụng378
-Hình 5.1. Sơ đồ luồng điều khiển của phương thức kiemTraQuyDinhNhanLich411
-Hình 5.2. Sơ đồ luồng điều khiển của phương thức kichHoatDinhKy413
-Hình 5.3. Chọn sân bay từ danh sách ở biểu mẫu thêm chuyến bay (TD01)481
-Hình 5.4. Giá tiền tự tính và thông báo lỗi tại ô ở màn hình bán vé (TD02)482
-Hình 5.5. Tra cứu chuyến bay theo sân bay đi, sân bay đến và khoảng ngày bằng nút chọn nhanh, sau 3 thao tác (TD04)483
-Hình 6.1. Màn hình Đăng nhập515
-Hình 6.2. Thông báo sai tên đăng nhập hoặc mật khẩu515
-Hình 6.3. Thông báo tài khoản đã bị khóa516
-Hình 6.4. Phần đầu trang chính của Quản lý517
-Hình 6.5. Trang chính của Nhân viên bán vé518
-Hình 6.6. Chuông thông báo đang mở519
-Hình 6.7. Trang Trợ giúp520
-Hình 6.8. Ô chọn ngày đang mở bảng lịch522
-Hình 6.9. Màn hình Danh sách chuyến bay524
-Hình 6.10. Màn hình xem chi tiết chuyến bay525
-Hình 6.11. Màn hình Bán vé ở chế độ bán trực tiếp526
-Hình 6.12. Bán vé từ phiếu đặt chỗ528
-Hình 6.13. Màn hình Danh sách vé529
-Hình 6.14. Màn hình Đặt vé531
-Hình 6.15. Màn hình Danh sách phiếu đặt chỗ533
-Hình 6.16. Màn hình Sửa phiếu đặt chỗ534
-Hình 6.17. Màn hình Thêm chuyến bay536
-Hình 6.18. Ô Ngày giờ khởi hành đang mở bảng lịch và giờ537
-Hình 6.19. Màn hình Sửa chuyến bay539
-Hình 6.20. Báo cáo doanh thu tháng541
-Hình 6.21. Báo cáo doanh thu năm542
-Hình 6.22. Màn hình Thay đổi quy định543
-Hình 6.23. Hộp thoại Cập nhật quy định544
-Hình 6.24. Hộp thoại Thêm sân bay545
-Hình 6.25. Hộp thoại Thêm hạng vé546
-Hình 6.26. Màn hình Phân quyền547
-Hình 6.27. Hộp thoại Thêm tài khoản548
-Hình 6.28. Hộp thoại Sửa tài khoản549
-Hình 6.29. Thông báo đã xóa phiếu đặt chỗ đã hủy550
-Hình 6.30. Hộp thoại hỏi xác nhận khi hủy thao tác bán vé đang nhập dở551
-Hình 6.31. Hộp thoại báo lỗi khi xóa hạng vé đang được sử dụng552
+Hình 3.28. Màn hình đăng nhập255
+Hình 3.29. Màn hình chính của Quản lý258
+Hình 3.30. Màn hình chính của Nhân viên bán vé, bảng thông báo đang mở259
+Hình 3.31. Màn hình phân quyền266
+Hình 3.32. Màn hình thêm tài khoản269
+Hình 3.33. Màn hình sửa tài khoản đang đăng nhập270
+Hình 3.34. Màn hình danh sách chuyến bay274
+Hình 3.35. Hộp thoại nhập lịch chuyến bay từ Excel275
+Hình 3.36. Màn hình thêm chuyến bay283
+Hình 3.37. Màn hình danh sách vé290
+Hình 3.38. Màn hình bán vé, cách bán trực tiếp295
+Hình 3.39. Màn hình bán vé, cách bán từ phiếu đặt chỗ296
+Hình 3.40. Màn hình danh sách phiếu đặt chỗ304
+Hình 3.41. Màn hình đặt vé, chế độ lập phiếu309
+Hình 3.42. Màn hình đặt vé, chế độ sửa phiếu310
+Hình 3.43. Màn hình lập báo cáo doanh thu, báo cáo tháng316
+Hình 3.44. Màn hình lập báo cáo doanh thu, báo cáo năm317
+Hình 3.45. Màn hình danh sách quy định322
+Hình 3.46. Màn hình cập nhật quy định, dạng cập nhật tham số326
+Hình 3.47. Màn hình cập nhật quy định, dạng thêm sân bay327
+Hình 3.48. Màn hình cập nhật quy định, dạng thêm hạng vé328
+Hình 3.49. Màn hình thông báo, hỏi xác nhận333
+Hình 3.50. Màn hình thông báo, báo lỗi333
+Hình 3.51. Màn hình thông báo, báo thành công và thông báo nổi334
+Hình 4.1. Lỗi nghiệp vụ được hiển thị trong hộp thoại thông báo khi xóa chuyến bay đã có vé355
+Hình 4.2. Trạng thái rỗng dùng chung khi tra cứu không có kết quả357
+Hình 4.3. Màn hình chính của Nhân viên bán vé chỉ hiện các chức năng được phép358
+Hình 4.4. Nhân viên bán vé mở đường dẫn của Quản lý thì bị chặn359
+Hình 4.5. Hỏi xác nhận trước khi khóa tài khoản banve04360
+Hình 4.6. Tài khoản banve04 ở trạng thái Đã khóa sau khi khóa361
+Hình 4.7. Thêm chuyến bay CB247 vi phạm thời gian bay tối thiểu của QĐ1362
+Hình 4.8. Thời gian dừng 25 phút tại DAD vi phạm QĐ1363
+Hình 4.9. Chuyến bay CB246 sau khi thêm thành công, tra cứu theo BM4364
+Hình 4.10. Kết quả nhập lịch chuyến bay từ tập tin Excel365
+Hình 4.11. Nội dung tập tin Excel danh sách chuyến bay366
+Hình 4.12. Hạng vé hết chỗ bị khóa trên màn hình bán vé367
+Hình 4.13. Không bán vé cho chuyến bay đã khởi hành368
+Hình 4.14. Hỏi xác nhận trước khi bán vé368
+Hình 4.15. Bán vé thành công, hiện mã vé VE00002810369
+Hình 4.16. Vé VE00002810 ở tình trạng Đã hủy sau khi hủy vé370
+Hình 4.17. Không đặt được vé vì quá thời hạn đặt vé của QĐ3371
+Hình 4.18. Đặt vé thành công, hiện mã phiếu và hạn thanh toán371
+Hình 4.19. Phiếu PD00000287 ở tình trạng Đã hủy372
+Hình 4.20. Hỏi xác nhận xóa hẳn các phiếu đã hủy trước ngày 13/10/2026373
+Hình 4.21. Báo cáo tháng 3/2025 không có chuyến bay nào374
+Hình 4.22. Trang đầu tập tin PDF báo cáo doanh thu tháng 11/2026375
+Hình 4.23. Nội dung tập tin Excel báo cáo doanh thu tháng 11/2026376
+Hình 4.24. Đổi thời gian bay tối thiểu từ 30 phút thành 45 phút377
+Hình 4.25. Tham số mới 45 phút có hiệu lực ngay ở màn hình thêm chuyến bay378
+Hình 4.26. Không xóa được sân bay đang được chuyến bay sử dụng379
+Hình 5.1. Sơ đồ luồng điều khiển của phương thức kiemTraQuyDinhNhanLich412
+Hình 5.2. Sơ đồ luồng điều khiển của phương thức kichHoatDinhKy414
+Hình 5.3. Chọn sân bay từ danh sách ở biểu mẫu thêm chuyến bay (TD01)482
+Hình 5.4. Giá tiền tự tính và thông báo lỗi tại ô ở màn hình bán vé (TD02)483
+Hình 5.5. Tra cứu chuyến bay theo sân bay đi, sân bay đến và khoảng ngày bằng nút chọn nhanh, sau 3 thao tác (TD04)484
+Hình 6.1. Màn hình Đăng nhập516
+Hình 6.2. Thông báo sai tên đăng nhập hoặc mật khẩu516
+Hình 6.3. Thông báo tài khoản đã bị khóa517
+Hình 6.4. Phần đầu trang chính của Quản lý518
+Hình 6.5. Trang chính của Nhân viên bán vé519
+Hình 6.6. Chuông thông báo đang mở520
+Hình 6.7. Trang Trợ giúp521
+Hình 6.8. Ô chọn ngày đang mở bảng lịch523
+Hình 6.9. Màn hình Danh sách chuyến bay525
+Hình 6.10. Màn hình xem chi tiết chuyến bay526
+Hình 6.11. Màn hình Bán vé ở chế độ bán trực tiếp527
+Hình 6.12. Bán vé từ phiếu đặt chỗ529
+Hình 6.13. Màn hình Danh sách vé530
+Hình 6.14. Màn hình Đặt vé532
+Hình 6.15. Màn hình Danh sách phiếu đặt chỗ534
+Hình 6.16. Màn hình Sửa phiếu đặt chỗ535
+Hình 6.17. Màn hình Thêm chuyến bay537
+Hình 6.18. Ô Ngày giờ khởi hành đang mở bảng lịch và giờ538
+Hình 6.19. Màn hình Sửa chuyến bay540
+Hình 6.20. Báo cáo doanh thu tháng542
+Hình 6.21. Báo cáo doanh thu năm543
+Hình 6.22. Màn hình Thay đổi quy định544
+Hình 6.23. Hộp thoại Cập nhật quy định545
+Hình 6.24. Hộp thoại Thêm sân bay546
+Hình 6.25. Hộp thoại Thêm hạng vé547
+Hình 6.26. Màn hình Phân quyền548
+Hình 6.27. Hộp thoại Thêm tài khoản549
+Hình 6.28. Hộp thoại Sửa tài khoản550
+Hình 6.29. Thông báo đã xóa phiếu đặt chỗ đã hủy551
+Hình 6.30. Hộp thoại hỏi xác nhận khi hủy thao tác bán vé đang nhập dở552
+Hình 6.31. Hộp thoại báo lỗi khi xóa hạng vé đang được sử dụng553
 CHƯƠNG 1. TỔNG QUAN ĐỀ TÀI
 1.1. Giới thiệu tổng quan về đề tài
 1.1.1. Bối cảnh
@@ -797,11 +797,11 @@ Số phút, số nguyên từ 0 đến 1.440 (giả định 12); mặc định 3
 TH03
 Thay đổi QĐ1
 Số sân bay trung gian tối đa
-Số nguyên không âm; mặc định 2
+Số nguyên từ 0 đến 255; mặc định 2
 TH04
 Thay đổi QĐ1
 Thời gian dừng tối thiểu, tối đa
-Số phút, số nguyên không âm; thời gian dừng tối thiểu không lớn hơn tối đa; mặc định 10 và 20
+Số phút, số nguyên không âm; thời gian dừng tối thiểu không lớn hơn tối đa, thời gian dừng tối đa không quá 100.000 phút; mặc định 10 và 20
 TH05
 Thay đổi QĐ2 (bán vé)
 Số lượng các hạng vé
@@ -809,7 +809,7 @@ Danh sách hạng vé (thêm, xóa; sửa tên khi nhập sai); tỉ lệ đơn 
 TH06
 Thay đổi QĐ3 (đặt vé)
 Thời gian chậm nhất khi đặt vé
-Số ngày, số nguyên không âm, lớn hơn thời gian hủy đặt vé; mặc định 1 (giả định 6)
+Số ngày, số nguyên không âm, lớn hơn thời gian hủy đặt vé và không quá 365 ngày; mặc định 1 (giả định 6)
 TH07
 Thay đổi QĐ3
 Thời gian hủy đặt vé
@@ -1286,7 +1286,7 @@ Danh sách 10 sân bay ban đầu do phòng vé cung cấp và được nhập s
 Ngoài QĐ1, một lịch chuyến bay hợp lệ khi thỏa các điều kiện sau: sân bay đến khác sân bay đi; các sân bay trung gian không trùng nhau và khác sân bay đi, sân bay đến; ngày giờ khởi hành phải sau thời điểm hiện tại, cả khi thêm mới và khi sửa; giá vé là số nguyên dương tính bằng đồng, không quá 999.999.999.999 đồng, và giá tiền của hạng vé có tỉ lệ đơn giá cao nhất trong các hạng mà chuyến bay có ghế, tính theo công thức (1.1), cũng không vượt mức này; số lượng ghế của mỗi hạng là số nguyên từ 0 đến 1.000 và có ít nhất một hạng có số ghế lớn hơn 0; thời gian bay không quá 1.440 phút (24 giờ), nên mức thời gian bay tối thiểu của QĐ1 cũng chỉ được đặt trong khoảng 0 đến 1.440 phút. Hạng có số ghế bằng 0 nghĩa là chuyến bay không bán hạng đó. Các cận trên 999.999.999.999 đồng, 1.000 ghế và 1.440 phút do nhóm đặt để chặn số nhập nhầm, không phải quy định của đề: máy bay chở khách lớn nhất hiện nay có khoảng 850 ghế và chuyến bay thẳng dài nhất khoảng 19 giờ. Mã chuyến bay được tự đổi sang chữ in hoa và bỏ các ký tự không phải chữ, số ngay khi nhập.
 Vé chỉ được bán cho chuyến bay chưa khởi hành, so với thời điểm hiện tại lúc nhân viên chọn chuyến bay. Đề chỉ giới hạn thời hạn đặt chỗ (QĐ3) mà không nói về thời hạn bán vé; nhóm thêm điều kiện này để không lập vé cho chuyến bay đã bay.
 Chuyến bay đã khởi hành thì không sửa được nữa, để số liệu báo cáo của các tháng đã qua không đổi; khi sửa chuyến bay chưa khởi hành, ngày giờ khởi hành mới cũng phải sau thời điểm hiện tại (giả định 12). Khi sửa, QĐ1 chỉ được kiểm tra cho phần lịch bay vừa thay đổi: thời gian bay chỉ xét khi thời gian bay đổi, số sân bay trung gian và thời gian dừng chỉ xét khi danh sách sân bay trung gian đổi. Nhờ vậy, chuyến bay lập trước khi Quản lý đổi mức của QĐ1 vẫn sửa được giá vé, số ghế hoặc ngày giờ mà không bị báo vi phạm mức mới. Đề chỉ nói về việc nhận lịch chuyến bay; quy tắc sửa là do nhóm bổ sung.
-Mật khẩu tài khoản dài từ 10 đến 100 ký tự và không được trùng mật khẩu mặc định của phần mềm. Một tên đăng nhập bị khóa tạm 5 phút khi đăng nhập sai 5 lần trong vòng 1 phút từ cùng một máy; một máy bị khóa tạm 5 phút khi sai 30 lần trong vòng 1 phút với bất kỳ tên nào. Chỉ lần sai mới được đếm, nên người nhập đúng không bao giờ bị chặn. Tên đăng nhập được tự cắt khoảng trắng ở đầu và cuối. Phiên đăng nhập được máy chủ ghi xuống một tập tin, nên khi máy chủ khởi động lại thì người đang làm việc không phải đăng nhập lại; bộ đếm lần sai chỉ giữ trong bộ nhớ của máy chủ nên trở về 0 khi máy chủ khởi động lại. Đề không nêu các con số này; nhóm đặt chúng cho yêu cầu bảo mật ở mục 1.2.5.
+Mật khẩu tài khoản dài từ 10 đến 100 ký tự và không được trùng mật khẩu mặc định của phần mềm. Một tên đăng nhập bị khóa tạm 5 phút khi đăng nhập sai 5 lần trong vòng 1 phút từ cùng một máy; một máy bị khóa tạm 5 phút khi sai 30 lần trong vòng 1 phút với bất kỳ tên nào. Chỉ lần sai mới được đếm, nên người luôn nhập đúng không bị khóa vì chính mình; trong 5 phút khóa tạm, mọi lần đăng nhập của tên hoặc máy đang bị khóa đều bị từ chối, kể cả khi đúng mật khẩu. Tên đăng nhập được tự cắt khoảng trắng ở đầu và cuối. Phiên đăng nhập được máy chủ ghi xuống một tập tin, nên khi máy chủ khởi động lại thì người đang làm việc không phải đăng nhập lại; bộ đếm lần sai chỉ giữ trong bộ nhớ của máy chủ nên trở về 0 khi máy chủ khởi động lại. Đề không nêu các con số này; nhóm đặt chúng cho yêu cầu bảo mật ở mục 1.2.5.
 Tra cứu chuyến bay, vé, phiếu đặt chỗ và xuất danh sách chuyến bay ra tập tin Excel trả về tối đa 1.000 dòng. Khi có nhiều hơn, màn hình hiện 1.000 dòng đầu kèm thông báo chỉ hiển thị 1.000 dòng và mời người dùng thu hẹp tiêu chí. Giới hạn này giữ thời gian trả kết quả trong ngưỡng của HQ05 khi dữ liệu lớn; đề không nêu giới hạn này.
 Giữa lúc một phiếu đặt chỗ hết hạn và lần kiểm tra định kỳ kế tiếp (tối đa 15 phút, giả định 7), phiếu vẫn mang tình trạng Chờ thanh toán: nhân viên vẫn sửa được thông tin hành khách hoặc hủy phiếu theo yêu cầu, nhưng không bán vé từ phiếu đó được (giả định 5). Hủy tay một phiếu quá hạn cho cùng kết quả với lần tự hủy.
 Đề không nêu số nhân viên hay số máy của phòng vé, nên nhóm suy ra số người dùng thao tác cùng lúc từ dung lượng lưu trữ ở Bảng 1.11. Mức 2.000.000 vé và 2.000.000 phiếu đặt chỗ ứng với 4.000.000 lần lập vé hoặc phiếu. Bảng 1.11 không nêu lượng này tích lũy trong bao lâu; để an toàn, nhóm tính như thể nó được lập trong 3 năm, mỗi năm 300 ngày làm việc, mỗi ngày 8 giờ, vì khoảng thời gian càng ngắn thì mỗi giờ càng nhiều lần lập. Khi đó trung bình mỗi ngày có khoảng 4.444 lần lập, mỗi giờ khoảng 556 lần; giờ cao điểm được giả định gấp 3 lần trung bình, tức khoảng 1.667 lần mỗi giờ. Mỗi lần bán vé hoặc lập phiếu, nhân viên thao tác trên phần mềm từ 32 đến 44 giây (ước lượng theo KLM ở mục 5.2.7); thời gian hỏi khách và đọc giấy tờ không gửi yêu cầu nào tới máy chủ nên không tính. Lấy 44 giây, số nhân viên thao tác cùng lúc ở giờ cao điểm là 1.667 x 44 / 3.600, khoảng 20,4 người. Nhóm làm tròn lên 25 người dùng, phần dư dành cho Quản lý và các lần tra cứu không dẫn tới bán vé, và lấy 25 làm mức thiết kế ở mục 1.2.3. Các con số 3 năm, 300 ngày, 8 giờ và hệ số cao điểm 3 do nhóm đặt, đề không nêu.
@@ -1829,7 +1829,7 @@ K2. Hệ thống tìm các chuyến bay thỏa tiêu chí, tính số ghế tr�
 K3. Hệ thống hiển thị danh sách chuyến bay tìm được theo BM4.
 Luồng thay thế
 3a. Người dùng chọn Xuất Excel: hệ thống xuất danh sách chuyến bay đang hiển thị ra tập tin Excel (yêu cầu tương thích).
-T1a. Quản lý chọn Nhập Excel để nhận nhiều lịch chuyến bay cùng lúc: hệ thống mở hộp chọn tập tin Excel (.xlsx) theo tập tin mẫu của phần mềm, đọc từng dòng, kiểm tra mã chuyến bay chưa tồn tại, lịch chuyến bay hợp lệ và QĐ1 như bước T3 cho từng chuyến bay, lưu các chuyến bay hợp lệ, sau đó thông báo số chuyến bay đã thêm và danh sách dòng bị lỗi kèm lý do (yêu cầu tương thích TT01). Tập tin gồm hai trang tính: trang ChuyenBay mỗi dòng một chuyến bay (mã, giá vé, mã sân bay đi, mã sân bay đến, ngày giờ, thời gian bay, một cột số ghế cho mỗi hạng vé); trang TrungGian mỗi dòng một sân bay trung gian (mã chuyến bay, thứ tự dừng, mã sân bay, thời gian dừng, ghi chú).
+T1a. Quản lý chọn Nhập Excel để nhận nhiều lịch chuyến bay cùng lúc: hệ thống mở hộp chọn tập tin Excel (.xlsx) theo tập tin mẫu của phần mềm, đọc từng dòng, kiểm tra mã chuyến bay chưa tồn tại, lịch chuyến bay hợp lệ và QĐ1 như bước T3 cho từng chuyến bay, lưu các chuyến bay hợp lệ, sau đó thông báo số chuyến bay đã thêm và danh sách dòng bị lỗi kèm lý do (yêu cầu tương thích TT01). Tập tin gồm hai trang dữ liệu và một trang HuongDan nhắc quy định hiện hành: trang ChuyenBay mỗi dòng một chuyến bay (mã, giá vé, mã sân bay đi, mã sân bay đến, ngày giờ, thời gian bay, một cột số ghế cho mỗi hạng vé); trang TrungGian mỗi dòng một sân bay trung gian (mã chuyến bay, thứ tự dừng, mã sân bay, thời gian dừng, ghi chú).
 T2a. Chuyến bay không có sân bay trung gian: Quản lý bỏ trống phần sân bay trung gian.
 T2b, S2a. Quản lý chọn Hủy: hệ thống đóng màn hình, không lưu và quay lại bước 2.
 T2c, S2b. Quản lý rời màn hình thêm, sửa khi đang nhập dở (chọn chức năng khác, nút Back hoặc tải lại trang): hệ thống hỏi xác nhận; chọn Tiếp tục nhập thì quay lại bước T2 hoặc S2, chọn Rời trang thì không lưu gì.
@@ -2343,7 +2343,7 @@ Thành phần
 Diễn giải
 1
 Tầng giao diện (GUI)
-Gồm 14 màn hình web, chính là 14 lớp biên MH_ ở Bảng 2.11 (kể cả màn hình chính MH_Chinh và hộp thoại thông báo MH_ThongBao), chạy trong trình duyệt của máy nhân viên. Màn hình nhận dữ liệu nhập, kiểm tra ràng buộc trên từng ô (bắt buộc nhập, kiểu số, độ dài), gửi yêu cầu lên máy chủ, hiển thị kết quả và thông báo, ẩn các chức năng không thuộc nhóm quyền của người đang đăng nhập. Phần giao tiếp trên máy chủ gồm tám lớp nhận yêu cầu của các use case (mỗi nhóm chức năng một lớp) và lớp KiemThuController của trang Kiểm thử, kiểm tra phiên đăng nhập và nhóm quyền, chuyển dữ liệu nhận được thành DTO rồi gọi tầng xử lý, sau đó trả kết quả hoặc thông báo lỗi về cho màn hình.
+Gồm 14 màn hình web, chính là 14 lớp biên MH_ ở Bảng 2.11 (kể cả màn hình chính MH_Chinh và hộp thoại thông báo MH_ThongBao), chạy trong trình duyệt của máy nhân viên. Màn hình nhận dữ liệu nhập, kiểm tra ràng buộc trên từng ô (bắt buộc nhập, kiểu số, độ dài), gửi yêu cầu lên máy chủ, hiển thị kết quả và thông báo, ẩn các chức năng không thuộc nhóm quyền của người đang đăng nhập. Phần giao tiếp trên máy chủ gồm tám lớp nhận yêu cầu của các use case (mỗi nhóm chức năng một lớp), lớp KiemThuController của trang Kiểm thử và lớp SaoLuuController của trang Sao lưu dữ liệu, kiểm tra phiên đăng nhập và nhóm quyền, chuyển dữ liệu nhận được thành DTO rồi gọi tầng xử lý, sau đó trả kết quả hoặc thông báo lỗi về cho màn hình.
 2
 Tầng xử lý nghiệp vụ (BUS)
 Gồm các lớp XL_DangNhap, XL_PhanQuyen, XL_ChuyenBay, XL_BanVe, XL_DatVe, XL_HuyPhieuDat, XL_BaoCao, XL_ThayDoiQD. Kiểm tra QĐ1, QĐ2, QĐ3 theo tham số đọc từ cơ sở dữ liệu ở mỗi lần kiểm tra (HQ07); điều phối các phép tính: giá tiền và hạn thanh toán do lớp DTO tính, số ghế trống, số ghế đặt, doanh thu do lớp DAL_ đếm và tổng hợp từ dữ liệu, tỉ lệ doanh thu do lớp XL_BaoCao tính; mở và kết thúc giao dịch khi một nghiệp vụ cập nhật nhiều bảng.
@@ -3568,7 +3568,7 @@ timTaiKhoan(tenDN: string): TaiKhoan?; layNhomQuyen(tenDN: string): string?; lay
 UC01, UC02
 Một số phương thức cần nói rõ cách làm. DAL_GheTheoHang.capNhat sửa SoLuongGhe của các hạng vé đã có, thêm dòng cho hạng vé mới và chỉ xóa dòng của hạng vé không còn vé, phiếu, vì cặp (MaChuyenBay, MaHangVe) của VE, PHIEUDATCHO phải tồn tại trong GHETHEOHANG. DAL_ChuyenBay.kiemTraCoVeHoacPhieu tính cả vé, phiếu đã hủy được giữ lại để lưu vết (AT02, AT03). DAL_Ve.huy chỉ cập nhật vé còn Đã bán, DAL_PhieuDatCho.huy (dùng cho hủy theo yêu cầu, bán vé từ phiếu và UC06) chỉ cập nhật phiếu còn Chờ thanh toán; hai phương thức trả về số dòng thực sự được hủy, nên khi hai máy cùng hủy một vé, một phiếu thì máy sau nhận 0 và báo dữ liệu đã thay đổi. Tương tự, sua, suaTen, xoa, capNhat, khoa, moKhoa của DAL_SanBay, DAL_HangVe, DAL_TaiKhoan trả về số dòng đã ghi. DAL_PhieuDatCho.xoaPhieuDaHuy chỉ xóa các phiếu Đã hủy có ThoiDiemDat trước mốc thời gian và chưa được VE tham chiếu qua MaPhieuDat (AT04). DAL_Ve.tongHopVe trả về số vé Đã bán và doanh thu của từng chuyến bay khởi hành trong tháng; chuyến bay chưa có vé không có trong kết quả. DAL_Ve.layVe và DAL_PhieuDatCho.layThongTinPhieu còn được lớp XL_ dùng để đọc mã chuyến bay, hạng vé, hành khách của vé, phiếu trước khi sửa hoặc hủy.
 3.3.1.4. Các lớp tiện ích và lớp hỗ trợ
-Các thành phần hỗ trợ ở Bảng 3.1 được thiết kế thành các lớp trong Bảng 3.31. Ba lớp TienIch_ chỉ có thành phần tĩnh vì không giữ trạng thái riêng cho từng lần gọi. Ngược lại, KetNoiCSDL và PhienLamViec không tĩnh: máy chủ xử lý nhiều yêu cầu cùng lúc nên mỗi yêu cầu có một đối tượng KetNoiCSDL riêng (giao dịch của yêu cầu này không lẫn với yêu cầu khác) và một đối tượng PhienLamViec riêng chứa tài khoản của người gửi yêu cầu. Khi nhận một yêu cầu, máy chủ tạo một bộ đối tượng cho yêu cầu đó gồm lớp Controller, các lớp XL_, DAL_, KetNoiCSDL, PhienLamViec và truyền đối tượng cần dùng vào hàm khởi tạo của từng lớp; riêng DongHoHeThong chỉ có một đối tượng dùng chung cho cả máy chủ. KhoPhien và GioiHanDangNhap là hai đối tượng dùng chung cho cả máy chủ: KhoPhien giữ các phiên đăng nhập, cookie của trình duyệt chỉ mang khóa phiên, nên khi người dùng đăng xuất hoặc Quản lý đặt lại mật khẩu thì phiên bị xóa ngay ở máy chủ; GioiHanDangNhap đếm số lần đăng nhập sai để khóa tạm theo giả định 15. Cả hai giữ dữ liệu trong bộ nhớ, nên khi máy chủ khởi động lại thì mọi người phải đăng nhập lại và bộ đếm trở về 0.
+Các thành phần hỗ trợ ở Bảng 3.1 được thiết kế thành các lớp trong Bảng 3.31. Ba lớp TienIch_ chỉ có thành phần tĩnh vì không giữ trạng thái riêng cho từng lần gọi. Ngược lại, KetNoiCSDL và PhienLamViec không tĩnh: máy chủ xử lý nhiều yêu cầu cùng lúc nên mỗi yêu cầu có một đối tượng KetNoiCSDL riêng (giao dịch của yêu cầu này không lẫn với yêu cầu khác) và một đối tượng PhienLamViec riêng chứa tài khoản của người gửi yêu cầu. Khi nhận một yêu cầu, máy chủ tạo một bộ đối tượng cho yêu cầu đó gồm lớp Controller, các lớp XL_, DAL_, KetNoiCSDL, PhienLamViec và truyền đối tượng cần dùng vào hàm khởi tạo của từng lớp; riêng DongHoHeThong chỉ có một đối tượng dùng chung cho cả máy chủ. KhoPhien và GioiHanDangNhap là hai đối tượng dùng chung cho cả máy chủ: KhoPhien giữ các phiên đăng nhập, cookie của trình duyệt chỉ mang khóa phiên, nên khi người dùng đăng xuất hoặc Quản lý đặt lại mật khẩu thì phiên bị xóa ngay ở máy chủ; GioiHanDangNhap đếm số lần đăng nhập sai để khóa tạm theo giả định 15. Cả hai giữ dữ liệu trong bộ nhớ; KhoPhien còn chép các phiên xuống tập tin và đọc lại khi máy chủ khởi động, nên khởi động lại máy chủ thì người đang làm việc không phải đăng nhập lại, còn bộ đếm lần sai trở về 0.
 Bảng 3.31. Các lớp tiện ích và lớp hỗ trợ
 STT
 Lớp
@@ -3589,7 +3589,7 @@ XL_DangNhap (bắt đầu phiên khi đăng nhập, nạp lại phiên ở mỗi
 4
 DongHoHeThong
 layThoiDiemHienTai(): DateTime (giờ của máy chủ, bỏ phần lẻ của giây)
-XL_ChuyenBay, XL_BanVe, XL_DatVe, XL_BaoCao, BoDinhThoi, GioiHanDangNhap
+XL_ChuyenBay, XL_BanVe, XL_DatVe, XL_BaoCao, XL_SaoLuu, BoDinhThoi, GioiHanDangNhap
 5
 TienIch_TapTin
 docExcel(tapTin: Stream, tenTrang: string, soDongToiDa: int): DataTable (từ chối trang tính có vùng dữ liệu quá lớn hoặc không có dòng dữ liệu); taoExcel(bang: DataTable, tieuDe: string? = null, dongPhu: IEnumerable<string>? = null): byte[]; taoExcel(cacBang: IEnumerable<DataTable>): byte[]; taoPdf(bang: DataTable, tieuDe: string, dongPhu: IEnumerable<string>? = null): byte[]
@@ -3792,7 +3792,7 @@ Hộp thoại hiển thị giá trị hiện hành và nhận giá trị mới c
 Màn hình thông báo (MH_ThongBao)
 Màn hình thông báo
 Hiển thị kết quả thực hiện (thành công, lỗi và nguyên nhân) hoặc hỏi xác nhận trước các thao tác không hoàn tác được như xóa, hủy, khóa.
-Ngoài 14 màn hình trên, phần mềm có bốn màn hình phụ không có lớp biên riêng ở Bảng 2.11. Màn hình trợ giúp (mở bằng F1 hoặc liên kết Trợ giúp ở đầu trang) hướng dẫn các bước của từng nghiệp vụ và liệt kê bảng phím tắt. Màn hình báo không đủ quyền được hiển thị khi Nhân viên bán vé mở đường dẫn của một màn hình chỉ dành cho Quản lý, kèm nút về màn hình chính. Chế độ xem chi tiết chuyến bay (mở khi nhấp đúp một dòng hoặc chọn nút xem trên MH_DanhSachChuyenBay) hiển thị đầy đủ thông tin một chuyến bay, số ghế trống của từng hạng và các sân bay trung gian, có nút bán vé, đặt vé cho chuyến bay đó và nút sửa chỉ hiện với Quản lý; chế độ này thuộc use case tra cứu chuyến bay (UC03.4) nên được xem là một phần của MH_DanhSachChuyenBay. Màn hình Kiểm thử chỉ Quản lý mở được và chỉ hiện khi được bật trong cấu hình của máy chủ (mặc định tắt): nó cho chạy bộ kiểm thử giao diện ngay trên máy chủ, xem kết quả từng ca và mở các dòng dữ liệu kiểm chứng trong cơ sở dữ liệu (cột mật khẩu không bao giờ được hiển thị). Đây là công cụ hỗ trợ kiểm thử ở Chương 5, không thuộc use case nào.
+Ngoài 14 màn hình trên, phần mềm có năm màn hình phụ không có lớp biên riêng ở Bảng 2.11. Màn hình trợ giúp (mở bằng F1 hoặc liên kết Trợ giúp ở đầu trang) hướng dẫn các bước của từng nghiệp vụ và liệt kê bảng phím tắt. Màn hình báo không đủ quyền được hiển thị khi Nhân viên bán vé mở đường dẫn của một màn hình chỉ dành cho Quản lý, kèm nút về màn hình chính. Chế độ xem chi tiết chuyến bay (mở khi nhấp đúp một dòng hoặc chọn nút xem trên MH_DanhSachChuyenBay) hiển thị đầy đủ thông tin một chuyến bay, số ghế trống của từng hạng và các sân bay trung gian, có nút bán vé, đặt vé cho chuyến bay đó và nút sửa chỉ hiện với Quản lý; chế độ này thuộc use case tra cứu chuyến bay (UC03.4) nên được xem là một phần của MH_DanhSachChuyenBay. Màn hình Kiểm thử chỉ Quản lý mở được và chỉ hiện khi được bật trong cấu hình của máy chủ (mặc định tắt): nó cho chạy bộ kiểm thử giao diện ngay trên máy chủ, xem kết quả từng ca và mở các dòng dữ liệu kiểm chứng trong cơ sở dữ liệu (cột mật khẩu không bao giờ được hiển thị). Đây là công cụ hỗ trợ kiểm thử ở Chương 5, không thuộc use case nào. Màn hình Sao lưu dữ liệu chỉ Quản lý mở được, từ thẻ Sao lưu ở phần lối tắt của màn hình chính: nút Sao lưu ngay tạo thêm một bản sao lưu toàn bộ dữ liệu và hiện tên tập tin đã tạo; màn hình không có chức năng phục hồi (giả định 19). Màn hình này bổ sung cho AT01, không thuộc use case nào.
 3.4.3. Mô tả các màn hình
 3.4.3.1. Màn hình đăng nhập (MH_DangNhap)
 Màn hình đăng nhập dùng cho UC01, là màn hình đầu tiên khi mở phần mềm và là nơi quay về sau khi đăng xuất; mọi đường dẫn khác khi chưa đăng nhập đều được chuyển về đây. Màn hình chia hai nửa: nửa trái là băng giới thiệu tự chuyển gồm logo, tên phần mềm, linh vật và ba thẻ giới thiệu bán vé, đặt vé, báo cáo; nửa phải là thẻ đăng nhập với hai ô nhập có biểu tượng, nút Đăng nhập màu vàng và nút Thoát viền xám. Ô đang nhập có viền đỏ nhạt; khi phím Caps Lock đang bật, dưới ô mật khẩu hiện dòng nhắc để tránh nhập sai. Lỗi đăng nhập được báo trong một hộp đỏ phía trên hai ô nhập mà không mở hộp thoại, để người dùng nhập lại ngay. Giao diện được trình bày trong Hình 3.28.
@@ -5579,7 +5579,7 @@ Trang trợ giúp
 tro_giup/TrangTroGiup.tsx
 Màn hình phụ nêu ở mục 3.4.2, mở bằng phím F1
 17
-8 lớp Controller (Bảng 3.32)
+8 lớp Controller nghiệp vụ (Bảng 3.32)
 GiaoTiep/PhienController.cs đến QuyDinhController.cs
 Cùng BoLocLoi.cs, XacThuc.cs, ChuyenDoi.cs, YeuCau.cs
 18
@@ -5619,7 +5619,7 @@ web/src/phien/NguCanhPhien.tsx, thanh_phan/BaoVeDuongDan.tsx, dinh_tuyen.ts
 Ẩn menu, chặn trang không thuộc nhóm quyền
 Ngoài 14 màn hình của Bảng 3.33, mã có năm màn hình phụ không làm thay đổi use case: bốn màn hình đúng như mục 3.4.2 là trang xem chi tiết chuyến bay (chỉ đọc, mở bằng nút xem hoặc nhấp đúp một dòng của MH_DanhSachChuyenBay), trang trợ giúp, trang báo không đủ quyền (thanh_phan/TrangThongBaoLoi.tsx) và trang Kiểm thử (kiem_thu/TrangKiemThu.tsx); thêm trang Sao lưu dữ liệu (sao_luu/TrangSaoLuu.tsx, giả định 19), mở từ thẻ Sao lưu ở phần lối tắt của màn hình chính, chỉ dành cho Quản lý. Ba màn hình MH_ThemSuaTaiKhoan, MH_CapNhatQD và MH_ThongBao không thành trang riêng mà là các hộp thoại mở trên trang đang dùng, cũng đúng như mục 3.4.2.
 4.2.3. Thống kê mã nguồn
-Số tập tin và số dòng mã của từng phần được đếm bằng lệnh find và wc trên kho mã, không tính các thư mục sinh ra khi dựng (bin, obj, node_modules) và thư mục wwwroot; số dòng gồm cả dòng trống và dòng chú thích. Kết quả được trình bày trong Bảng 4.4. Cột số tập tin và cột số dòng mã đếm các tập tin C# ở máy chủ, TypeScript ở giao diện và SQL ở cơ sở dữ liệu; các tập tin định dạng giao diện CSS (38 tập tin) không tính vào số tập tin và được đếm số dòng riêng ở cột cuối.
+Số tập tin và số dòng mã của từng phần được đếm bằng lệnh find và wc trên kho mã, không tính các thư mục sinh ra khi dựng (bin, obj, node_modules) và thư mục wwwroot; số dòng gồm cả dòng trống và dòng chú thích. Kết quả được trình bày trong Bảng 4.4. Cột số tập tin và cột số dòng mã đếm các tập tin C# ở máy chủ, TypeScript ở giao diện và SQL ở cơ sở dữ liệu; các tập tin định dạng giao diện CSS (39 tập tin) không tính vào số tập tin và được đếm số dòng riêng ở cột cuối.
 Bảng 4.4. Thống kê mã nguồn theo tầng
 STT
 Phần
@@ -5630,18 +5630,18 @@ Số dòng CSS
 1
 Phần giao tiếp
 api/QuanLyBanVe.Api/GiaoTiep
-13
-1.222
+14
+1.248
 2
 Tầng xử lý nghiệp vụ
 api/QuanLyBanVe.Api/XuLy
-12
-2.072
+13
+2.114
 3
 Tầng truy xuất dữ liệu
 api/QuanLyBanVe.Api/TruyXuat
-14
-1.517
+15
+1.583
 4
 Các lớp DTO
 api/QuanLyBanVe.Api/DTO
@@ -5651,56 +5651,56 @@ api/QuanLyBanVe.Api/DTO
 Các lớp tiện ích
 api/QuanLyBanVe.Api/TienIch
 9
-912
+963
 6
 Khởi động máy chủ
 Program.cs, DangKyDichVu.cs
 2
-216
+222
 7
 Kiểm thử xUnit
 api/QuanLyBanVe.KiemThu
-12
-3.354
+13
+3.662
 8
 Các màn hình
 web/src/trang
-37
-7.683
-4.703
+38
+7.836
+4.733
 9
 Thành phần giao diện dùng chung
 web/src/thanh_phan
 29
-2.949
+2.953
 3.016
 10
 Gọi máy chủ, dữ liệu giả lập
 web/src/api
 4
-1.582
+1.598
 11
 Phần còn lại của giao diện
 web/src: icons3d, canh, tien_ich, phien, kieu, styles và các tập tin gốc
 27
-1.592
+1.609
 470
 12
 Kiểm thử giao diện
 web/kiem_thu_e2e
-21
-6.215
+23
+6.291
 13
 Cơ sở dữ liệu
 db
 3
-630
+632
 14
 Tổng cộng
-194
-30.237
-8.189
-Theo số đếm ngày 22/11/2026, phần máy chủ có 61 tập tin với 6.232 dòng C#, trong đó tầng xử lý nghiệp vụ lớn nhất vì chứa toàn bộ việc kiểm tra quy định. Mã kiểm thử (9.569 dòng ở hai phần kiểm thử xUnit và kiểm thử giao diện) nhiều hơn mã máy chủ khoảng một lần rưỡi, cho thấy nhóm dành nhiều công sức cho kiểm thử theo yêu cầu CN06. Phần giao diện chiếm nhiều dòng nhất vì mỗi màn hình phải tự kiểm tra dữ liệu tại ô, hiển thị trạng thái đang tải, trạng thái rỗng và các hộp thoại.
+201
+31.004
+8.219
+Theo số đếm ngày 22/11/2026, phần máy chủ có 64 tập tin với 6.423 dòng C#, trong đó tầng xử lý nghiệp vụ lớn nhất vì chứa toàn bộ việc kiểm tra quy định. Mã kiểm thử (9.953 dòng ở hai phần kiểm thử xUnit và kiểm thử giao diện) nhiều hơn mã máy chủ khoảng một lần rưỡi, cho thấy nhóm dành nhiều công sức cho kiểm thử theo yêu cầu CN06. Phần giao diện chiếm nhiều dòng nhất vì mỗi màn hình phải tự kiểm tra dữ liệu tại ô, hiển thị trạng thái đang tải, trạng thái rỗng và các hộp thoại.
 4.2.4. Một số điểm cài đặt đáng chú ý
 Giao dịch và khóa dòng số ghế khi bán vé, đặt vé. Các thao tác có thể làm hết chỗ (bán vé trực tiếp, lập phiếu đặt chỗ, sửa và xóa chuyến bay) đều chạy trong phương thức thucHienTrongGiaoDich của KetNoiCSDL: mở giao dịch, xác nhận khi xong và hủy khi có ngoại lệ. Bên trong giao dịch, câu lệnh đọc số lượng ghế của hạng vé trong DAL_GheTheoHang được thêm gợi ý khóa WITH (UPDLOCK, HOLDLOCK), nên yêu cầu thứ hai trên cùng hạng vé của cùng chuyến bay phải chờ giao dịch thứ nhất kết thúc rồi mới đếm lại số ghế trống theo công thức (1.2). Đoạn rút gọn của XL_BanVe.banVe dưới đây cho thấy thứ tự: khóa và đếm ghế, kiểm tra chuyến bay chưa khởi hành, kiểm tra còn chỗ, rồi mới lưu hành khách và vé.
 return ketNoi.thucHienTrongGiaoDich(() =>
@@ -5719,7 +5719,7 @@ return ve;
 Khi bán vé từ phiếu đặt chỗ, XL_BanVe.banVeTuPhieu khóa dòng của phiếu, kiểm tra lại phiếu còn hạn, lập vé và chuyển phiếu sang Đã hủy trong cùng giao dịch; câu lệnh hủy chỉ cập nhật phiếu còn ở tình trạng Chờ thanh toán, và chỉ mục duy nhất UQ_VE_MaPhieuDat bảo đảm mỗi phiếu chỉ thành nhiều nhất một vé (giả định 5). Nếu máy chủ cơ sở dữ liệu chọn hủy một giao dịch do hai giao dịch chờ nhau (lỗi số 1205), KetNoiCSDL đổi lỗi này thành ngoại lệ LoiTranhChap và màn hình nhận câu "Dữ liệu vừa được thay đổi ở máy khác. Vui lòng tải lại và thử lại.". Ca kiểm thử xUnit cho 12 máy cùng bán và đặt trên 3 ghế cuối của một chuyến bay cho kết quả đúng 3 yêu cầu thành công, các yêu cầu còn lại nhận lỗi hết chỗ.
 Kiểm tra QĐ1, QĐ2, QĐ3 theo tham số đọc từ cơ sở dữ liệu. Các lớp XL_ không giữ bản sao tham số trong bộ nhớ. Mỗi lần kiểm tra, phương thức kiemTraQuyDinhNhanLich của XL_ChuyenBay gọi layThamSoNhanLich của DAL_ThamSoQuyDinh để đọc thời gian bay tối thiểu, số sân bay trung gian tối đa, thời gian dừng tối thiểu và tối đa (QĐ1); XL_DatVe đọc thời gian chậm nhất khi đặt vé và so ngày khởi hành với ngày hiện tại theo ngày lịch (QĐ3, giả định 6); XL_HuyPhieuDat đọc thời gian hủy đặt vé ở mỗi lần chạy. Giá tiền của vé và phiếu do HangVe.tinhGiaTien tính theo tỉ lệ đơn giá đọc từ bảng HANGVE, làm tròn đến đồng, phần lẻ từ 0,5 làm tròn lên (QĐ2, công thức (1.1)). Nhờ vậy giá trị mới do Quản lý lưu ở MH_CapNhatQD có hiệu lực ngay từ thao tác kế tiếp trên mọi máy mà không cần khởi động lại máy chủ (QĐ6, HQ07). Câu báo lỗi cũng ghép giá trị hiện hành, ví dụ "Thời gian bay phải từ 30 phút trở lên (QĐ1).". Ngoài ra, bảng THAMSOQUYDINH có ràng buộc CHECK để thời gian hủy đặt vé luôn nhỏ hơn thời gian chậm nhất khi đặt vé, kể cả khi sửa trực tiếp trong cơ sở dữ liệu.
 Dịch vụ nền BoDinhThoi và nhật ký. BoDinhThoi kế thừa lớp dịch vụ nền BackgroundService của ASP.NET Core và được đăng ký trong Program.cs, nên chạy cùng máy chủ ứng dụng từ lúc khởi động. Lần kiểm tra đầu tiên chạy ngay khi máy chủ khởi động xong, các lần sau do bộ đếm PeriodicTimer gọi theo chu kỳ đọc từ mục BoDinhThoi:ChuKyPhut của appsettings.json (mặc định 15 phút). Mỗi lần kiểm tra tạo một phạm vi đối tượng riêng như một yêu cầu bình thường, lấy thời điểm hiện tại từ DongHoHeThong rồi gọi XL_HuyPhieuDat.kichHoatDinhKy; lỗi của một lần kiểm tra (ví dụ mất kết nối cơ sở dữ liệu) chỉ được ghi vào nhật ký của máy chủ, không làm dừng bộ định thời. Khi có phiếu bị hủy, TienIch_NhatKy ghi thêm một dòng vào tập tin nhat_ky/huy_phieu_tu_dong.log theo dạng "2026-11-12 23:23:00 | Hệ thống đã tự động hủy 3 phiếu đặt chỗ quá hạn."; việc ghi được khóa để hai luồng không ghi chồng lên nhau. ThongBaoController đọc các dòng mới nhất của tập tin này để hiển thị trên thanh thông báo và chuông thông báo của MH_Chinh, như dòng chữ trên cùng của các ảnh trong chương này.
-Phiên đăng nhập và kiểm tra nhóm quyền ở phần giao tiếp. Sau khi đăng nhập thành công, PhienController tạo phiên chứa tên đăng nhập và nhóm quyền. Phiên được giữ trong KhoPhien ở bộ nhớ của máy chủ, còn cookie phiên qlbv_phien chỉ mang khóa của phiên; vì vậy khi người dùng đăng xuất, phiên bị xóa ở máy chủ và cookie cũ không dùng lại được, và khi Quản lý đặt lại mật khẩu, KhoPhien.huyCuaTaiKhoan xóa mọi phiên của tài khoản đó. KhoPhien còn chép các phiên xuống tập tin phien/phien.dat ở mỗi lần thay đổi và đọc lại khi máy chủ khởi động, nên khởi động lại máy chủ không bắt người đang làm việc đăng nhập lại (giả định 15); tập tin chỉ giữ mã băm SHA-256 của khóa phiên, còn nội dung phiên được mã hóa bằng khóa bảo vệ dữ liệu của máy chủ, nên chép được tập tin cũng không dùng làm cookie được. Cookie có cờ HttpOnly (mã chạy trong trang không đọc được), hết hạn sau 8 giờ không dùng và được gia hạn khi người dùng còn thao tác. Ở mỗi yêu cầu, phương thức kiemTraPhien của lớp XacThuc gọi XL_DangNhap.tiepTucPhien để đối chiếu cookie với bảng TAIKHOAN qua DAL_TaiKhoan, không gọi thẳng tầng truy xuất dữ liệu; tài khoản đã bị khóa, bị xóa hoặc đã đổi nhóm quyền thì phiên bị hủy ngay ở yêu cầu đó, đúng như mục 3.1.1. Nhóm quyền được khai báo bằng thuộc tính Authorize(Roles = VaiTro.QUAN_LY) trên TaiKhoanController, BaoCaoController và trên từng phương thức chỉ dành cho Quản lý của ChuyenBayController, PhieuDatController, QuyDinhController; yêu cầu không đủ quyền nhận mã trạng thái HTTP 403 kèm câu "Bạn không có quyền thực hiện chức năng này.", kể cả khi người dùng tự gửi yêu cầu không qua màn hình.
+Phiên đăng nhập và kiểm tra nhóm quyền ở phần giao tiếp. Sau khi đăng nhập thành công, PhienController tạo phiên chứa tên đăng nhập và nhóm quyền. Phiên được giữ trong KhoPhien ở bộ nhớ của máy chủ, còn cookie phiên qlbv_phien chỉ mang khóa của phiên; vì vậy khi người dùng đăng xuất, phiên bị xóa ở máy chủ và cookie cũ không dùng lại được, và khi Quản lý đặt lại mật khẩu, KhoPhien.huyCuaTaiKhoan xóa mọi phiên của tài khoản đó. KhoPhien còn chép các phiên xuống tập tin phien/phien.dat ở mỗi lần thay đổi và đọc lại khi máy chủ khởi động, nên khởi động lại máy chủ không bắt người đang làm việc đăng nhập lại (giả định 15); tập tin chỉ giữ mã băm SHA-256 của khóa phiên, còn nội dung phiên được mã hóa bằng khóa bảo vệ dữ liệu của máy chủ, nên chép được tập tin cũng không dùng làm cookie được. Cookie có cờ HttpOnly (mã chạy trong trang không đọc được), hết hạn sau 8 giờ không có yêu cầu nào tới máy chủ và được gia hạn ở các yêu cầu sau đó; vì khung trang tự hỏi máy chủ mục thông báo mỗi phút khi phần mềm đang hiện trên màn hình, phiên chỉ hết hạn khi trang đóng hoặc bị ẩn đủ 8 giờ. Ở mỗi yêu cầu, phương thức kiemTraPhien của lớp XacThuc gọi XL_DangNhap.tiepTucPhien để đối chiếu cookie với bảng TAIKHOAN qua DAL_TaiKhoan, không gọi thẳng tầng truy xuất dữ liệu; tài khoản đã bị khóa, bị xóa hoặc đã đổi nhóm quyền thì phiên bị hủy ngay ở yêu cầu đó, đúng như mục 3.1.1. Nhóm quyền được khai báo bằng thuộc tính Authorize(Roles = VaiTro.QUAN_LY) trên TaiKhoanController, BaoCaoController và trên từng phương thức chỉ dành cho Quản lý của ChuyenBayController, PhieuDatController, QuyDinhController; yêu cầu không đủ quyền nhận mã trạng thái HTTP 403 kèm câu "Bạn không có quyền thực hiện chức năng này.", kể cả khi người dùng tự gửi yêu cầu không qua màn hình.
 Giới hạn đăng nhập sai. PhienController hỏi GioiHanDangNhap trước khi kiểm tra mật khẩu. Lớp này đếm số lần sai trong 1 phút theo từng máy (địa chỉ IP) và theo từng cặp máy, tên đăng nhập; cặp nào sai 5 lần, hoặc máy nào sai 30 lần, thì bị khóa tạm 5 phút và nhận mã trạng thái HTTP 429 kèm số giây còn phải chờ. Chỉ lần sai mới được đếm, đăng nhập đúng thì xóa bộ đếm của cặp đó, nên người nhập đúng không bao giờ bị chặn. Thời gian được lấy từ DongHoHeThong để ca kiểm thử dùng được đồng hồ giả.
 Header bảo mật và chống giả mạo yêu cầu. Program.cs gắn vào mọi phản hồi các header X-Frame-Options, X-Content-Type-Options, Referrer-Policy và Content-Security-Policy để trang không bị nhúng vào trang khác và trình duyệt chỉ chạy mã của chính phần mềm. Mọi yêu cầu ghi tới /api (POST, PUT, DELETE) phải kèm header X-Requested-With, mà trang của nơi khác không tự gửi được, nếu thiếu thì bị từ chối với mã 400; màn hình gửi header này ở mọi lời gọi. Khi địa chỉ lắng nghe trong cấu hình dùng https, máy chủ tự bật cookie chỉ gửi qua HTTPS, HSTS và chuyển hướng từ http sang https (mục 6.1).
 Giới hạn số dòng tra cứu. Tra cứu chuyến bay, vé, phiếu đặt chỗ và xuất danh sách chuyến bay chỉ lấy tối đa 1.000 dòng bằng mệnh đề TOP trong câu lệnh SQL (hằng SO_DONG_TOI_DA của DAL_ChuyenBay, DAL_Ve, DAL_PhieuDatCho); màn hình nhận biết khi chạm giới hạn và hiện thông báo (giả định 16).
@@ -5727,7 +5727,7 @@ Băm mật khẩu bằng PBKDF2. TienIch_BaoMat.maHoa tạo chuỗi muối ngẫ
 Đổi lỗi nghiệp vụ thành thông báo. Khi một điều kiện không thỏa, lớp XL_ phát sinh LoiNghiepVu gồm loại lỗi, mã lỗi (ví dụ HET_CHO, VI_PHAM_QD1, QUA_HAN_DAT_VE), câu thông báo tiếng Việt và danh sách lỗi theo từng ô nhập. Bộ lọc BoLocLoi của phần giao tiếp bắt ngoại lệ này và đổi thành mã trạng thái HTTP: 400 khi dữ liệu không hợp lệ, 404 khi không tìm thấy, 409 khi vi phạm quy định, 429 khi đăng nhập sai quá nhiều lần; các ngoại lệ của tầng truy xuất cũng được đổi tương tự (trùng khóa, vi phạm khóa ngoại, hai giao dịch chờ nhau), lỗi hết thời gian chờ hoặc mất kết nối tới SQL Server được KetNoiCSDL đổi thành mã 503 kèm lời mời thử lại, còn lỗi chưa lường trước chỉ trả câu chung và ghi chi tiết vào nhật ký máy chủ. Ở màn hình, lỗi theo ô được hiện ngay dưới ô nhập tương ứng, còn câu thông báo được hiện trong hộp thoại MH_ThongBao, như Hình 4.1 khi Quản lý xóa chuyến bay CB208 đã có vé.
 Hình 4.1. Lỗi nghiệp vụ được hiển thị trong hộp thoại thông báo khi xóa chuyến bay đã có vé
 Đọc, ghi Excel và PDF. TienIch_TapTin.docExcel dùng ClosedXML đọc một trang tính thành bảng dữ liệu kèm số dòng gốc; tập tin nhập lịch gồm trang ChuyenBay và trang TrungGian theo tập tin mẫu do XL_ChuyenBay.taoTapTinMau tạo, trong đó phần ghi chú ghép sẵn giá trị hiện hành của QĐ1. Mỗi lần nhập tối đa 2.000 chuyến bay; trang tính có vùng dữ liệu quá lớn (ví dụ một ô lạc ở cuối trang tính) hoặc không có dòng dữ liệu nào bị từ chối ngay, không đọc từng ô; mỗi dòng được kiểm tra như khi thêm một chuyến bay, dòng hợp lệ được lưu, dòng lỗi được trả về kèm số dòng và lý do. Hàm taoExcel ghi tiêu đề, các dòng ghi chú và bảng số liệu, cột số được căn phải; hàm taoPdf dùng QuestPDF tạo trang A4 gồm tiêu đề, dòng ghi chú, bảng số liệu và số trang. Tập tin được trả về dạng mảng byte để trình duyệt tải về với tên như danh_sach_chuyen_bay.xlsx, bao_cao_thang_11_2026.pdf.
-Phía giao diện. Mười bốn màn hình được ghép từ 27 thành phần giao diện dùng chung trong thư mục thanh_phan (cùng hai tập tin giữ trạng thái của hộp thoại và thông báo nổi, tổng cộng 29 tập tin): nút (Nut), ô nhập (ONhap), ô chọn (OChon), ô chọn ngày (ONgay), bảng dữ liệu có phân trang (BangDuLieu), hộp thoại (HopThoai), thông báo nổi (Toast), nhãn tình trạng (NhanTrangThai), trạng thái rỗng (TrangThaiRong) và đầu trang, chân trang. Nhờ vậy mọi bảng đều có cùng cách hiển thị khi đang tải (các dòng khung xương) và khi không có kết quả, như Hình 4.2 khi tra cứu mã chuyến bay CB999 không có trong lịch. Dữ liệu được kiểm tra ngay tại ô trước khi gửi lên máy chủ: số CCCD đúng 12 chữ số, số hộ chiếu 6 đến 20 ký tự chữ in hoa và chữ số (giả định 9), điện thoại 8 đến 15 chữ số (giả định 10), các điều kiện của giả định 12 và QĐ1 theo tham số hiện hành; máy chủ vẫn kiểm tra lại toàn bộ. Nhóm quyền của từng mục menu được khai báo ở một nơi là dinh_tuyen.ts: menu chỉ hiện các mục thuộc nhóm quyền của người đang đăng nhập, các trang của Quản lý được bọc bởi YeuCauQuyen trong App.tsx, còn các nút như Thêm, Sửa, Xóa chuyến bay được bọc bởi ChiKhiCoQuyen. Các phím tắt chung (F1, Alt+1 đến Alt+4) và phím tắt trên từng trang (Ctrl+N để thêm mới, Ctrl+S để lưu, Esc để hủy, Ctrl+F tới ô tìm) dùng một bộ lắng nghe duy nhất trong tien_ich/phim_tat.ts. Năm trang ít mở (Báo cáo, Quy định, Tài khoản, Kiểm thử, Trợ giúp) được tách khỏi tập tin JavaScript chính và chỉ tải khi mở trang, để lần mở phần mềm đầu tiên nhanh hơn. Biểu mẫu chuyến bay, bán vé và đặt vé dùng chung hàm dungHoiKhiRoiTrang (thư mục tien_ich) để hỏi lại khi người dùng rời trang lúc đang nhập dở.
+Phía giao diện. Mười bốn màn hình được ghép từ 27 thành phần giao diện dùng chung trong thư mục thanh_phan (cùng hai tập tin giữ trạng thái của hộp thoại và thông báo nổi, tổng cộng 29 tập tin): nút (Nut), ô nhập (ONhap), ô chọn (OChon), ô chọn ngày (ONgay), bảng dữ liệu có phân trang (BangDuLieu), hộp thoại (HopThoai), thông báo nổi (Toast), nhãn tình trạng (NhanTrangThai), trạng thái rỗng (TrangThaiRong) và đầu trang, chân trang. Nhờ vậy mọi bảng đều có cùng cách hiển thị khi đang tải (các dòng khung xương) và khi không có kết quả, như Hình 4.2 khi tra cứu mã chuyến bay CB999 không có trong lịch. Dữ liệu được kiểm tra ngay tại ô trước khi gửi lên máy chủ: số CCCD đúng 12 chữ số, số hộ chiếu 6 đến 20 ký tự chữ in hoa và chữ số (giả định 9), điện thoại 8 đến 15 chữ số (giả định 10), các điều kiện của giả định 12 và QĐ1 theo tham số hiện hành; máy chủ vẫn kiểm tra lại toàn bộ. Nhóm quyền của từng mục menu được khai báo ở một nơi là dinh_tuyen.ts: menu chỉ hiện các mục thuộc nhóm quyền của người đang đăng nhập, các trang của Quản lý được bọc bởi YeuCauQuyen trong App.tsx, còn các nút như Thêm, Sửa, Xóa chuyến bay được bọc bởi ChiKhiCoQuyen. Các phím tắt chung (F1, Alt+1 đến Alt+4) và phím tắt trên từng trang (Ctrl+N để thêm mới, Ctrl+S để lưu, Esc để hủy, Ctrl+F tới ô tìm) dùng một bộ lắng nghe duy nhất trong tien_ich/phim_tat.ts. Sáu trang ít mở (Báo cáo, Quy định, Tài khoản, Kiểm thử, Sao lưu dữ liệu, Trợ giúp) được tách khỏi tập tin JavaScript chính và chỉ tải khi mở trang, để lần mở phần mềm đầu tiên nhanh hơn. Biểu mẫu chuyến bay, bán vé và đặt vé dùng chung hàm dungHoiKhiRoiTrang (thư mục tien_ich) để hỏi lại khi người dùng rời trang lúc đang nhập dở.
 Hình 4.2. Trạng thái rỗng dùng chung khi tra cứu không có kết quả
 4.3. Kết quả cài đặt các chức năng
 Mục này trình bày các chức năng đã chạy được trên phần mềm, theo năm nhóm chức năng ở mục 1.4.2; nhóm Hệ thống được tách thành mục 4.3.1 (đăng nhập, phân quyền) và mục 4.3.6 (thay đổi quy định). Các hình ưu tiên những trường hợp phần mềm kiểm tra quy định của đề và kết quả xử lý; giao diện đầy đủ của từng màn hình được trình bày ở mục 3.4, cách thao tác ở mục 6.2.
@@ -5800,11 +5800,11 @@ Ca giao diện KT-UC01-01 đến KT-UC01-05 (đúng, sai mật khẩu, tài kho�
 2
 UC02 Phân quyền
 100
-Ca KT-UC02-01 đến KT-UC02-09 (thêm, trùng tên, đổi nhóm quyền, khóa, mở khóa, không tự khóa, ẩn menu, chặn đường dẫn); 9 ca xUnit, kể cả đặt lại mật khẩu
+Ca KT-UC02-01 đến KT-UC02-09 (thêm, trùng tên, đổi nhóm quyền, khóa, mở khóa, không tự khóa, ẩn menu, chặn đường dẫn); 15 ca xUnit, kể cả đặt lại mật khẩu
 3
 UC03 Quản lý chuyến bay
 100
-Đủ bốn use case con; 11 ca giao diện, 26 ca xUnit (kể cả các ca có nhiều bộ dữ liệu)
+Đủ bốn use case con; 11 ca giao diện, 52 ca xUnit (mỗi bộ dữ liệu của ca có nhiều bộ dữ liệu tính là một ca, như Bảng 5.7)
 4
 UC03.1 Thêm chuyến bay
 100
@@ -5848,7 +5848,7 @@ Ca KT-UC04-07: vé chuyển sang Đã hủy và trả chỗ (AT03)
 14
 UC05 Quản lý đặt vé
 100
-Đủ năm use case con; 6 ca giao diện, 12 ca xUnit
+Đủ năm use case con; 6 ca giao diện, 16 ca xUnit
 15
 UC05.1 Lập phiếu đặt chỗ
 100
@@ -5876,7 +5876,7 @@ UC06 Tự động hủy phiếu đặt chỗ
 21
 UC07 Lập báo cáo doanh thu
 100
-Đủ hai use case con; 3 ca giao diện, 7 ca xUnit
+Đủ hai use case con; 3 ca giao diện, 8 ca xUnit
 22
 UC07.1 Báo cáo doanh thu bán vé các chuyến bay
 100
@@ -5888,7 +5888,7 @@ Ca KT-UC07-02: đủ 12 tháng và tổng doanh thu
 24
 UC08 Thay đổi quy định
 100
-Đủ ba use case con; 6 ca giao diện, 11 ca xUnit
+Đủ ba use case con; 6 ca giao diện, 19 ca xUnit
 25
 UC08.1 Thay đổi QĐ1
 100
@@ -7271,7 +7271,7 @@ Tổng cộng 355 ca kiểm thử tự động (186 ca xUnit và 169 ca giao di�
 Trong quá trình kiểm thử, nhóm phát hiện và đã sửa một số lỗi; danh sách đầy đủ được tổng hợp ở Bảng 5.42 (mục 5.3). Hai lỗi tiêu biểu phát hiện nhờ kiểm thử giao diện là:
 Phím Esc không đóng được bảng thông báo khi con trỏ đang ở nút chuông. Sau khi bấm nút chuông để mở bảng Danh sách thông báo, con trỏ vẫn còn ở nút chuông; lúc này nhấn Esc thì bảng không đóng, chỉ đóng được khi con trỏ đã nằm trong bảng. Nhóm chuyển việc bắt phím Esc lên khung bao cả nút chuông và bảng (thành phần ChuongThongBao), nên Esc đóng bảng dù con trỏ ở nút chuông hay trong bảng.
 Ô ngày hiển thị theo định dạng của máy thay vì dd/MM/yyyy. Ban đầu các ô ngày, ngày giờ dùng ô chọn ngày có sẵn của trình duyệt, nên cách hiển thị phụ thuộc ngôn ngữ của trình duyệt và hệ điều hành, ví dụ trình duyệt tiếng Anh hiện tháng trước ngày. Nhóm thay bằng ô chọn ngày riêng (thành phần ONgay) luôn hiển thị dd/MM/yyyy và giờ HH:mm dạng 24 giờ, giá trị gửi lên máy chủ vẫn là ngày theo chuẩn quốc tế. Hàm nhập ngày dùng chung của bộ kiểm thử giao diện được viết để chạy được với cả hai loại ô, và ca KT-UC03-09 kiểm tra ngày trong kết quả tra cứu hiển thị đúng dạng dd/MM/yyyy.
-Sau lần sửa lỗi cuối ngày 22/11/2026 (mục 5.3), các lần chạy trong Bảng 5.25 không ghi nhận thêm lỗi nào. Một số giới hạn của phần kiểm thử chức năng: các ca kiểm thử giao diện chỉ chạy bằng Chromium của Playwright (trên Ubuntu 24.04 và Windows 11), chưa chạy trên Chrome và Edge bản cài đặt thật (mục 5.2.4); phần kiểm thử giao diện chạy trên dữ liệu mẫu cỡ nhỏ, việc kiểm tra với lượng dữ liệu lớn theo Bảng 1.11 được trình bày ở mục 5.2.
+Sau lần sửa lỗi cuối ngày 22/11/2026 (mục 5.3), các lần chạy trong Bảng 5.25 không ghi nhận thêm lỗi nào. Một số giới hạn của phần kiểm thử chức năng: các ca kiểm thử giao diện chạy bằng Chromium của Playwright (trên Ubuntu 24.04 và Windows 11) và bằng Chrome, Edge cài trên Windows 11 (mục 5.2.4), chưa chạy trên Windows 10; phần kiểm thử giao diện chạy trên dữ liệu mẫu cỡ nhỏ, việc kiểm tra với lượng dữ liệu lớn theo Bảng 1.11 được trình bày ở mục 5.2.
 Kiểm định tĩnh. Bên cạnh việc chạy chương trình, nhóm còn kiểm tra mà không chạy chương trình. Thứ nhất là rà soát. Rà soát từng màn hình khi chụp hình cho mục 3.4 tìm ra bốn lỗi giao diện (dòng 5 đến 8 của Bảng 5.42). Rà soát mã nguồn theo CN02 tìm ra hai chỗ tầng giao tiếp gọi thẳng tầng truy xuất (dòng 9 và 27). Đối chiếu giới hạn của từng ô nhập giữa giao diện, máy chủ và cơ sở dữ liệu tìm ra ô tên sân bay chặn ở 50 ký tự trên giao diện trong khi máy chủ và cơ sở dữ liệu cho 100 ký tự (dòng 25). Thứ hai là phân tích tĩnh tự động. Mã C# bật kiểm tra giá trị null (Nullable), mã TypeScript bật chế độ strict cùng hai tùy chọn noUnusedLocals, noUnusedParameters. Ở lần dựng ngày 22/11/2026, dotnet build báo 0 lỗi và 0 cảnh báo, sau khi nhóm ghim bản đã vá của gói System.Security.Cryptography.Pkcs (trước đó có cảnh báo NU1903 về lỗ hổng của bản 9.0.18, dòng 28); lệnh tsc --noEmit báo 0 lỗi. Thứ ba là duyệt mã theo danh sách kiểm tra lỗi (checklist). Duyệt mã là kỹ thuật tìm lỗi hiệu quả khi có sẵn một danh sách các lỗi thường gặp; danh sách này phụ thuộc ngôn ngữ và loại ứng dụng. Nhóm lập danh sách 12 mục cho phần mềm và duyệt lại toàn bộ mã nguồn theo từng mục ngày 22/11/2026, ghi số chỗ đã xét và kết quả trong Bảng 5.26. Nhóm chưa dùng công cụ kiểm phong cách mã cho giao diện.
 Bảng 5.26. Danh sách kiểm tra lỗi khi duyệt mã và kết quả duyệt ngày 22/11/2026
 STT
@@ -7797,12 +7797,12 @@ Mọi câu lệnh SQL đều nằm trong thư mục TruyXuat (10 lớp DAL_ nghi
 3
 CN03
 Cần ghép các thành phần đăng nhập, phân quyền, quy định, báo cáo vào một phần mềm khác
-Chưa thử vì đồ án không xây dựng phần mềm bán vé tàu hoặc xe khách để ghép (ước lượng theo số dòng mã: các lớp đăng nhập, phân quyền, phiên làm việc, kết nối cơ sở dữ liệu, xử lý lỗi, nhật ký và bộ định thời không chứa nghiệp vụ chuyến bay, khoảng 1.400 trên 6.232 dòng C#, cùng 2.949 dòng thành phần giao diện dùng chung, dùng lại được nguyên; phần quy định và báo cáo phải đổi tên tham số, tên cột)
+Chưa thử vì đồ án không xây dựng phần mềm bán vé tàu hoặc xe khách để ghép (ước lượng theo số dòng mã: các lớp đăng nhập, phân quyền, phiên làm việc, kết nối cơ sở dữ liệu, xử lý lỗi, nhật ký và bộ định thời không chứa nghiệp vụ chuyến bay, khoảng 1.400 trên 6.423 dòng C#, cùng 2.953 dòng thành phần giao diện dùng chung, dùng lại được nguyên; phần quy định và báo cáo phải đổi tên tham số, tên cột)
 Chưa kiểm được
 4
 CN04
 Cần chuyển thật sang một hệ quản trị CSDL quan hệ khác
-Chứng cứ gián tiếp: mọi câu lệnh SQL gom trong 14 tập tin của thư mục TruyXuat, tổng 1.517 dòng, nên phần phải viết lại khi đổi hệ quản trị có giới hạn rõ; nhóm chưa thử chuyển nên không có số ngày làm việc (ước lượng: có 33 chỗ dùng cú pháp riêng của SQL Server, gồm 8 gợi ý khóa UPDLOCK, HOLDLOCK, 7 hàm ISNULL, 6 hàm DATEADD, 6 mệnh đề TOP, 3 mệnh đề OUTPUT, 3 mệnh đề OUTER APPLY; cộng lớp KetNoiCSDL 222 dòng phải đổi thư viện kết nối, hai script tạo và nạp cơ sở dữ liệu 606 dòng và việc chạy lại 186 ca kiểm thử; khoảng 13 giờ làm việc, tức khoảng 1,6 ngày, so với ngưỡng 2 ngày)
+Chứng cứ gián tiếp: mọi câu lệnh SQL gom trong 15 tập tin của thư mục TruyXuat, tổng 1.583 dòng, nên phần phải viết lại khi đổi hệ quản trị có giới hạn rõ; nhóm chưa thử chuyển nên không có số ngày làm việc (ước lượng: có 33 chỗ dùng cú pháp riêng của SQL Server, gồm 8 gợi ý khóa UPDLOCK, HOLDLOCK, 7 hàm ISNULL, 6 hàm DATEADD, 6 mệnh đề TOP, 3 mệnh đề OUTPUT, 3 mệnh đề OUTER APPLY; cộng lớp KetNoiCSDL 222 dòng phải đổi thư viện kết nối, hai script tạo và nạp cơ sở dữ liệu 606 dòng và việc chạy lại 186 ca kiểm thử; khoảng 13 giờ làm việc, tức khoảng 1,6 ngày, so với ngưỡng 2 ngày)
 Chưa kiểm được
 5
 CN05
@@ -8034,7 +8034,7 @@ Về trang chính
 Đạt
 Bảng 5.39 cho thấy mười phím tắt trong bảng Phím tắt của trang Trợ giúp đều hoạt động đúng, kể cả việc kiểm tra nhóm quyền ở Alt+4 và Ctrl+N, nên người dùng quen bàn phím có thể làm các thao tác thường dùng mà không cần chuột. Phím Ctrl+N trùng với phím mở cửa sổ mới của trình duyệt Chrome; trong lần thử bằng Playwright phím này được phần mềm nhận, còn trên Chrome có cửa sổ thật trình duyệt có thể giữ phím này, điều đã được ghi chú trong mã nguồn và cần xem lại khi chạy thử trên Chrome, Edge.
 5.2.8. An toàn
-Các yêu cầu an toàn được kiểm tra lại ngày 22/11/2026 trên Windows 11, trên cơ sở dữ liệu QLBANVE_HQ. Riêng AT01 chưa có ca kiểm thử tự động ở mục 5.1 vì sao lưu, phục hồi được thực hiện ngoài phần mềm; ở mục này nhóm đo thật một lượt sao lưu và phục hồi toàn bộ dữ liệu lớn. Script SQL sao lưu QLBANVE_HQ, phục hồi sang một cơ sở dữ liệu mới QLBANVE_HQ_PHUCHOI, rồi so số dòng của 10 bảng và giá trị CHECKSUM_AGG của hai bảng VE, TAIKHOAN giữa bản gốc và bản phục hồi. Nhóm cũng tạo tác vụ sao lưu hằng ngày bằng Task Scheduler theo hướng dẫn ở mục 6.1.6 cho QLBANVE_HQ, lần lượt ở quyền người dùng thường và ở quyền Administrator, chạy thử, cho tác vụ tự chạy theo lịch và kiểm tra tập tin sao lưu tạo ra, rồi xóa tác vụ, tập tin sao lưu và cơ sở dữ liệu phục hồi. Kết quả được trình bày trong Bảng 5.40.
+Các yêu cầu an toàn được kiểm tra lại ngày 22/11/2026 trên Windows 11, trên cơ sở dữ liệu QLBANVE_HQ. Riêng AT01 chưa có ca kiểm thử tự động cho tác vụ sao lưu hằng ngày và việc phục hồi ở mục 5.1, vì hai việc này được thực hiện ngoài phần mềm (chức năng sao lưu ngay của giả định 19 thì có ca KiemThuSaoLuu ở Bảng 5.7); ở mục này nhóm đo thật một lượt sao lưu và phục hồi toàn bộ dữ liệu lớn. Script SQL sao lưu QLBANVE_HQ, phục hồi sang một cơ sở dữ liệu mới QLBANVE_HQ_PHUCHOI, rồi so số dòng của 10 bảng và giá trị CHECKSUM_AGG của hai bảng VE, TAIKHOAN giữa bản gốc và bản phục hồi. Nhóm cũng tạo tác vụ sao lưu hằng ngày bằng Task Scheduler theo hướng dẫn ở mục 6.1.6 cho QLBANVE_HQ, lần lượt ở quyền người dùng thường và ở quyền Administrator, chạy thử, cho tác vụ tự chạy theo lịch và kiểm tra tập tin sao lưu tạo ra, rồi xóa tác vụ, tập tin sao lưu và cơ sở dữ liệu phục hồi. Kết quả được trình bày trong Bảng 5.40.
 Bảng 5.40. Kết quả kiểm tra các yêu cầu an toàn
 STT
 Mã
@@ -8077,7 +8077,7 @@ xUnit tầng xử lý và phần giao tiếp, script kiểm tra nhanh, Playwrigh
 Đạt cả 6 yêu cầu và 6 biểu mẫu
 2
 Quy định QĐ1, QĐ2, QĐ3, QĐ6 và giả định ở mục 1.3.4
-4 quy định, 17 giả định
+4 quy định, 19 giả định
 Ba mức như trên, ca ở biên của quy định, đồng hồ giả (Bảng 5.8, Bảng 5.23)
 Đạt; riêng vế 10 sân bay của QĐ1 chưa có ca tự động, vế hủy phiếu vào ngày khởi hành của QĐ3 mới kiểm ở tầng xử lý
 3
@@ -8104,18 +8104,18 @@ Ca tự động ba mức; 77 lượt gọi máy chủ trên dữ liệu lớn (B
 An toàn AT01 đến AT04
 4
 Ca tự động cho AT02 đến AT04; đo sao lưu, phục hồi thật cho AT01 (Bảng 5.40)
-Cả bốn yêu cầu đạt; AT01 phục hồi xong trong 8,8 giây, tác vụ sao lưu tự động ở quyền Administrator tự chạy đúng giờ (chưa có ca tự động vì sao lưu nằm ngoài phần mềm)
+Cả bốn yêu cầu đạt; AT01 phục hồi xong trong 8,8 giây, tác vụ sao lưu tự động ở quyền Administrator tự chạy đúng giờ (tác vụ sao lưu hằng ngày và việc phục hồi chưa có ca tự động vì nằm ngoài phần mềm; sao lưu ngay có ca tự động)
 8
 Tiện dụng TD01 đến TD06
 6
 Đếm thao tác, kiểm các trợ giúp và phím tắt bằng Playwright (Bảng 5.37 đến Bảng 5.39)
-Đạt một phần: các trợ giúp đều có, TD05 đạt phần thao tác, TD04 vượt khi dùng đủ bốn tiêu chí; số phút hướng dẫn, thời gian và tỉ lệ nhập sai của người dùng thật chưa kiểm được
+Đạt một phần: các trợ giúp đều có, TD04, TD05 đạt phần thao tác (TD04 nhờ nút chọn nhanh khoảng ngày, khoảng ngày tự nhập vẫn cần 5 thao tác); số phút hướng dẫn, thời gian và tỉ lệ nhập sai của người dùng thật chưa kiểm được
 9
 Công nghệ CN01 đến CN06
 6
 Tìm kiếm, đếm trong mã nguồn; kết quả chạy kiểm thử (Bảng 5.36)
-Đạt một phần: CN02 (tách tầng), CN06 (kiểm thử tự động) có chứng cứ; CN05 đã chạy trên Windows 11, chưa thử Windows 10, Chrome, Edge; CN01, CN03, CN04 chưa kiểm được (CN03, CN04 mới có ước lượng)
-Ba điểm chưa có ca kiểm thử tự động mà mục 5.1.5 đã nêu được xử lý như sau. Thứ nhất, vế có 10 sân bay của QĐ1: danh sách ban đầu do script dữ liệu nạp sẵn theo giả định 11 và được quan sát thấy đủ 10 sân bay ở ô chọn sân bay khi kiểm TD01, nhưng chưa có ca tự động kiểm riêng; việc Quản lý thay đổi danh sách theo TH01 đã có ca kiểm. Thứ hai, vế hủy phiếu vào ngày khởi hành của QĐ3 chỉ được kiểm ở tầng xử lý bằng đồng hồ giả (ca HuyPhieuDenNgayKhoiHanh, HuyTheoThamSoThoiGianHuy), chưa có ca ở mức giao diện và script vì việc hủy chạy nền, và mới đo với 0 phiếu trên dữ liệu lớn. Thứ ba, AT01 không có ca tự động vì sao lưu, phục hồi thực hiện ngoài phần mềm; thay vào đó nhóm đo thật một lượt sao lưu và phục hồi ở mục 5.2.8.
+Đạt một phần: CN02, CN06 (kiểm thử tự động) có chứng cứ; CN05 đã chạy trên Windows 11 với Chromium, Chrome, Edge, chưa thử Windows 10; CN01, CN03, CN04 chưa kiểm được (CN03, CN04 mới có ước lượng)
+Ba điểm chưa có ca kiểm thử tự động mà mục 5.1.5 đã nêu được xử lý như sau. Thứ nhất, vế có 10 sân bay của QĐ1: danh sách ban đầu do script dữ liệu nạp sẵn theo giả định 11 và được quan sát thấy đủ 10 sân bay ở ô chọn sân bay khi kiểm TD01, nhưng chưa có ca tự động kiểm riêng; việc Quản lý thay đổi danh sách theo TH01 đã có ca kiểm. Thứ hai, vế hủy phiếu vào ngày khởi hành của QĐ3 chỉ được kiểm ở tầng xử lý bằng đồng hồ giả (ca HuyPhieuDenNgayKhoiHanh, HuyTheoThamSoThoiGianHuy), chưa có ca ở mức giao diện và script vì việc hủy chạy nền, và mới đo với 0 phiếu trên dữ liệu lớn. Thứ ba, tác vụ sao lưu hằng ngày và việc phục hồi của AT01 không có ca tự động vì thực hiện ngoài phần mềm; thay vào đó nhóm đo thật một lượt sao lưu và phục hồi ở mục 5.2.8.
 Trong suốt quá trình kiểm thử chức năng và phi chức năng, nhóm đã phát hiện và sửa các lỗi được trình bày trong Bảng 5.42. Phần lớn là lỗi hiển thị hoặc thao tác trên giao diện. Ba lỗi có thể làm sai dữ liệu đã lưu và đều đã sửa: ô số tự đổi giá trị gõ sai thành số khác (dòng 10), xóa phiếu đã hủy theo ngày cũ (dòng 12) và sửa được chuyến bay đã khởi hành (dòng 23). Không có lỗi nào cho lưu dữ liệu vi phạm QĐ1, QĐ2, QĐ3, vì các quy định luôn được kiểm tra lại ở máy chủ.
 Bảng 5.42. Các lỗi đã phát hiện trong quá trình kiểm thử và đã sửa
 STT
@@ -8240,7 +8240,7 @@ Kiểm định tĩnh: duyệt mã theo mục 10 của Bảng 5.26 (22/11/2026)
 Thêm hàm dùng chung giaTienTheoHang tính bằng số nguyên, làm tròn nửa lên như HangVe.tinhGiaTien; thêm ca kiểm thử tinh_gia.spec.ts
 Sau khi sửa các lỗi ở Bảng 5.42, nhóm chạy lại toàn bộ 186 ca kiểm thử xUnit và 169 ca kiểm thử giao diện trên mã nguồn đã sửa (ngày 22/11/2026); tất cả vẫn Đạt.
 Các điểm còn tồn tại. Sau khi kiểm thử, phần mềm còn các điểm sau, nhóm ghi nhận để xử lý ở giai đoạn triển khai hoặc phiên bản sau:
-TD04 chưa đạt khi dùng đủ bốn tiêu chí: tra cứu theo sân bay đi, sân bay đến và khoảng ngày cần 5 thao tác. Có thể giảm bằng cách cho chọn nhanh khoảng ngày (ví dụ tuần này, tháng này) trong một thao tác.
+TD04 với khoảng ngày tự nhập: tra cứu theo sân bay đi, sân bay đến và một khoảng ngày bất kỳ vẫn cần 5 thao tác; các khoảng ngày thường dùng đã có nút chọn nhanh (Hôm nay, 7 ngày tới, Tháng này, Tháng sau) nên chỉ cần 3 thao tác.
 Việc tự động hủy phiếu cập nhật từng phiếu bằng một câu lệnh riêng nên thời gian tăng theo số phiếu, khoảng 1,4 mili giây mỗi phiếu trên máy đo; nhánh hủy theo mốc QĐ3 chưa được đo với 1.000 phiếu.
 Các chỉ tiêu hiệu quả chưa được đo trên máy Windows 10 cấu hình tối thiểu ở mục 1.2.3 và qua mạng nội bộ thật; giao diện đã chạy bằng Chromium, Chrome và Edge trên Windows 11 nhưng chưa chạy trên Windows 10 (CN05).
 Các chỉ tiêu cần người dùng thật của TD01 đến TD06 (số phút hướng dẫn, thời gian thao tác, tỉ lệ nhập sai) chưa đo được trong phạm vi đồ án; thời gian thao tác và tỉ lệ nhập sai mới có ước lượng ở mục 5.2.7.
@@ -8312,7 +8312,7 @@ cd ..
 Ý nghĩa các tham số của sqlcmd: -S là tên máy và tên phiên bản SQL Server; -E đăng nhập bằng tài khoản Windows đang dùng; -C tin cậy chứng chỉ của máy chủ SQL Server trên máy; -b dừng và báo lỗi ngay khi script gặp lỗi; -i là tập tin script cần chạy. Ý nghĩa của từng script:
 01_tao_csdl.sql: nếu đã có cơ sở dữ liệu QLBANVECHUYENBAY thì xóa, sau đó tạo lại cơ sở dữ liệu với 10 bảng đã thiết kế ở mục 3.2 (Bảng 3.15) cùng các ràng buộc, chỉ mục, và ghi các tham số quy định mặc định: thời gian bay tối thiểu 30 phút, tối đa 2 sân bay trung gian, thời gian dừng từ 10 đến 20 phút, đặt vé chậm nhất 1 ngày trước ngày khởi hành, thời gian hủy đặt vé 0 ngày.
 02_du_lieu_mau.sql: nạp dữ liệu mẫu gồm 10 sân bay, 2 hạng vé (Hạng 1 tỉ lệ 105%, Hạng 2 tỉ lệ 100%), 60 chuyến bay, 406 hành khách, khoảng 2.800 vé và gần 290 phiếu đặt chỗ. Lịch chuyến bay mẫu được soạn quanh ngày 12/11/2026 và tự dịch theo ngày nạp, nên nạp vào ngày nào thì ngày đó là ngày hôm nay của dữ liệu mẫu (vẫn có chuyến bay sắp khởi hành, phiếu đang chờ thanh toán và vé bán trong ngày).
-03_tai_khoan_sql.sql (tùy chọn): tạo một tài khoản đăng nhập SQL Server chỉ được đọc và ghi dữ liệu trên QLBANVECHUYENBAY, để máy chủ ứng dụng không phải chạy bằng quyền quản trị. Tên và mật khẩu của tài khoản được truyền qua tham số -v của sqlcmd, không ghi vào tập tin; cách chạy và chuỗi kết nối đi kèm được ghi ở đầu tập tin. Muốn dùng tài khoản này, SQL Server phải bật chế độ đăng nhập bằng tài khoản SQL.
+03_tai_khoan_sql.sql (tùy chọn): tạo một tài khoản đăng nhập SQL Server chỉ được đọc, ghi dữ liệu và sao lưu QLBANVECHUYENBAY, để máy chủ ứng dụng không phải chạy bằng quyền quản trị. Tên và mật khẩu của tài khoản được truyền qua tham số -v của sqlcmd, không ghi vào tập tin; cách chạy và chuỗi kết nối đi kèm được ghi ở đầu tập tin. Muốn dùng tài khoản này, SQL Server phải bật chế độ đăng nhập bằng tài khoản SQL.
 Lưu ý: script 01_tao_csdl.sql xóa toàn bộ dữ liệu cũ của QLBANVECHUYENBAY. Khi phòng vé đã dùng phần mềm với dữ liệu thật, không chạy lại script này; muốn đưa dữ liệu về một thời điểm trước thì phục hồi từ bản sao lưu (mục 6.1.6).
 6.1.3. Cài đặt và chạy máy chủ ứng dụng
 Máy chủ ứng dụng đọc chuỗi kết nối tới cơ sở dữ liệu ở mục ConnectionStrings:QLBANVE của tập tin api\QuanLyBanVe.Api\appsettings.json. Giá trị mặc định như sau:
@@ -8475,7 +8475,7 @@ Tên đăng nhập này đã bị nhập sai mật khẩu 5 lần trong 1 phút 
 Chờ hết thời gian khóa tạm rồi đăng nhập lại; quên mật khẩu thì nhờ Quản lý đặt lại (mục 6.2.3.4)
 10
 Sau khi khởi động lại máy chủ, có người bị đưa về màn hình Đăng nhập
-Phiên đã hết hạn (8 giờ không thao tác), hoặc thư mục phien của máy chủ ứng dụng đã bị xóa
+Phiên đã hết hạn (trang phần mềm bị đóng hoặc bị ẩn quá 8 giờ), hoặc tập tin trong thư mục phien của máy chủ ứng dụng bị xóa trước khi máy chủ khởi động lại
 Đăng nhập lại; đây là hành vi bình thường, không mất dữ liệu
 6.2. Hướng dẫn sử dụng
 Mục 6.2.1 dùng chung cho mọi người dùng. Mục 6.2.2 hướng dẫn các công việc của Nhân viên bán vé; Quản lý cũng làm được các công việc này. Mục 6.2.3 hướng dẫn các công việc chỉ dành cho Quản lý (BMT02, BMT03, BMT07 đến BMT09). Mục 6.2.4 giải thích các thông báo thường gặp.
@@ -8607,7 +8607,7 @@ Màn hình Danh sách phiếu đặt chỗ (Hình 6.15) mở bằng nút Danh s�
 4. Hủy phiếu theo yêu cầu của hành khách: bấm Hủy trên dòng phiếu rồi bấm Hủy phiếu trong hộp thoại để xác nhận. Phiếu chuyển sang Đã hủy, chỗ được trả lại và không phục hồi được.
 Hình 6.15. Màn hình Danh sách phiếu đặt chỗ
 Hình 6.16. Màn hình Sửa phiếu đặt chỗ
-Phiếu đã hủy (do hành khách hủy, do quá hạn hoặc đã được chuyển thành vé) không còn nút Bán vé, sửa và Hủy.
+Phiếu đã hủy (do hành khách hủy, do quá hạn hoặc đã được chuyển thành vé) có các nút Bán vé, sửa và Hủy bị làm mờ, không dùng được.
 6.2.3. Hướng dẫn dành cho Quản lý
 6.2.3.1. Nhận lịch chuyến bay
 Thêm chuyến bay bằng cách nhập tay. Màn hình Thêm chuyến bay (BM1) được trình bày trong Hình 6.17.
@@ -8650,7 +8650,7 @@ Thay đổi tham số:
 2. Bấm vào thẻ tham số cần đổi hoặc nút Thay đổi trên thẻ. Hộp thoại Cập nhật quy định hiện Giá trị hiện tại trước khi sửa (TD06), như trong Hình 6.23.
 3. Nhập Giá trị mới (số nguyên không âm) rồi bấm Lưu (hoặc Ctrl+S).
 Hình 6.23. Hộp thoại Cập nhật quy định
-Lưu ý: thời gian dừng tối thiểu không được lớn hơn tối đa; thời gian hủy đặt vé phải nhỏ hơn thời gian chậm nhất khi đặt vé (giả định 6). Giá trị mới không làm thay đổi các chuyến bay, vé, phiếu đã lưu trước đó.
+Lưu ý: thời gian dừng tối thiểu không được lớn hơn tối đa; thời gian hủy đặt vé phải nhỏ hơn thời gian chậm nhất khi đặt vé (giả định 6). Giá trị mới không làm thay đổi các chuyến bay, vé, phiếu đã lưu trước đó (giá tiền giữ nguyên); riêng hạn thanh toán và việc tự hủy của các phiếu đang Chờ thanh toán được tính theo thời gian hủy đặt vé hiện hành.
 Thêm, sửa, xóa sân bay (Hình 6.24):
 1. Ở khung Danh sách sân bay, bấm Thêm sân bay (hoặc Ctrl+N).
 2. Nhập Mã sân bay (đúng 3 chữ cái in hoa, không trùng mã đã có) và Tên sân bay (không trùng tên đã có), rồi bấm Lưu.
@@ -8723,7 +8723,7 @@ Nhân viên bán vé mở một màn hình chỉ dành cho Quản lý, ví dụ 
 Bấm Về trang chính; nếu cần được cấp quyền thì liên hệ Quản lý
 6
 Bạn chưa đăng nhập hoặc phiên làm việc đã hết hạn.
-Phiên làm việc kết thúc vì để máy không thao tác quá 8 giờ, tài khoản vừa bị khóa hoặc bị đổi nhóm quyền, mật khẩu vừa được Quản lý đặt lại, hoặc máy chủ vừa khởi động lại; phần mềm tự trở về màn hình Đăng nhập
+Phiên làm việc kết thúc vì trang phần mềm bị đóng hoặc bị ẩn quá 8 giờ, tài khoản vừa bị khóa hoặc bị đổi nhóm quyền, mật khẩu vừa được Quản lý đặt lại, hoặc tập tin phiên trên máy chủ bị xóa trước khi máy chủ khởi động lại; phần mềm tự trở về màn hình Đăng nhập
 Đăng nhập lại rồi làm lại thao tác chưa lưu; nếu tài khoản bị khóa thì liên hệ Quản lý
 7
 Chuyến bay đã hết chỗ; Hạng vé đã hết chỗ.
