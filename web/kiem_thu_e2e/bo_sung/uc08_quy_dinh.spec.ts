@@ -97,6 +97,17 @@ async function kiemBiChan(hop: Locator, o: Locator, chu: string): Promise<string
 }
 
 test.describe('Bổ sung UC08 Thay đổi quy định', () => {
+  test('UC08.22 Danh sách ban đầu có đúng 10 sân bay với các mã trong dữ liệu mẫu (QĐ1, TH01)', async ({ page }) => {
+    await dangNhap(page, 'quanLy', '/quy-dinh');
+    const cacDong = page.getByRole('table', { name: 'Danh sách sân bay' }).locator('tbody tr');
+    await expect(cacDong).toHaveCount(10);
+
+    const cacMa = await cacDong.evaluateAll((ds) =>
+      ds.map((dong) => dong.querySelectorAll('td')[1]?.textContent?.trim()).sort(),
+    );
+    expect(cacMa).toEqual(['SGN', 'HAN', 'DAD', 'CXR', 'PQC', 'HPH', 'HUI', 'VCA', 'DLI', 'VII'].sort());
+  });
+
   test('UC08.7 Tham số bằng 0, số âm, chữ, số lẻ: 0 được hay không tùy tham số, giá trị sai bị chặn và không lưu (Ràng buộc THAMSOQUYDINH)', async ({ page }) => {
     const api = await ApiThu.moi();
     const ten = ['soSanBayTrungGianToiDa', 'thoiGianDatVeChamNhat', 'thoiGianHuyDatVe'];

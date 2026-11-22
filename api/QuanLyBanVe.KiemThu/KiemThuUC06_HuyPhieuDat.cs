@@ -83,6 +83,44 @@ public class KiemThuUC06_HuyPhieuDat : KiemThuCoSo
         Assert.Equal(PhieuDatCho.DA_HUY, tinhTrang(phieu));
     }
 
+    [Fact(DisplayName = "TH07/QĐ3/UC06: đổi thời gian hủy đặt vé có hiệu lực ngay, trước mốc mới một phút giữ phiếu, đúng mốc thì hủy")]
+    public void DoiThoiGianHuy_KiemTraHaiPhiaMocMoi()
+    {
+        DateTime khoiHanh = HOM_NAY.AddDays(3).AddHours(18);
+        DateTime mocMoi = khoiHanh.Date.AddDays(-2);
+        taoChuyenBay("CB503", khoiHanh);
+        dongHo.BayGio = mocMoi.AddHours(-2);
+        PhieuDatCho phieu = xlDatVe.datVe("CB503", "H2", khach(1), out _);
+        var dalThamSo = lay<DAL_ThamSoQuyDinh>();
+        ThamSoQuyDinh cu = dalThamSo.layThamSoQuyDinh();
+        var thayDoiQD = lay<XL_ThayDoiQD>();
+
+        // Phiếu mới đặt chưa đủ 24 giờ để chỉ kiểm tra nhánh QĐ3.
+        Assert.True(mocMoi - phieu.ThoiDiemDat < TimeSpan.FromHours(24));
+        Assert.Equal(0, xl.kichHoatDinhKy(mocMoi));
+        Assert.Equal(PhieuDatCho.CHO_THANH_TOAN, tinhTrang(phieu));
+        try
+        {
+            thayDoiQD.capNhatThamSo("ThoiGianDatVeChamNhat", 3);
+            thayDoiQD.capNhatThamSo("ThoiGianHuyDatVe", 2);
+            Assert.Equal(2, dalThamSo.layThoiGianHuyDatVe());
+
+            Assert.Equal(0, xl.kichHoatDinhKy(mocMoi.AddMinutes(-1)));
+            Assert.Equal(PhieuDatCho.CHO_THANH_TOAN, tinhTrang(phieu));
+            Assert.Equal(1, xl.kichHoatDinhKy(mocMoi));
+            Assert.Equal(PhieuDatCho.DA_HUY, tinhTrang(phieu));
+            Assert.Equal(0, xl.kichHoatDinhKy(mocMoi));
+        }
+        finally
+        {
+            // Trả mốc hủy trước để không vi phạm ràng buộc hủy nhỏ hơn đặt.
+            thayDoiQD.capNhatThamSo("ThoiGianHuyDatVe", cu.ThoiGianHuyDatVe);
+            thayDoiQD.capNhatThamSo("ThoiGianDatVeChamNhat", cu.ThoiGianDatVeChamNhat);
+        }
+        Assert.Equal(cu.ThoiGianHuyDatVe, dalThamSo.layThoiGianHuyDatVe());
+        Assert.Equal(cu.ThoiGianDatVeChamNhat, dalThamSo.layThoiGianDatVeChamNhat());
+    }
+
     [Fact(DisplayName = "UC06 bước 5, luồng 5a: chỉ ghi nhật ký khi có phiếu bị hủy, kèm thời điểm và số phiếu")]
     public void GhiNhatKy()
     {
@@ -167,6 +205,40 @@ public class KiemThuUC06_HuyPhieuDat : KiemThuCoSo
         Assert.Equal(1000, soDaHuy);
         Assert.True(dongHoBam.Elapsed < TimeSpan.FromSeconds(10), "Mất " + dongHoBam.Elapsed.TotalSeconds + " giây");
         Assert.Equal(0, csdl.dem("SELECT COUNT(*) FROM PHIEUDATCHO WHERE TinhTrang = N'Chờ thanh toán'"));
+    }
+
+    [Fact(DisplayName = "HQ04 QĐ3 UC06: hủy hết 1.000 phiếu chưa quá 24 giờ tại mốc hủy chuyến bay trong dưới 10 giây")]
+    [Trait("Loai", "HieuNang")]
+    public void Huy1000PhieuTheoQD3Trong10Giay()
+    {
+        DateTime mocHuy = HOM_NAY.AddDays(1);
+        taoChuyenBay("CB530", mocHuy.AddHours(6), gheH1: 0, gheH2: 500);
+        taoChuyenBay("CB531", mocHuy.AddHours(18), gheH1: 0, gheH2: 500);
+        csdl.thucThi(@"
+            INSERT INTO HANHKHACH (HoTen, LoaiGiayTo, SoGiayTo, DienThoai)
+            SELECT TOP (1000) N'Khách QĐ3', N'Căn cước',
+                RIGHT('000000000000' + CAST(ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS varchar(12)), 12), '0901234567'
+            FROM sys.all_objects a CROSS JOIN sys.all_objects b;
+            INSERT INTO PHIEUDATCHO (MaChuyenBay, MaHanhKhach, MaHangVe, GiaTien, ThoiDiemDat, TinhTrang)
+            SELECT CASE WHEN ROW_NUMBER() OVER (ORDER BY MaHanhKhach) <= 500 THEN 'CB530' ELSE 'CB531' END,
+                MaHanhKhach, 'H2', 1000000, '2026-11-12T22:00:00', N'Chờ thanh toán'
+            FROM HANHKHACH;");
+        Assert.Equal(0, lay<DAL_ThamSoQuyDinh>().layThoiGianHuyDatVe());
+        Assert.Equal(1000, csdl.dem("SELECT COUNT(*) FROM PHIEUDATCHO WHERE TinhTrang = N'Chờ thanh toán'"));
+        Assert.Empty(dalPhieu.layPhieuQuaHan(mocHuy));
+        Assert.Equal(0, xl.kichHoatDinhKy(mocHuy.AddMinutes(-1)));
+
+        var dongHoBam = System.Diagnostics.Stopwatch.StartNew();
+        int soDaHuy = xl.kichHoatDinhKy(mocHuy);
+        dongHoBam.Stop();
+
+        Assert.Equal(1000, soDaHuy);
+        Assert.True(dongHoBam.Elapsed < TimeSpan.FromSeconds(10), "Mất " + dongHoBam.Elapsed.TotalSeconds + " giây");
+        Assert.Equal(1000, csdl.dem("SELECT COUNT(*) FROM PHIEUDATCHO"));
+        Assert.Equal(1000, csdl.dem("SELECT COUNT(*) FROM PHIEUDATCHO WHERE TinhTrang = N'Đã hủy'"));
+        Assert.Equal(0, csdl.dem("SELECT COUNT(*) FROM PHIEUDATCHO WHERE TinhTrang = N'Chờ thanh toán'"));
+        foreach (string ma in new[] { "CB530", "CB531" })
+            Assert.Equal(500, lay<DAL_ChuyenBay>().laySoGheTrong(ma, "H2"));
     }
 
     private static IConfiguration cauHinhDinhThoi(bool bat) => new ConfigurationBuilder()

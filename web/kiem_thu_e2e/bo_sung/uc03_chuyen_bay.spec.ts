@@ -1079,4 +1079,40 @@ test.describe('Bổ sung UC03 Quản lý chuyến bay', () => {
       await api.dong();
     }
   });
+
+  test('UC03.50 Nhấn Ctrl+S lưu biểu mẫu thêm chuyến bay hợp lệ thành công (UC03)', async ({ page }) => {
+    const api = await ApiThu.moi();
+    const ma = maMoi('CS');
+    const ngayGio = mocVN(15, 9, 0);
+    try {
+      await dangNhap(page, 'quanLy', '/chuyen-bay/them');
+      await dienBieuMau(page, { ma, ngayGio: ngayGio.vnGio });
+
+      const choLuu = page.waitForResponse((ph) =>
+        new URL(ph.url()).pathname === '/api/chuyen-bay' && ph.request().method() === 'POST',
+      );
+      await page.keyboard.press('Control+s');
+      expect((await choLuu).ok()).toBeTruthy();
+      await expect(toast(page, `Thêm chuyến bay ${ma} thành công.`)).toBeVisible();
+      await expect(page).toHaveURL(/\/chuyen-bay$/);
+
+      const daLuu = await page.request.get(`/api/chuyen-bay/${ma}`);
+      expect(daLuu.status()).toBe(200);
+      expect(await daLuu.json()).toMatchObject({
+        maChuyenBay: ma, giaVe: 1_500_000, maSanBayDi: 'SGN', maSanBayDen: 'HAN',
+        ngayGioKhoiHanh: ngayGio.isoGio, thoiGianBay: 130,
+        gheTheoHang: expect.arrayContaining([
+          expect.objectContaining({ maHangVe: 'H1', soLuongGhe: 10 }),
+          expect.objectContaining({ maHangVe: 'H2', soLuongGhe: 60 }),
+        ]),
+      });
+    } finally {
+      try {
+        await api.xoaChuyenBayNeuCo(ma);
+      } finally {
+        await api.dong();
+      }
+    }
+    expect(await trangThaiChuyenBay(page, ma)).toBe(404);
+  });
 });
