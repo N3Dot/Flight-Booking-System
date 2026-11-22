@@ -60,114 +60,114 @@ CHƯƠNG 1. TỔNG QUAN ĐỀ TÀI1
 1.3.2. Các công thức tính toán21
 1.3.3. Thông tin xử lý của từng nghiệp vụ22
 1.3.4. Các giả định khi phân tích23
-1.4. Mô tả quy trình thực hiện và các công việc chính của đề tài28
-1.4.1. Quy trình nghiệp vụ của phòng vé28
-1.4.2. Biểu đồ ngữ cảnh và phân cấp chức năng30
-1.4.3. Quy trình phát triển phần mềm32
-1.4.4. Các công việc chính33
-1.5. Xây dựng kế hoạch dự án đơn giản33
-1.5.1. Thành viên nhóm33
-1.5.2. Kế hoạch thực hiện34
-1.5.3. Quản lý rủi ro35
-CHƯƠNG 2. ĐẶC TẢ VÀ PHÂN TÍCH YÊU CẦU37
-2.1. Các tác nhân của hệ thống37
-2.2. Bảng các use case của hệ thống38
-2.3. Biểu đồ use case42
-2.3.1. Biểu đồ use case tổng quan42
-2.3.2. Biểu đồ phân rã use case43
-2.4. Đặc tả và phân tích các yêu cầu phần mềm47
-2.4.1. UC01 Đăng nhập48
-2.4.2. UC02 Phân quyền54
-2.4.3. UC03 Quản lý chuyến bay63
-2.4.4. UC04 Quản lý bán vé78
-2.4.5. UC05 Quản lý đặt vé93
-2.4.6. UC06 Tự động hủy phiếu đặt chỗ108
-2.4.7. UC07 Lập báo cáo doanh thu114
-2.4.8. UC08 Thay đổi quy định122
-2.4.9. Tổng hợp các lớp phân tích130
-2.5. Xây dựng biểu đồ thực thể liên kết (ERD)135
-2.5.1. Các thực thể và mối kết hợp135
-2.5.2. Biểu đồ ERD136
-2.6. Biểu đồ luồng dữ liệu của các yêu cầu nghiệp vụ138
-2.7. Sơ đồ trạng thái của vé, phiếu đặt chỗ và tài khoản141
-CHƯƠNG 3. THIẾT KẾ HỆ THỐNG144
-3.1. Kiến trúc hệ thống144
-3.1.1. Lựa chọn kiến trúc144
-3.1.2. Các thành phần trong hệ thống147
-3.1.3. Công nghệ và công cụ sử dụng150
-3.2. Thiết kế dữ liệu152
-3.2.1. Thuật toán thiết kế dữ liệu153
-3.2.2. Bước 1: Xét yêu cầu Nhận lịch chuyến bay (NV01)156
-3.2.3. Bước 2: Xét yêu cầu Bán vé (NV02)163
-3.2.4. Bước 3: Xét yêu cầu Ghi nhận đặt vé (NV03)170
-3.2.5. Bước 4: Xét yêu cầu Tra cứu chuyến bay (NV04)174
-3.2.6. Bước 5: Xét yêu cầu Lập báo cáo (NV05)175
-3.2.7. Bước 6: Xét yêu cầu Thay đổi quy định (NV06)177
-3.2.8. Bước 7: Xét yêu cầu Đăng nhập và Phân quyền180
-3.2.9. Kiểm tra sơ đồ logic theo ba tính chất182
-3.2.10. Sơ đồ logic hoàn chỉnh186
-3.2.11. Danh sách các bảng dữ liệu187
-3.2.12. Mô tả từng bảng dữ liệu188
-3.3. Thiết kế lớp197
-3.3.1. Thiết kế chi tiết lớp200
-3.3.2. Sơ đồ lớp chi tiết220
-3.4. Thiết kế giao diện243
-3.4.1. Sơ đồ liên kết các màn hình244
-3.4.2. Danh sách các màn hình246
-3.4.3. Mô tả các màn hình249
-CHƯƠNG 4. CÀI ĐẶT CHƯƠNG TRÌNH328
-4.1. Môi trường và công cụ cài đặt328
-4.1.1. Môi trường phát triển và chạy thử328
-4.1.2. Thư viện và công cụ đã dùng329
-4.1.3. Phương pháp cài đặt và phong cách lập trình332
-4.2. Tổ chức mã nguồn335
-4.2.1. Cấu trúc thư mục335
-4.2.2. Ánh xạ từ thiết kế sang mã336
-4.2.3. Thống kê mã nguồn340
-4.2.4. Một số điểm cài đặt đáng chú ý341
-4.3. Kết quả cài đặt các chức năng348
-4.3.1. Đăng nhập và phân quyền348
-4.3.2. Quản lý chuyến bay352
-4.3.3. Bán vé357
-4.3.4. Đặt vé và tự động hủy phiếu361
-4.3.5. Báo cáo doanh thu364
-4.3.6. Thay đổi quy định368
-4.4. Mức độ hoàn thành370
-CHƯƠNG 5. KIỂM THỬ CHƯƠNG TRÌNH375
-5.1. Kiểm thử các chức năng đã thực hiện376
-5.1.1. Phạm vi, kế hoạch và môi trường kiểm thử376
-5.1.2. Kiểm thử tầng xử lý nghiệp vụ và truy xuất dữ liệu392
-5.1.3. Kiểm thử phần giao tiếp (API)405
-5.1.4. Kiểm thử giao diện theo use case411
-5.1.5. Đối chiếu yêu cầu với ca kiểm thử429
-5.1.6. Nhận xét435
-5.2. Kiểm thử yêu cầu phi chức năng443
-5.2.1. Tiến hóa444
-5.2.2. Môi trường và dữ liệu đo446
-5.2.3. Hiệu quả450
-5.2.4. Tương thích456
-5.2.5. Bảo mật458
-5.2.6. Công nghệ462
-5.2.7. Tiện dụng465
-5.2.8. An toàn476
-5.3. Tổng hợp kết quả kiểm thử478
-CHƯƠNG 6. HƯỚNG DẪN CÀI ĐẶT VÀ SỬ DỤNG488
-6.1. Hướng dẫn cài đặt488
-6.1.1. Yêu cầu hệ thống489
-6.1.2. Cài đặt cơ sở dữ liệu490
-6.1.3. Cài đặt và chạy máy chủ ứng dụng491
-6.1.4. Cho các máy nhân viên trong mạng nội bộ truy cập493
-6.1.5. Tài khoản ban đầu và việc cần làm ngay sau khi cài494
-6.1.6. Sao lưu và phục hồi dữ liệu495
-6.1.7. Nạp lại dữ liệu mẫu và một số lỗi thường gặp khi cài đặt497
-6.2. Hướng dẫn sử dụng499
-6.2.1. Đăng nhập, đăng xuất và bố cục chung của màn hình500
-6.2.2. Hướng dẫn dành cho Nhân viên bán vé507
-6.2.3. Hướng dẫn dành cho Quản lý519
-6.2.4. Ý nghĩa các thông báo thường gặp535
-KẾT LUẬN541
-TÀI LIỆU THAM KHẢO544
-BẢNG PHÂN CÔNG CÔNG VIỆC546
+1.4. Mô tả quy trình thực hiện và các công việc chính của đề tài29
+1.4.1. Quy trình nghiệp vụ của phòng vé29
+1.4.2. Biểu đồ ngữ cảnh và phân cấp chức năng31
+1.4.3. Quy trình phát triển phần mềm33
+1.4.4. Các công việc chính34
+1.5. Xây dựng kế hoạch dự án đơn giản34
+1.5.1. Thành viên nhóm34
+1.5.2. Kế hoạch thực hiện35
+1.5.3. Quản lý rủi ro36
+CHƯƠNG 2. ĐẶC TẢ VÀ PHÂN TÍCH YÊU CẦU38
+2.1. Các tác nhân của hệ thống38
+2.2. Bảng các use case của hệ thống39
+2.3. Biểu đồ use case43
+2.3.1. Biểu đồ use case tổng quan43
+2.3.2. Biểu đồ phân rã use case44
+2.4. Đặc tả và phân tích các yêu cầu phần mềm48
+2.4.1. UC01 Đăng nhập49
+2.4.2. UC02 Phân quyền55
+2.4.3. UC03 Quản lý chuyến bay64
+2.4.4. UC04 Quản lý bán vé79
+2.4.5. UC05 Quản lý đặt vé94
+2.4.6. UC06 Tự động hủy phiếu đặt chỗ109
+2.4.7. UC07 Lập báo cáo doanh thu115
+2.4.8. UC08 Thay đổi quy định123
+2.4.9. Tổng hợp các lớp phân tích131
+2.5. Xây dựng biểu đồ thực thể liên kết (ERD)136
+2.5.1. Các thực thể và mối kết hợp136
+2.5.2. Biểu đồ ERD137
+2.6. Biểu đồ luồng dữ liệu của các yêu cầu nghiệp vụ139
+2.7. Sơ đồ trạng thái của vé, phiếu đặt chỗ và tài khoản142
+CHƯƠNG 3. THIẾT KẾ HỆ THỐNG145
+3.1. Kiến trúc hệ thống145
+3.1.1. Lựa chọn kiến trúc145
+3.1.2. Các thành phần trong hệ thống148
+3.1.3. Công nghệ và công cụ sử dụng151
+3.2. Thiết kế dữ liệu153
+3.2.1. Thuật toán thiết kế dữ liệu154
+3.2.2. Bước 1: Xét yêu cầu Nhận lịch chuyến bay (NV01)157
+3.2.3. Bước 2: Xét yêu cầu Bán vé (NV02)164
+3.2.4. Bước 3: Xét yêu cầu Ghi nhận đặt vé (NV03)171
+3.2.5. Bước 4: Xét yêu cầu Tra cứu chuyến bay (NV04)175
+3.2.6. Bước 5: Xét yêu cầu Lập báo cáo (NV05)176
+3.2.7. Bước 6: Xét yêu cầu Thay đổi quy định (NV06)178
+3.2.8. Bước 7: Xét yêu cầu Đăng nhập và Phân quyền181
+3.2.9. Kiểm tra sơ đồ logic theo ba tính chất183
+3.2.10. Sơ đồ logic hoàn chỉnh187
+3.2.11. Danh sách các bảng dữ liệu188
+3.2.12. Mô tả từng bảng dữ liệu189
+3.3. Thiết kế lớp198
+3.3.1. Thiết kế chi tiết lớp201
+3.3.2. Sơ đồ lớp chi tiết221
+3.4. Thiết kế giao diện244
+3.4.1. Sơ đồ liên kết các màn hình245
+3.4.2. Danh sách các màn hình247
+3.4.3. Mô tả các màn hình250
+CHƯƠNG 4. CÀI ĐẶT CHƯƠNG TRÌNH329
+4.1. Môi trường và công cụ cài đặt329
+4.1.1. Môi trường phát triển và chạy thử329
+4.1.2. Thư viện và công cụ đã dùng330
+4.1.3. Phương pháp cài đặt và phong cách lập trình333
+4.2. Tổ chức mã nguồn336
+4.2.1. Cấu trúc thư mục336
+4.2.2. Ánh xạ từ thiết kế sang mã337
+4.2.3. Thống kê mã nguồn341
+4.2.4. Một số điểm cài đặt đáng chú ý342
+4.3. Kết quả cài đặt các chức năng349
+4.3.1. Đăng nhập và phân quyền349
+4.3.2. Quản lý chuyến bay353
+4.3.3. Bán vé358
+4.3.4. Đặt vé và tự động hủy phiếu362
+4.3.5. Báo cáo doanh thu365
+4.3.6. Thay đổi quy định369
+4.4. Mức độ hoàn thành371
+CHƯƠNG 5. KIỂM THỬ CHƯƠNG TRÌNH376
+5.1. Kiểm thử các chức năng đã thực hiện377
+5.1.1. Phạm vi, kế hoạch và môi trường kiểm thử377
+5.1.2. Kiểm thử tầng xử lý nghiệp vụ và truy xuất dữ liệu393
+5.1.3. Kiểm thử phần giao tiếp (API)406
+5.1.4. Kiểm thử giao diện theo use case412
+5.1.5. Đối chiếu yêu cầu với ca kiểm thử430
+5.1.6. Nhận xét436
+5.2. Kiểm thử yêu cầu phi chức năng444
+5.2.1. Tiến hóa445
+5.2.2. Môi trường và dữ liệu đo447
+5.2.3. Hiệu quả451
+5.2.4. Tương thích458
+5.2.5. Bảo mật460
+5.2.6. Công nghệ463
+5.2.7. Tiện dụng466
+5.2.8. An toàn477
+5.3. Tổng hợp kết quả kiểm thử479
+CHƯƠNG 6. HƯỚNG DẪN CÀI ĐẶT VÀ SỬ DỤNG489
+6.1. Hướng dẫn cài đặt489
+6.1.1. Yêu cầu hệ thống490
+6.1.2. Cài đặt cơ sở dữ liệu491
+6.1.3. Cài đặt và chạy máy chủ ứng dụng492
+6.1.4. Cho các máy nhân viên trong mạng nội bộ truy cập494
+6.1.5. Tài khoản ban đầu và việc cần làm ngay sau khi cài495
+6.1.6. Sao lưu và phục hồi dữ liệu496
+6.1.7. Nạp lại dữ liệu mẫu và một số lỗi thường gặp khi cài đặt498
+6.2. Hướng dẫn sử dụng501
+6.2.1. Đăng nhập, đăng xuất và bố cục chung của màn hình501
+6.2.2. Hướng dẫn dành cho Nhân viên bán vé509
+6.2.3. Hướng dẫn dành cho Quản lý521
+6.2.4. Ý nghĩa các thông báo thường gặp537
+KẾT LUẬN543
+TÀI LIỆU THAM KHẢO546
+BẢNG PHÂN CÔNG CÔNG VIỆC548
 DANH MỤC CHỮ VIẾT TẮT
 STT
 Chữ viết tắt
@@ -302,310 +302,310 @@ Bảng 1.21. Danh sách yêu cầu an toàn18
 Bảng 1.22. Bảng trách nhiệm yêu cầu an toàn19
 Bảng 1.23. Các đối tượng và thông tin cần quản lý19
 Bảng 1.24. Thông tin xử lý của từng nghiệp vụ22
-Bảng 1.25. Các công việc chính theo từng giai đoạn33
-Bảng 1.26. Danh sách thành viên nhóm 1234
-Bảng 1.27. Kế hoạch thực hiện đồ án34
-Bảng 1.28. Quản lý các rủi ro trong quá trình thực hiện đồ án35
-Bảng 2.1. Danh sách tác nhân của hệ thống37
-Bảng 2.2. Danh sách use case của hệ thống38
-Bảng 2.3. Đặc tả use case UC01 Đăng nhập48
-Bảng 2.4. Đặc tả use case UC02 Phân quyền55
-Bảng 2.5. Đặc tả use case UC03 Quản lý chuyến bay63
-Bảng 2.6. Đặc tả use case UC04 Quản lý bán vé78
-Bảng 2.7. Đặc tả use case UC05 Quản lý đặt vé94
-Bảng 2.8. Đặc tả use case UC06 Tự động hủy phiếu đặt chỗ108
-Bảng 2.9. Đặc tả use case UC07 Lập báo cáo doanh thu114
-Bảng 2.10. Đặc tả use case UC08 Thay đổi quy định122
-Bảng 2.11. Danh sách các lớp phân tích130
-Bảng 2.12. Danh sách mối kết hợp136
-Bảng 3.1. Mô tả các thành phần trong hệ thống148
-Bảng 3.2. Công nghệ và công cụ sử dụng151
-Bảng 3.3. Biểu mẫu 1 và quy định 1156
-Bảng 3.4. Thuộc tính mới và quy định liên quan ở bước 1161
-Bảng 3.5. Biểu mẫu 2 và quy định 2163
-Bảng 3.6. Thuộc tính mới và quy định liên quan ở bước 2168
-Bảng 3.7. Biểu mẫu 3 và quy định 3170
-Bảng 3.8. Thuộc tính mới và quy định liên quan ở bước 3173
-Bảng 3.9. Biểu mẫu 4174
-Bảng 3.10. Biểu mẫu 5.1176
-Bảng 3.11. Biểu mẫu 5.2176
-Bảng 3.12. Nơi lưu các giá trị thay đổi được theo QĐ6178
-Bảng 3.13. Thuộc tính mới và quy định liên quan ở bước 7181
-Bảng 3.14. Đối chiếu thông tin trên biểu mẫu với nơi lưu182
-Bảng 3.15. Danh sách các bảng dữ liệu trong sơ đồ187
-Bảng 3.16. Mô tả bảng SANBAY189
-Bảng 3.17. Mô tả bảng CHUYENBAY189
-Bảng 3.18. Mô tả bảng CHITIETTRUNGGIAN190
-Bảng 3.19. Mô tả bảng HANGVE191
-Bảng 3.20. Mô tả bảng GHETHEOHANG192
-Bảng 3.21. Mô tả bảng HANHKHACH192
-Bảng 3.22. Mô tả bảng VE193
-Bảng 3.23. Mô tả bảng PHIEUDATCHO195
-Bảng 3.24. Mô tả bảng THAMSOQUYDINH196
-Bảng 3.25. Mô tả bảng TAIKHOAN197
-Bảng 3.26. Phân loại các lớp của phần mềm198
-Bảng 3.27. Đổi kiểu dữ liệu từ SQL Server sang C#200
-Bảng 3.28. Danh sách các lớp DTO203
-Bảng 3.29. Nơi hiện thực các phương thức của lớp thực thể206
-Bảng 3.30. Các lớp truy xuất dữ liệu và phương thức210
-Bảng 3.31. Các lớp tiện ích và lớp hỗ trợ214
-Bảng 3.32. Các lớp của phần giao tiếp218
-Bảng 3.33. Danh sách các màn hình246
-Bảng 3.34. Mô tả các đối tượng trên màn hình đăng nhập250
-Bảng 3.35. Danh sách biến cố và xử lý trên màn hình đăng nhập250
-Bảng 3.36. Mô tả các đối tượng trên màn hình chính254
-Bảng 3.37. Danh sách biến cố và xử lý trên màn hình chính257
-Bảng 3.38. Mô tả các đối tượng trên màn hình phân quyền260
-Bảng 3.39. Danh sách biến cố và xử lý trên màn hình phân quyền261
-Bảng 3.40. Mô tả các đối tượng trên màn hình thêm, sửa tài khoản264
-Bảng 3.41. Danh sách biến cố và xử lý trên màn hình thêm, sửa tài khoản266
-Bảng 3.42. Mô tả các đối tượng trên màn hình danh sách chuyến bay270
-Bảng 3.43. Danh sách biến cố và xử lý trên màn hình danh sách chuyến bay273
-Bảng 3.44. Mô tả các đối tượng trên màn hình thêm, sửa chuyến bay277
-Bảng 3.45. Danh sách biến cố và xử lý trên màn hình thêm, sửa chuyến bay280
-Bảng 3.46. Mô tả các đối tượng trên màn hình danh sách vé283
-Bảng 3.47. Danh sách biến cố và xử lý trên màn hình danh sách vé285
-Bảng 3.48. Mô tả các đối tượng trên màn hình bán vé290
-Bảng 3.49. Danh sách biến cố và xử lý trên màn hình bán vé293
-Bảng 3.50. Mô tả các đối tượng trên màn hình danh sách phiếu đặt chỗ297
-Bảng 3.51. Danh sách biến cố và xử lý trên màn hình danh sách phiếu đặt chỗ300
-Bảng 3.52. Mô tả các đối tượng trên màn hình đặt vé304
-Bảng 3.53. Danh sách biến cố và xử lý trên màn hình đặt vé306
-Bảng 3.54. Mô tả các đối tượng trên màn hình lập báo cáo doanh thu310
-Bảng 3.55. Danh sách biến cố và xử lý trên màn hình lập báo cáo doanh thu311
-Bảng 3.56. Mô tả các đối tượng trên màn hình danh sách quy định314
-Bảng 3.57. Danh sách biến cố và xử lý trên màn hình danh sách quy định316
-Bảng 3.58. Mô tả các đối tượng trên màn hình cập nhật quy định319
-Bảng 3.59. Danh sách biến cố và xử lý trên màn hình cập nhật quy định321
-Bảng 3.60. Mô tả các đối tượng trên màn hình thông báo325
-Bảng 3.61. Danh sách biến cố và xử lý trên màn hình thông báo326
-Bảng 4.1. Thư viện và công cụ đã dùng khi cài đặt329
-Bảng 4.2. Đánh giá ngôn ngữ lập trình theo năm tiêu chí333
-Bảng 4.3. Ánh xạ từ thiết kế sang mã nguồn336
-Bảng 4.4. Thống kê mã nguồn theo tầng340
-Bảng 4.5. Mức độ hoàn thành các chức năng370
-Bảng 5.1. Các mức kiểm thử và công cụ376
-Bảng 5.2. Môi trường kiểm thử378
-Bảng 5.3. Kế hoạch kiểm thử theo bảy mục382
-Bảng 5.4. Phân hoạch tương đương và giá trị biên của thời gian bay (QĐ1 với mức tối thiểu 30 phút, giả định 12)386
-Bảng 5.5. Phân hoạch tương đương và giá trị biên của ô số căn cước (giả định 9)388
-Bảng 5.6. Kiểm thử theo trạng thái của phiếu đặt chỗ, vé, tài khoản và chuyến bay389
-Bảng 5.7. Tổng hợp kiểm thử tầng xử lý nghiệp vụ và truy xuất dữ liệu393
-Bảng 5.8. Một số ca kiểm thử tiêu biểu ở tầng xử lý397
-Bảng 5.9. Độ phủ dòng lệnh của bộ kiểm thử xUnit theo thư mục mã nguồn400
-Bảng 5.10. Các đường độc lập của kiemTraQuyDinhNhanLich và ca kiểm thử tương ứng402
-Bảng 5.11. Các đường độc lập của kichHoatDinhKy và ca kiểm thử tương ứng404
-Bảng 5.12. Các ca kiểm thử phần giao tiếp trong lớp KiemThuGiaoTiep406
-Bảng 5.13. Các nhóm bước của script kiểm tra nhanh phần giao tiếp409
-Bảng 5.14. Các ca kiểm thử giao diện của UC01 Đăng nhập412
-Bảng 5.15. Các ca kiểm thử giao diện của UC02 Phân quyền413
-Bảng 5.16. Các ca kiểm thử giao diện của UC03 Quản lý chuyến bay415
-Bảng 5.17. Các ca kiểm thử giao diện của UC04 Quản lý bán vé418
-Bảng 5.18. Các ca kiểm thử giao diện của UC05 Quản lý đặt vé420
-Bảng 5.19. Các ca kiểm thử giao diện của UC07 Lập báo cáo doanh thu421
-Bảng 5.20. Các ca kiểm thử giao diện của UC08 Thay đổi quy định423
-Bảng 5.21. Các ca kiểm thử giao diện của các chức năng chung424
-Bảng 5.22. Các ca kiểm thử giao diện bổ sung426
-Bảng 5.23. Đối chiếu yêu cầu nghiệp vụ, quy định, biểu mẫu với ca kiểm thử429
-Bảng 5.24. Đối chiếu các yêu cầu tiến hóa, bảo mật, tương thích, an toàn với ca kiểm thử431
-Bảng 5.25. Tổng hợp kết quả kiểm thử chức năng435
-Bảng 5.26. Danh sách kiểm tra lỗi khi duyệt mã và kết quả duyệt ngày 22/11/2026438
-Bảng 5.27. Kết quả kiểm thử các yêu cầu tiến hóa444
-Bảng 5.28. Cấu hình máy đo so với cấu hình triển khai ở mục 1.2.3447
-Bảng 5.29. Dữ liệu đo so với mức dung lượng lưu trữ ở Bảng 1.11448
-Bảng 5.30. Kết quả đo các yêu cầu hiệu quả trên dữ liệu lớn450
-Bảng 5.31. Kết quả đo HQ04: hủy 1.000 phiếu đến hạn trong một lần kiểm tra453
-Bảng 5.32. Kết quả kiểm tra 20 yêu cầu gửi cùng lúc vào hạng vé còn 5 ghế454
-Bảng 5.33. Kết quả tăng tải dần và quá tải với tra cứu chuyến bay và bán vé455
-Bảng 5.34. Kết quả kiểm tra các yêu cầu tương thích và môi trường chạy457
-Bảng 5.35. Kết quả kiểm tra các yêu cầu bảo mật459
-Bảng 5.36. Kết quả đánh giá các yêu cầu công nghệ463
-Bảng 5.37. Số thao tác để có kết quả tra cứu và báo cáo466
-Bảng 5.38. Kết quả đánh giá các yêu cầu tiện dụng469
-Bảng 5.39. Kết quả kiểm tra phím tắt473
-Bảng 5.40. Kết quả kiểm tra các yêu cầu an toàn476
-Bảng 5.41. Tổng hợp kết quả kiểm thử theo nhóm yêu cầu479
-Bảng 5.42. Các lỗi đã phát hiện trong quá trình kiểm thử và đã sửa481
-Bảng 6.1. Yêu cầu phần cứng và phần mềm489
-Bảng 6.2. Các tài khoản ban đầu494
-Bảng 6.3. Một số lỗi thường gặp khi cài đặt và cách xử lý498
-Bảng 6.4. Các phím tắt của phần mềm505
-Bảng 6.5. Các thông báo thường gặp và cách xử lý537
+Bảng 1.25. Các công việc chính theo từng giai đoạn34
+Bảng 1.26. Danh sách thành viên nhóm 1235
+Bảng 1.27. Kế hoạch thực hiện đồ án35
+Bảng 1.28. Quản lý các rủi ro trong quá trình thực hiện đồ án36
+Bảng 2.1. Danh sách tác nhân của hệ thống38
+Bảng 2.2. Danh sách use case của hệ thống39
+Bảng 2.3. Đặc tả use case UC01 Đăng nhập49
+Bảng 2.4. Đặc tả use case UC02 Phân quyền56
+Bảng 2.5. Đặc tả use case UC03 Quản lý chuyến bay64
+Bảng 2.6. Đặc tả use case UC04 Quản lý bán vé79
+Bảng 2.7. Đặc tả use case UC05 Quản lý đặt vé95
+Bảng 2.8. Đặc tả use case UC06 Tự động hủy phiếu đặt chỗ109
+Bảng 2.9. Đặc tả use case UC07 Lập báo cáo doanh thu115
+Bảng 2.10. Đặc tả use case UC08 Thay đổi quy định123
+Bảng 2.11. Danh sách các lớp phân tích131
+Bảng 2.12. Danh sách mối kết hợp137
+Bảng 3.1. Mô tả các thành phần trong hệ thống149
+Bảng 3.2. Công nghệ và công cụ sử dụng152
+Bảng 3.3. Biểu mẫu 1 và quy định 1157
+Bảng 3.4. Thuộc tính mới và quy định liên quan ở bước 1162
+Bảng 3.5. Biểu mẫu 2 và quy định 2164
+Bảng 3.6. Thuộc tính mới và quy định liên quan ở bước 2169
+Bảng 3.7. Biểu mẫu 3 và quy định 3171
+Bảng 3.8. Thuộc tính mới và quy định liên quan ở bước 3174
+Bảng 3.9. Biểu mẫu 4175
+Bảng 3.10. Biểu mẫu 5.1177
+Bảng 3.11. Biểu mẫu 5.2177
+Bảng 3.12. Nơi lưu các giá trị thay đổi được theo QĐ6179
+Bảng 3.13. Thuộc tính mới và quy định liên quan ở bước 7182
+Bảng 3.14. Đối chiếu thông tin trên biểu mẫu với nơi lưu183
+Bảng 3.15. Danh sách các bảng dữ liệu trong sơ đồ188
+Bảng 3.16. Mô tả bảng SANBAY190
+Bảng 3.17. Mô tả bảng CHUYENBAY190
+Bảng 3.18. Mô tả bảng CHITIETTRUNGGIAN191
+Bảng 3.19. Mô tả bảng HANGVE192
+Bảng 3.20. Mô tả bảng GHETHEOHANG193
+Bảng 3.21. Mô tả bảng HANHKHACH193
+Bảng 3.22. Mô tả bảng VE194
+Bảng 3.23. Mô tả bảng PHIEUDATCHO196
+Bảng 3.24. Mô tả bảng THAMSOQUYDINH197
+Bảng 3.25. Mô tả bảng TAIKHOAN198
+Bảng 3.26. Phân loại các lớp của phần mềm199
+Bảng 3.27. Đổi kiểu dữ liệu từ SQL Server sang C#201
+Bảng 3.28. Danh sách các lớp DTO204
+Bảng 3.29. Nơi hiện thực các phương thức của lớp thực thể207
+Bảng 3.30. Các lớp truy xuất dữ liệu và phương thức211
+Bảng 3.31. Các lớp tiện ích và lớp hỗ trợ215
+Bảng 3.32. Các lớp của phần giao tiếp219
+Bảng 3.33. Danh sách các màn hình247
+Bảng 3.34. Mô tả các đối tượng trên màn hình đăng nhập251
+Bảng 3.35. Danh sách biến cố và xử lý trên màn hình đăng nhập251
+Bảng 3.36. Mô tả các đối tượng trên màn hình chính255
+Bảng 3.37. Danh sách biến cố và xử lý trên màn hình chính258
+Bảng 3.38. Mô tả các đối tượng trên màn hình phân quyền261
+Bảng 3.39. Danh sách biến cố và xử lý trên màn hình phân quyền262
+Bảng 3.40. Mô tả các đối tượng trên màn hình thêm, sửa tài khoản265
+Bảng 3.41. Danh sách biến cố và xử lý trên màn hình thêm, sửa tài khoản267
+Bảng 3.42. Mô tả các đối tượng trên màn hình danh sách chuyến bay271
+Bảng 3.43. Danh sách biến cố và xử lý trên màn hình danh sách chuyến bay274
+Bảng 3.44. Mô tả các đối tượng trên màn hình thêm, sửa chuyến bay278
+Bảng 3.45. Danh sách biến cố và xử lý trên màn hình thêm, sửa chuyến bay281
+Bảng 3.46. Mô tả các đối tượng trên màn hình danh sách vé284
+Bảng 3.47. Danh sách biến cố và xử lý trên màn hình danh sách vé286
+Bảng 3.48. Mô tả các đối tượng trên màn hình bán vé291
+Bảng 3.49. Danh sách biến cố và xử lý trên màn hình bán vé294
+Bảng 3.50. Mô tả các đối tượng trên màn hình danh sách phiếu đặt chỗ298
+Bảng 3.51. Danh sách biến cố và xử lý trên màn hình danh sách phiếu đặt chỗ301
+Bảng 3.52. Mô tả các đối tượng trên màn hình đặt vé305
+Bảng 3.53. Danh sách biến cố và xử lý trên màn hình đặt vé307
+Bảng 3.54. Mô tả các đối tượng trên màn hình lập báo cáo doanh thu311
+Bảng 3.55. Danh sách biến cố và xử lý trên màn hình lập báo cáo doanh thu312
+Bảng 3.56. Mô tả các đối tượng trên màn hình danh sách quy định315
+Bảng 3.57. Danh sách biến cố và xử lý trên màn hình danh sách quy định317
+Bảng 3.58. Mô tả các đối tượng trên màn hình cập nhật quy định320
+Bảng 3.59. Danh sách biến cố và xử lý trên màn hình cập nhật quy định322
+Bảng 3.60. Mô tả các đối tượng trên màn hình thông báo326
+Bảng 3.61. Danh sách biến cố và xử lý trên màn hình thông báo327
+Bảng 4.1. Thư viện và công cụ đã dùng khi cài đặt330
+Bảng 4.2. Đánh giá ngôn ngữ lập trình theo năm tiêu chí334
+Bảng 4.3. Ánh xạ từ thiết kế sang mã nguồn337
+Bảng 4.4. Thống kê mã nguồn theo tầng341
+Bảng 4.5. Mức độ hoàn thành các chức năng371
+Bảng 5.1. Các mức kiểm thử và công cụ377
+Bảng 5.2. Môi trường kiểm thử379
+Bảng 5.3. Kế hoạch kiểm thử theo bảy mục383
+Bảng 5.4. Phân hoạch tương đương và giá trị biên của thời gian bay (QĐ1 với mức tối thiểu 30 phút, giả định 12)387
+Bảng 5.5. Phân hoạch tương đương và giá trị biên của ô số căn cước (giả định 9)389
+Bảng 5.6. Kiểm thử theo trạng thái của phiếu đặt chỗ, vé, tài khoản và chuyến bay390
+Bảng 5.7. Tổng hợp kiểm thử tầng xử lý nghiệp vụ và truy xuất dữ liệu394
+Bảng 5.8. Một số ca kiểm thử tiêu biểu ở tầng xử lý398
+Bảng 5.9. Độ phủ dòng lệnh của bộ kiểm thử xUnit theo thư mục mã nguồn401
+Bảng 5.10. Các đường độc lập của kiemTraQuyDinhNhanLich và ca kiểm thử tương ứng403
+Bảng 5.11. Các đường độc lập của kichHoatDinhKy và ca kiểm thử tương ứng405
+Bảng 5.12. Các ca kiểm thử phần giao tiếp trong lớp KiemThuGiaoTiep407
+Bảng 5.13. Các nhóm bước của script kiểm tra nhanh phần giao tiếp410
+Bảng 5.14. Các ca kiểm thử giao diện của UC01 Đăng nhập413
+Bảng 5.15. Các ca kiểm thử giao diện của UC02 Phân quyền414
+Bảng 5.16. Các ca kiểm thử giao diện của UC03 Quản lý chuyến bay416
+Bảng 5.17. Các ca kiểm thử giao diện của UC04 Quản lý bán vé419
+Bảng 5.18. Các ca kiểm thử giao diện của UC05 Quản lý đặt vé421
+Bảng 5.19. Các ca kiểm thử giao diện của UC07 Lập báo cáo doanh thu422
+Bảng 5.20. Các ca kiểm thử giao diện của UC08 Thay đổi quy định424
+Bảng 5.21. Các ca kiểm thử giao diện của các chức năng chung425
+Bảng 5.22. Các ca kiểm thử giao diện bổ sung427
+Bảng 5.23. Đối chiếu yêu cầu nghiệp vụ, quy định, biểu mẫu với ca kiểm thử430
+Bảng 5.24. Đối chiếu các yêu cầu tiến hóa, bảo mật, tương thích, an toàn với ca kiểm thử432
+Bảng 5.25. Tổng hợp kết quả kiểm thử chức năng436
+Bảng 5.26. Danh sách kiểm tra lỗi khi duyệt mã và kết quả duyệt ngày 22/11/2026439
+Bảng 5.27. Kết quả kiểm thử các yêu cầu tiến hóa445
+Bảng 5.28. Cấu hình máy đo so với cấu hình triển khai ở mục 1.2.3448
+Bảng 5.29. Dữ liệu đo so với mức dung lượng lưu trữ ở Bảng 1.11449
+Bảng 5.30. Kết quả đo các yêu cầu hiệu quả trên dữ liệu lớn451
+Bảng 5.31. Kết quả đo HQ04: hủy 1.000 phiếu đến hạn trong một lần kiểm tra454
+Bảng 5.32. Kết quả kiểm tra 20 yêu cầu gửi cùng lúc vào hạng vé còn 5 ghế455
+Bảng 5.33. Kết quả tăng tải dần và quá tải với tra cứu chuyến bay và bán vé456
+Bảng 5.34. Kết quả kiểm tra các yêu cầu tương thích và môi trường chạy458
+Bảng 5.35. Kết quả kiểm tra các yêu cầu bảo mật460
+Bảng 5.36. Kết quả đánh giá các yêu cầu công nghệ464
+Bảng 5.37. Số thao tác để có kết quả tra cứu và báo cáo467
+Bảng 5.38. Kết quả đánh giá các yêu cầu tiện dụng470
+Bảng 5.39. Kết quả kiểm tra phím tắt474
+Bảng 5.40. Kết quả kiểm tra các yêu cầu an toàn477
+Bảng 5.41. Tổng hợp kết quả kiểm thử theo nhóm yêu cầu480
+Bảng 5.42. Các lỗi đã phát hiện trong quá trình kiểm thử và đã sửa482
+Bảng 6.1. Yêu cầu phần cứng và phần mềm490
+Bảng 6.2. Các tài khoản ban đầu495
+Bảng 6.3. Một số lỗi thường gặp khi cài đặt và cách xử lý499
+Bảng 6.4. Các phím tắt của phần mềm507
+Bảng 6.5. Các thông báo thường gặp và cách xử lý539
 DANH MỤC HÌNH
-Hình 1.1. Quy trình nghiệp vụ tổng quát của phòng vé30
-Hình 1.2. Biểu đồ ngữ cảnh của hệ thống31
-Hình 1.3. Biểu đồ phân cấp chức năng của hệ thống32
-Hình 1.4. Mô hình thác nước cải tiến áp dụng cho đề tài32
-Hình 2.1. Biểu đồ use case tổng quan43
-Hình 2.2. Biểu đồ phân rã use case quản lý chuyến bay44
-Hình 2.3. Biểu đồ phân rã use case quản lý bán vé45
-Hình 2.4. Biểu đồ phân rã use case quản lý đặt vé46
-Hình 2.5. Biểu đồ phân rã use case lập báo cáo doanh thu46
-Hình 2.6. Biểu đồ phân rã use case thay đổi quy định47
-Hình 2.7. Biểu đồ hoạt động của UC01 Đăng nhập50
-Hình 2.8. Biểu đồ tuần tự của UC01 Đăng nhập52
-Hình 2.9. Biểu đồ cộng tác của UC01 Đăng nhập53
-Hình 2.10. Biểu đồ lớp phân tích của UC01 Đăng nhập54
-Hình 2.11. Biểu đồ hoạt động của UC02 Phân quyền57
-Hình 2.12. Biểu đồ tuần tự của UC02 Phân quyền60
-Hình 2.13. Biểu đồ cộng tác của UC02 Phân quyền60
-Hình 2.14. Biểu đồ lớp phân tích của UC02 Phân quyền62
-Hình 2.15. Biểu đồ hoạt động của UC03 Quản lý chuyến bay68
-Hình 2.16.1. Biểu đồ tuần tự của UC03.1 Thêm chuyến bay69
-Hình 2.16.2. Biểu đồ tuần tự của UC03.2, UC03.3 Sửa, xóa chuyến bay72
-Hình 2.16.3. Biểu đồ tuần tự của UC03.4 Tra cứu chuyến bay73
-Hình 2.16.4. Biểu đồ tuần tự của UC03.1 Thêm chuyến bay (nhập lịch chuyến bay từ tập tin Excel)74
-Hình 2.17. Biểu đồ cộng tác của UC03.1 Thêm chuyến bay76
-Hình 2.18. Biểu đồ lớp phân tích của UC03 Quản lý chuyến bay77
-Hình 2.19. Biểu đồ hoạt động của UC04 Quản lý bán vé84
-Hình 2.20.1. Biểu đồ tuần tự của UC04.1 Bán vé trực tiếp85
-Hình 2.20.2. Biểu đồ tuần tự của UC04.2 Bán vé từ phiếu đặt chỗ87
-Hình 2.20.3. Biểu đồ tuần tự của UC04.3, UC04.4, UC04.5 Tra cứu, sửa, hủy vé90
-Hình 2.21.1. Biểu đồ cộng tác của UC04.1 Bán vé trực tiếp91
-Hình 2.21.2. Biểu đồ cộng tác của UC04.2 Bán vé từ phiếu đặt chỗ92
-Hình 2.22. Biểu đồ lớp phân tích của UC04 Quản lý bán vé93
-Hình 2.23. Biểu đồ hoạt động của UC05 Quản lý đặt vé101
-Hình 2.24.1. Biểu đồ tuần tự của UC05.1 Lập phiếu đặt chỗ102
-Hình 2.24.2. Biểu đồ tuần tự của UC05.2, UC05.3, UC05.4 Tra cứu, sửa, hủy phiếu đặt chỗ104
-Hình 2.24.3. Biểu đồ tuần tự của UC05.5 Xóa phiếu đặt chỗ đã hủy105
-Hình 2.25. Biểu đồ cộng tác của UC05.1 Lập phiếu đặt chỗ107
-Hình 2.26. Biểu đồ lớp phân tích của UC05 Quản lý đặt vé108
-Hình 2.27. Biểu đồ hoạt động của UC06 Tự động hủy phiếu đặt chỗ111
-Hình 2.28. Biểu đồ tuần tự của UC06 Tự động hủy phiếu đặt chỗ112
-Hình 2.29. Biểu đồ cộng tác của UC06 Tự động hủy phiếu đặt chỗ113
-Hình 2.30. Biểu đồ lớp phân tích của UC06 Tự động hủy phiếu đặt chỗ114
-Hình 2.31. Biểu đồ hoạt động của UC07 Lập báo cáo doanh thu116
-Hình 2.32. Biểu đồ tuần tự của UC07 Lập báo cáo doanh thu118
-Hình 2.33. Biểu đồ cộng tác của UC07 Lập báo cáo doanh thu120
-Hình 2.34. Biểu đồ lớp phân tích của UC07 Lập báo cáo doanh thu121
-Hình 2.35. Biểu đồ hoạt động của UC08 Thay đổi quy định125
-Hình 2.36. Biểu đồ tuần tự của UC08 Thay đổi quy định128
-Hình 2.37. Biểu đồ cộng tác của UC08 Thay đổi quy định128
-Hình 2.38. Biểu đồ lớp phân tích của UC08 Thay đổi quy định129
-Hình 2.39. Biểu đồ lớp thực thể135
-Hình 2.40. Biểu đồ thực thể liên kết của hệ thống138
-Hình 2.41. Biểu đồ luồng dữ liệu của NV01 Nhận lịch chuyến bay139
-Hình 2.42. Biểu đồ luồng dữ liệu của NV02 Bán vé139
-Hình 2.43. Biểu đồ luồng dữ liệu của NV03 Ghi nhận đặt vé140
-Hình 2.44. Biểu đồ luồng dữ liệu của NV04 Tra cứu chuyến bay140
-Hình 2.45. Biểu đồ luồng dữ liệu của NV05 Lập báo cáo141
-Hình 2.46. Biểu đồ luồng dữ liệu của NV06 Thay đổi quy định141
-Hình 2.47. Sơ đồ trạng thái của vé142
-Hình 2.48. Sơ đồ trạng thái của phiếu đặt chỗ142
-Hình 2.49. Sơ đồ trạng thái của tài khoản143
-Hình 3.1. Kiến trúc ba lớp của hệ thống148
-Hình 3.2. Sơ đồ logic bước 1, thiết kế với tính đúng đắn157
-Hình 3.3. Sơ đồ logic bước 1, thiết kế với tính tiến hóa159
-Hình 3.4. Sơ đồ logic bước 1, thiết kế với tính hiệu quả160
-Hình 3.5. Sơ đồ logic bước 2, thiết kế với tính đúng đắn164
-Hình 3.6. Sơ đồ logic bước 2, thiết kế với tính tiến hóa165
-Hình 3.7. Sơ đồ logic bước 2, thiết kế với tính hiệu quả167
-Hình 3.8. Sơ đồ logic bước 3, thiết kế với tính đúng đắn171
-Hình 3.9. Sơ đồ logic bước 3, thiết kế với tính tiến hóa172
-Hình 3.10. Các hộp quy định có thể chọn và nơi lưu của từng quy định178
-Hình 3.11. Sơ đồ logic bước 6, các bảng THAMSOQUYDINH, HANGVE, SANBAY179
-Hình 3.12. Sơ đồ logic bước 7, bảng TAIKHOAN180
-Hình 3.13. Sơ đồ logic hoàn chỉnh của hệ thống187
-Hình 3.14. Các lớp DTO SanBay, ChuyenBay, ChiTietTrungGian, HangVe, GheTheoHang202
-Hình 3.15. Các lớp DTO HanhKhach, Ve, TaiKhoan, PhieuDatCho, ThamSoQuyDinh và các lớp TieuChiTim, ThongTinBan, ThongTinHang203
-Hình 3.16. Sơ đồ lớp chi tiết chức năng Đăng nhập222
-Hình 3.17. Sơ đồ lớp chi tiết chức năng Phân quyền224
-Hình 3.18. Sơ đồ lớp chi tiết chức năng Quản lý chuyến bay: thêm, sửa, xóa chuyến bay227
-Hình 3.19. Sơ đồ lớp chi tiết chức năng Quản lý chuyến bay: tra cứu chuyến bay229
-Hình 3.20. Sơ đồ lớp chi tiết chức năng Quản lý bán vé: bán vé231
-Hình 3.21. Sơ đồ lớp chi tiết chức năng Quản lý bán vé: tra cứu, sửa, hủy vé232
-Hình 3.22. Sơ đồ lớp chi tiết chức năng Quản lý đặt vé: lập phiếu đặt chỗ234
-Hình 3.23. Sơ đồ lớp chi tiết chức năng Quản lý đặt vé: tra cứu, sửa, hủy phiếu và xóa phiếu đã hủy236
-Hình 3.24. Sơ đồ lớp chi tiết chức năng Tự động hủy phiếu đặt chỗ238
-Hình 3.25. Sơ đồ lớp chi tiết chức năng Lập báo cáo doanh thu240
-Hình 3.26. Sơ đồ lớp chi tiết chức năng Thay đổi quy định242
-Hình 3.27. Sơ đồ liên kết các màn hình245
-Hình 3.28. Màn hình đăng nhập249
-Hình 3.29. Màn hình chính của Quản lý252
-Hình 3.30. Màn hình chính của Nhân viên bán vé, bảng thông báo đang mở253
-Hình 3.31. Màn hình phân quyền260
-Hình 3.32. Màn hình thêm tài khoản263
-Hình 3.33. Màn hình sửa tài khoản đang đăng nhập264
-Hình 3.34. Màn hình danh sách chuyến bay268
-Hình 3.35. Hộp thoại nhập lịch chuyến bay từ Excel269
-Hình 3.36. Màn hình thêm chuyến bay276
-Hình 3.37. Màn hình danh sách vé283
-Hình 3.38. Màn hình bán vé, cách bán trực tiếp288
-Hình 3.39. Màn hình bán vé, cách bán từ phiếu đặt chỗ289
-Hình 3.40. Màn hình danh sách phiếu đặt chỗ297
-Hình 3.41. Màn hình đặt vé, chế độ lập phiếu302
-Hình 3.42. Màn hình đặt vé, chế độ sửa phiếu303
-Hình 3.43. Màn hình lập báo cáo doanh thu, báo cáo tháng308
-Hình 3.44. Màn hình lập báo cáo doanh thu, báo cáo năm309
-Hình 3.45. Màn hình danh sách quy định314
-Hình 3.46. Màn hình cập nhật quy định, dạng cập nhật tham số318
-Hình 3.47. Màn hình cập nhật quy định, dạng thêm sân bay318
-Hình 3.48. Màn hình cập nhật quy định, dạng thêm hạng vé319
-Hình 3.49. Màn hình thông báo, hỏi xác nhận323
-Hình 3.50. Màn hình thông báo, báo lỗi324
-Hình 3.51. Màn hình thông báo, báo thành công và thông báo nổi325
-Hình 4.1. Lỗi nghiệp vụ được hiển thị trong hộp thoại thông báo khi xóa chuyến bay đã có vé346
-Hình 4.2. Trạng thái rỗng dùng chung khi tra cứu không có kết quả348
-Hình 4.3. Màn hình chính của Nhân viên bán vé chỉ hiện các chức năng được phép349
-Hình 4.4. Nhân viên bán vé mở đường dẫn của Quản lý thì bị chặn350
-Hình 4.5. Hỏi xác nhận trước khi khóa tài khoản banve04351
-Hình 4.6. Tài khoản banve04 ở trạng thái Đã khóa sau khi khóa352
-Hình 4.7. Thêm chuyến bay CB247 vi phạm thời gian bay tối thiểu của QĐ1353
-Hình 4.8. Thời gian dừng 25 phút tại DAD vi phạm QĐ1354
-Hình 4.9. Chuyến bay CB246 sau khi thêm thành công, tra cứu theo BM4355
-Hình 4.10. Kết quả nhập lịch chuyến bay từ tập tin Excel356
-Hình 4.11. Nội dung tập tin Excel danh sách chuyến bay357
-Hình 4.12. Hạng vé hết chỗ bị khóa trên màn hình bán vé358
-Hình 4.13. Không bán vé cho chuyến bay đã khởi hành359
-Hình 4.14. Hỏi xác nhận trước khi bán vé359
-Hình 4.15. Bán vé thành công, hiện mã vé VE00002810360
-Hình 4.16. Vé VE00002810 ở tình trạng Đã hủy sau khi hủy vé361
-Hình 4.17. Không đặt được vé vì quá thời hạn đặt vé của QĐ3362
-Hình 4.18. Đặt vé thành công, hiện mã phiếu và hạn thanh toán362
-Hình 4.19. Phiếu PD00000287 ở tình trạng Đã hủy363
-Hình 4.20. Hỏi xác nhận xóa hẳn các phiếu đã hủy trước ngày 13/10/2026364
-Hình 4.21. Báo cáo tháng 3/2025 không có chuyến bay nào365
-Hình 4.22. Trang đầu tập tin PDF báo cáo doanh thu tháng 11/2026366
-Hình 4.23. Nội dung tập tin Excel báo cáo doanh thu tháng 11/2026367
-Hình 4.24. Đổi thời gian bay tối thiểu từ 30 phút thành 45 phút368
-Hình 4.25. Tham số mới 45 phút có hiệu lực ngay ở màn hình thêm chuyến bay369
-Hình 4.26. Không xóa được sân bay đang được chuyến bay sử dụng370
-Hình 5.1. Sơ đồ luồng điều khiển của phương thức kiemTraQuyDinhNhanLich402
-Hình 5.2. Sơ đồ luồng điều khiển của phương thức kichHoatDinhKy404
-Hình 5.3. Chọn sân bay từ danh sách ở biểu mẫu thêm chuyến bay (TD01)467
-Hình 5.4. Giá tiền tự tính và thông báo lỗi tại ô ở màn hình bán vé (TD02)468
-Hình 5.5. Tra cứu chuyến bay theo sân bay đi và sân bay đến sau 3 thao tác (TD04)469
-Hình 6.1. Màn hình Đăng nhập500
-Hình 6.2. Thông báo sai tên đăng nhập hoặc mật khẩu501
-Hình 6.3. Thông báo tài khoản đã bị khóa501
-Hình 6.4. Phần đầu trang chính của Quản lý502
-Hình 6.5. Trang chính của Nhân viên bán vé503
-Hình 6.6. Chuông thông báo đang mở504
-Hình 6.7. Trang Trợ giúp505
-Hình 6.8. Ô chọn ngày đang mở bảng lịch507
-Hình 6.9. Màn hình Danh sách chuyến bay509
-Hình 6.10. Màn hình xem chi tiết chuyến bay510
-Hình 6.11. Màn hình Bán vé ở chế độ bán trực tiếp511
-Hình 6.12. Bán vé từ phiếu đặt chỗ513
-Hình 6.13. Màn hình Danh sách vé514
-Hình 6.14. Màn hình Đặt vé516
-Hình 6.15. Màn hình Danh sách phiếu đặt chỗ518
-Hình 6.16. Màn hình Sửa phiếu đặt chỗ519
-Hình 6.17. Màn hình Thêm chuyến bay521
-Hình 6.18. Ô Ngày giờ khởi hành đang mở bảng lịch và giờ522
-Hình 6.19. Màn hình Sửa chuyến bay524
-Hình 6.20. Báo cáo doanh thu tháng526
-Hình 6.21. Báo cáo doanh thu năm527
-Hình 6.22. Màn hình Thay đổi quy định528
-Hình 6.23. Hộp thoại Cập nhật quy định529
-Hình 6.24. Hộp thoại Thêm sân bay530
-Hình 6.25. Hộp thoại Thêm hạng vé531
-Hình 6.26. Màn hình Phân quyền532
-Hình 6.27. Hộp thoại Thêm tài khoản533
-Hình 6.28. Hộp thoại Sửa tài khoản534
-Hình 6.29. Thông báo đã xóa phiếu đặt chỗ đã hủy535
-Hình 6.30. Hộp thoại hỏi xác nhận khi hủy thao tác bán vé đang nhập dở536
-Hình 6.31. Hộp thoại báo lỗi khi xóa hạng vé đang được sử dụng536
+Hình 1.1. Quy trình nghiệp vụ tổng quát của phòng vé31
+Hình 1.2. Biểu đồ ngữ cảnh của hệ thống32
+Hình 1.3. Biểu đồ phân cấp chức năng của hệ thống33
+Hình 1.4. Mô hình thác nước cải tiến áp dụng cho đề tài33
+Hình 2.1. Biểu đồ use case tổng quan44
+Hình 2.2. Biểu đồ phân rã use case quản lý chuyến bay45
+Hình 2.3. Biểu đồ phân rã use case quản lý bán vé46
+Hình 2.4. Biểu đồ phân rã use case quản lý đặt vé47
+Hình 2.5. Biểu đồ phân rã use case lập báo cáo doanh thu47
+Hình 2.6. Biểu đồ phân rã use case thay đổi quy định48
+Hình 2.7. Biểu đồ hoạt động của UC01 Đăng nhập51
+Hình 2.8. Biểu đồ tuần tự của UC01 Đăng nhập53
+Hình 2.9. Biểu đồ cộng tác của UC01 Đăng nhập54
+Hình 2.10. Biểu đồ lớp phân tích của UC01 Đăng nhập55
+Hình 2.11. Biểu đồ hoạt động của UC02 Phân quyền58
+Hình 2.12. Biểu đồ tuần tự của UC02 Phân quyền61
+Hình 2.13. Biểu đồ cộng tác của UC02 Phân quyền61
+Hình 2.14. Biểu đồ lớp phân tích của UC02 Phân quyền63
+Hình 2.15. Biểu đồ hoạt động của UC03 Quản lý chuyến bay69
+Hình 2.16.1. Biểu đồ tuần tự của UC03.1 Thêm chuyến bay70
+Hình 2.16.2. Biểu đồ tuần tự của UC03.2, UC03.3 Sửa, xóa chuyến bay73
+Hình 2.16.3. Biểu đồ tuần tự của UC03.4 Tra cứu chuyến bay74
+Hình 2.16.4. Biểu đồ tuần tự của UC03.1 Thêm chuyến bay (nhập lịch chuyến bay từ tập tin Excel)75
+Hình 2.17. Biểu đồ cộng tác của UC03.1 Thêm chuyến bay77
+Hình 2.18. Biểu đồ lớp phân tích của UC03 Quản lý chuyến bay78
+Hình 2.19. Biểu đồ hoạt động của UC04 Quản lý bán vé85
+Hình 2.20.1. Biểu đồ tuần tự của UC04.1 Bán vé trực tiếp86
+Hình 2.20.2. Biểu đồ tuần tự của UC04.2 Bán vé từ phiếu đặt chỗ88
+Hình 2.20.3. Biểu đồ tuần tự của UC04.3, UC04.4, UC04.5 Tra cứu, sửa, hủy vé91
+Hình 2.21.1. Biểu đồ cộng tác của UC04.1 Bán vé trực tiếp92
+Hình 2.21.2. Biểu đồ cộng tác của UC04.2 Bán vé từ phiếu đặt chỗ93
+Hình 2.22. Biểu đồ lớp phân tích của UC04 Quản lý bán vé94
+Hình 2.23. Biểu đồ hoạt động của UC05 Quản lý đặt vé102
+Hình 2.24.1. Biểu đồ tuần tự của UC05.1 Lập phiếu đặt chỗ103
+Hình 2.24.2. Biểu đồ tuần tự của UC05.2, UC05.3, UC05.4 Tra cứu, sửa, hủy phiếu đặt chỗ105
+Hình 2.24.3. Biểu đồ tuần tự của UC05.5 Xóa phiếu đặt chỗ đã hủy106
+Hình 2.25. Biểu đồ cộng tác của UC05.1 Lập phiếu đặt chỗ108
+Hình 2.26. Biểu đồ lớp phân tích của UC05 Quản lý đặt vé109
+Hình 2.27. Biểu đồ hoạt động của UC06 Tự động hủy phiếu đặt chỗ112
+Hình 2.28. Biểu đồ tuần tự của UC06 Tự động hủy phiếu đặt chỗ113
+Hình 2.29. Biểu đồ cộng tác của UC06 Tự động hủy phiếu đặt chỗ114
+Hình 2.30. Biểu đồ lớp phân tích của UC06 Tự động hủy phiếu đặt chỗ115
+Hình 2.31. Biểu đồ hoạt động của UC07 Lập báo cáo doanh thu117
+Hình 2.32. Biểu đồ tuần tự của UC07 Lập báo cáo doanh thu119
+Hình 2.33. Biểu đồ cộng tác của UC07 Lập báo cáo doanh thu121
+Hình 2.34. Biểu đồ lớp phân tích của UC07 Lập báo cáo doanh thu122
+Hình 2.35. Biểu đồ hoạt động của UC08 Thay đổi quy định126
+Hình 2.36. Biểu đồ tuần tự của UC08 Thay đổi quy định129
+Hình 2.37. Biểu đồ cộng tác của UC08 Thay đổi quy định129
+Hình 2.38. Biểu đồ lớp phân tích của UC08 Thay đổi quy định130
+Hình 2.39. Biểu đồ lớp thực thể136
+Hình 2.40. Biểu đồ thực thể liên kết của hệ thống139
+Hình 2.41. Biểu đồ luồng dữ liệu của NV01 Nhận lịch chuyến bay140
+Hình 2.42. Biểu đồ luồng dữ liệu của NV02 Bán vé140
+Hình 2.43. Biểu đồ luồng dữ liệu của NV03 Ghi nhận đặt vé141
+Hình 2.44. Biểu đồ luồng dữ liệu của NV04 Tra cứu chuyến bay141
+Hình 2.45. Biểu đồ luồng dữ liệu của NV05 Lập báo cáo142
+Hình 2.46. Biểu đồ luồng dữ liệu của NV06 Thay đổi quy định142
+Hình 2.47. Sơ đồ trạng thái của vé143
+Hình 2.48. Sơ đồ trạng thái của phiếu đặt chỗ143
+Hình 2.49. Sơ đồ trạng thái của tài khoản144
+Hình 3.1. Kiến trúc ba lớp của hệ thống149
+Hình 3.2. Sơ đồ logic bước 1, thiết kế với tính đúng đắn158
+Hình 3.3. Sơ đồ logic bước 1, thiết kế với tính tiến hóa160
+Hình 3.4. Sơ đồ logic bước 1, thiết kế với tính hiệu quả161
+Hình 3.5. Sơ đồ logic bước 2, thiết kế với tính đúng đắn165
+Hình 3.6. Sơ đồ logic bước 2, thiết kế với tính tiến hóa166
+Hình 3.7. Sơ đồ logic bước 2, thiết kế với tính hiệu quả168
+Hình 3.8. Sơ đồ logic bước 3, thiết kế với tính đúng đắn172
+Hình 3.9. Sơ đồ logic bước 3, thiết kế với tính tiến hóa173
+Hình 3.10. Các hộp quy định có thể chọn và nơi lưu của từng quy định179
+Hình 3.11. Sơ đồ logic bước 6, các bảng THAMSOQUYDINH, HANGVE, SANBAY180
+Hình 3.12. Sơ đồ logic bước 7, bảng TAIKHOAN181
+Hình 3.13. Sơ đồ logic hoàn chỉnh của hệ thống188
+Hình 3.14. Các lớp DTO SanBay, ChuyenBay, ChiTietTrungGian, HangVe, GheTheoHang203
+Hình 3.15. Các lớp DTO HanhKhach, Ve, TaiKhoan, PhieuDatCho, ThamSoQuyDinh và các lớp TieuChiTim, ThongTinBan, ThongTinHang204
+Hình 3.16. Sơ đồ lớp chi tiết chức năng Đăng nhập223
+Hình 3.17. Sơ đồ lớp chi tiết chức năng Phân quyền225
+Hình 3.18. Sơ đồ lớp chi tiết chức năng Quản lý chuyến bay: thêm, sửa, xóa chuyến bay228
+Hình 3.19. Sơ đồ lớp chi tiết chức năng Quản lý chuyến bay: tra cứu chuyến bay230
+Hình 3.20. Sơ đồ lớp chi tiết chức năng Quản lý bán vé: bán vé232
+Hình 3.21. Sơ đồ lớp chi tiết chức năng Quản lý bán vé: tra cứu, sửa, hủy vé233
+Hình 3.22. Sơ đồ lớp chi tiết chức năng Quản lý đặt vé: lập phiếu đặt chỗ235
+Hình 3.23. Sơ đồ lớp chi tiết chức năng Quản lý đặt vé: tra cứu, sửa, hủy phiếu và xóa phiếu đã hủy237
+Hình 3.24. Sơ đồ lớp chi tiết chức năng Tự động hủy phiếu đặt chỗ239
+Hình 3.25. Sơ đồ lớp chi tiết chức năng Lập báo cáo doanh thu241
+Hình 3.26. Sơ đồ lớp chi tiết chức năng Thay đổi quy định243
+Hình 3.27. Sơ đồ liên kết các màn hình246
+Hình 3.28. Màn hình đăng nhập250
+Hình 3.29. Màn hình chính của Quản lý253
+Hình 3.30. Màn hình chính của Nhân viên bán vé, bảng thông báo đang mở254
+Hình 3.31. Màn hình phân quyền261
+Hình 3.32. Màn hình thêm tài khoản264
+Hình 3.33. Màn hình sửa tài khoản đang đăng nhập265
+Hình 3.34. Màn hình danh sách chuyến bay269
+Hình 3.35. Hộp thoại nhập lịch chuyến bay từ Excel270
+Hình 3.36. Màn hình thêm chuyến bay277
+Hình 3.37. Màn hình danh sách vé284
+Hình 3.38. Màn hình bán vé, cách bán trực tiếp289
+Hình 3.39. Màn hình bán vé, cách bán từ phiếu đặt chỗ290
+Hình 3.40. Màn hình danh sách phiếu đặt chỗ298
+Hình 3.41. Màn hình đặt vé, chế độ lập phiếu303
+Hình 3.42. Màn hình đặt vé, chế độ sửa phiếu304
+Hình 3.43. Màn hình lập báo cáo doanh thu, báo cáo tháng309
+Hình 3.44. Màn hình lập báo cáo doanh thu, báo cáo năm310
+Hình 3.45. Màn hình danh sách quy định315
+Hình 3.46. Màn hình cập nhật quy định, dạng cập nhật tham số319
+Hình 3.47. Màn hình cập nhật quy định, dạng thêm sân bay319
+Hình 3.48. Màn hình cập nhật quy định, dạng thêm hạng vé320
+Hình 3.49. Màn hình thông báo, hỏi xác nhận324
+Hình 3.50. Màn hình thông báo, báo lỗi325
+Hình 3.51. Màn hình thông báo, báo thành công và thông báo nổi326
+Hình 4.1. Lỗi nghiệp vụ được hiển thị trong hộp thoại thông báo khi xóa chuyến bay đã có vé347
+Hình 4.2. Trạng thái rỗng dùng chung khi tra cứu không có kết quả349
+Hình 4.3. Màn hình chính của Nhân viên bán vé chỉ hiện các chức năng được phép350
+Hình 4.4. Nhân viên bán vé mở đường dẫn của Quản lý thì bị chặn351
+Hình 4.5. Hỏi xác nhận trước khi khóa tài khoản banve04352
+Hình 4.6. Tài khoản banve04 ở trạng thái Đã khóa sau khi khóa353
+Hình 4.7. Thêm chuyến bay CB247 vi phạm thời gian bay tối thiểu của QĐ1354
+Hình 4.8. Thời gian dừng 25 phút tại DAD vi phạm QĐ1355
+Hình 4.9. Chuyến bay CB246 sau khi thêm thành công, tra cứu theo BM4356
+Hình 4.10. Kết quả nhập lịch chuyến bay từ tập tin Excel357
+Hình 4.11. Nội dung tập tin Excel danh sách chuyến bay358
+Hình 4.12. Hạng vé hết chỗ bị khóa trên màn hình bán vé359
+Hình 4.13. Không bán vé cho chuyến bay đã khởi hành360
+Hình 4.14. Hỏi xác nhận trước khi bán vé360
+Hình 4.15. Bán vé thành công, hiện mã vé VE00002810361
+Hình 4.16. Vé VE00002810 ở tình trạng Đã hủy sau khi hủy vé362
+Hình 4.17. Không đặt được vé vì quá thời hạn đặt vé của QĐ3363
+Hình 4.18. Đặt vé thành công, hiện mã phiếu và hạn thanh toán363
+Hình 4.19. Phiếu PD00000287 ở tình trạng Đã hủy364
+Hình 4.20. Hỏi xác nhận xóa hẳn các phiếu đã hủy trước ngày 13/10/2026365
+Hình 4.21. Báo cáo tháng 3/2025 không có chuyến bay nào366
+Hình 4.22. Trang đầu tập tin PDF báo cáo doanh thu tháng 11/2026367
+Hình 4.23. Nội dung tập tin Excel báo cáo doanh thu tháng 11/2026368
+Hình 4.24. Đổi thời gian bay tối thiểu từ 30 phút thành 45 phút369
+Hình 4.25. Tham số mới 45 phút có hiệu lực ngay ở màn hình thêm chuyến bay370
+Hình 4.26. Không xóa được sân bay đang được chuyến bay sử dụng371
+Hình 5.1. Sơ đồ luồng điều khiển của phương thức kiemTraQuyDinhNhanLich403
+Hình 5.2. Sơ đồ luồng điều khiển của phương thức kichHoatDinhKy405
+Hình 5.3. Chọn sân bay từ danh sách ở biểu mẫu thêm chuyến bay (TD01)468
+Hình 5.4. Giá tiền tự tính và thông báo lỗi tại ô ở màn hình bán vé (TD02)469
+Hình 5.5. Tra cứu chuyến bay theo sân bay đi và sân bay đến sau 3 thao tác (TD04)470
+Hình 6.1. Màn hình Đăng nhập501
+Hình 6.2. Thông báo sai tên đăng nhập hoặc mật khẩu502
+Hình 6.3. Thông báo tài khoản đã bị khóa502
+Hình 6.4. Phần đầu trang chính của Quản lý504
+Hình 6.5. Trang chính của Nhân viên bán vé505
+Hình 6.6. Chuông thông báo đang mở506
+Hình 6.7. Trang Trợ giúp507
+Hình 6.8. Ô chọn ngày đang mở bảng lịch509
+Hình 6.9. Màn hình Danh sách chuyến bay511
+Hình 6.10. Màn hình xem chi tiết chuyến bay512
+Hình 6.11. Màn hình Bán vé ở chế độ bán trực tiếp513
+Hình 6.12. Bán vé từ phiếu đặt chỗ515
+Hình 6.13. Màn hình Danh sách vé516
+Hình 6.14. Màn hình Đặt vé518
+Hình 6.15. Màn hình Danh sách phiếu đặt chỗ520
+Hình 6.16. Màn hình Sửa phiếu đặt chỗ521
+Hình 6.17. Màn hình Thêm chuyến bay523
+Hình 6.18. Ô Ngày giờ khởi hành đang mở bảng lịch và giờ524
+Hình 6.19. Màn hình Sửa chuyến bay526
+Hình 6.20. Báo cáo doanh thu tháng528
+Hình 6.21. Báo cáo doanh thu năm529
+Hình 6.22. Màn hình Thay đổi quy định530
+Hình 6.23. Hộp thoại Cập nhật quy định531
+Hình 6.24. Hộp thoại Thêm sân bay532
+Hình 6.25. Hộp thoại Thêm hạng vé533
+Hình 6.26. Màn hình Phân quyền534
+Hình 6.27. Hộp thoại Thêm tài khoản535
+Hình 6.28. Hộp thoại Sửa tài khoản536
+Hình 6.29. Thông báo đã xóa phiếu đặt chỗ đã hủy537
+Hình 6.30. Hộp thoại hỏi xác nhận khi hủy thao tác bán vé đang nhập dở538
+Hình 6.31. Hộp thoại báo lỗi khi xóa hạng vé đang được sử dụng538
 CHƯƠNG 1. TỔNG QUAN ĐỀ TÀI
 1.1. Giới thiệu tổng quan về đề tài
 1.1.1. Bối cảnh
@@ -834,7 +834,7 @@ Thay đổi QĐ3
 Cho biết thời hạn đặt vé, thời gian hủy mới
 Ghi nhận và thay đổi cách kiểm tra, cách hủy phiếu đặt
 1.2.3. Yêu cầu hiệu quả
-Yêu cầu hiệu quả liên quan đến tốc độ xử lý và dung lượng lưu trữ. Các chỉ tiêu trong Bảng 1.11 được đo trong cấu hình triển khai tại phòng vé: máy chủ của phần mềm và cơ sở dữ liệu đặt trên một máy trong mạng nội bộ có dây, nhân viên dùng trình duyệt trên máy của mình để làm việc. Máy chủ và máy của nhân viên có cấu hình tối thiểu như sau: hệ điều hành Windows 10 bản 64 bit; bộ xử lý 64 bit loại 2 nhân, tốc độ từ 2,0 GHz (ví dụ Intel Core i3 hoặc AMD Ryzen 3 tương đương); bộ nhớ truy cập ngẫu nhiên (RAM) 4 GB. Máy chủ còn trống ít nhất 10 GB ổ cứng cho hệ quản trị cơ sở dữ liệu (CSDL) và dữ liệu.
+Yêu cầu hiệu quả liên quan đến tốc độ xử lý và dung lượng lưu trữ. Các chỉ tiêu trong Bảng 1.11 được đo trong cấu hình triển khai tại phòng vé: máy chủ của phần mềm và cơ sở dữ liệu đặt trên một máy trong mạng nội bộ có dây, nhân viên dùng trình duyệt trên máy của mình để làm việc. Hệ thống được thiết kế cho tối đa 25 người dùng (Nhân viên bán vé và Quản lý) thao tác trên phần mềm cùng lúc; đây là mức thiết kế, được suy ra từ dung lượng lưu trữ trong Bảng 1.11 (giả định 18). Máy chủ và máy của nhân viên có cấu hình tối thiểu như sau: hệ điều hành Windows 10 bản 64 bit; bộ xử lý 64 bit loại 2 nhân, tốc độ từ 2,0 GHz (ví dụ Intel Core i3 hoặc AMD Ryzen 3 tương đương); bộ nhớ truy cập ngẫu nhiên (RAM) 4 GB. Máy chủ còn trống ít nhất 10 GB ổ cứng cho hệ quản trị cơ sở dữ liệu (CSDL) và dữ liệu.
 Thời gian xử lý được tính từ lúc người dùng chọn nút thực hiện đến lúc phần mềm hiển thị kết quả hoặc thông báo, khi cơ sở dữ liệu đã có lượng dữ liệu bằng mức dung lượng lưu trữ trong Bảng 1.11. Danh sách yêu cầu hiệu quả được trình bày trong Bảng 1.11, trách nhiệm tương ứng nằm trong Bảng 1.12.
 Bảng 1.11. Danh sách yêu cầu hiệu quả
 Mã YC
@@ -1290,6 +1290,7 @@ Chuyến bay đã khởi hành thì không sửa được nữa, để số li�
 Mật khẩu tài khoản dài từ 10 đến 100 ký tự và không được trùng mật khẩu mặc định của phần mềm. Một tên đăng nhập bị khóa tạm 5 phút khi đăng nhập sai 5 lần trong vòng 1 phút từ cùng một máy; một máy bị khóa tạm 5 phút khi sai 30 lần trong vòng 1 phút với bất kỳ tên nào. Chỉ lần sai mới được đếm, nên người nhập đúng không bao giờ bị chặn. Tên đăng nhập được tự cắt khoảng trắng ở đầu và cuối. Phiên đăng nhập và bộ đếm lần sai được giữ trong bộ nhớ của máy chủ, nên khi máy chủ khởi động lại thì mọi người phải đăng nhập lại và bộ đếm trở về 0. Đề không nêu các con số này; nhóm đặt chúng cho yêu cầu bảo mật ở mục 1.2.5.
 Tra cứu chuyến bay, vé, phiếu đặt chỗ và xuất danh sách chuyến bay ra tập tin Excel trả về tối đa 1.000 dòng. Khi có nhiều hơn, màn hình hiện 1.000 dòng đầu kèm thông báo chỉ hiển thị 1.000 dòng và mời người dùng thu hẹp tiêu chí. Giới hạn này giữ thời gian trả kết quả trong ngưỡng của HQ05 khi dữ liệu lớn; đề không nêu giới hạn này.
 Giữa lúc một phiếu đặt chỗ hết hạn và lần kiểm tra định kỳ kế tiếp (tối đa 15 phút, giả định 7), phiếu vẫn mang tình trạng Chờ thanh toán: nhân viên vẫn sửa được thông tin hành khách hoặc hủy phiếu theo yêu cầu, nhưng không bán vé từ phiếu đó được (giả định 5). Hủy tay một phiếu quá hạn cho cùng kết quả với lần tự hủy.
+Đề không nêu số nhân viên hay số máy của phòng vé, nên nhóm suy ra số người dùng thao tác cùng lúc từ dung lượng lưu trữ ở Bảng 1.11. Mức 2.000.000 vé và 2.000.000 phiếu đặt chỗ ứng với 4.000.000 lần lập vé hoặc phiếu. Bảng 1.11 không nêu lượng này tích lũy trong bao lâu; để an toàn, nhóm tính như thể nó được lập trong 3 năm, mỗi năm 300 ngày làm việc, mỗi ngày 8 giờ, vì khoảng thời gian càng ngắn thì mỗi giờ càng nhiều lần lập. Khi đó trung bình mỗi ngày có khoảng 4.444 lần lập, mỗi giờ khoảng 556 lần; giờ cao điểm được giả định gấp 3 lần trung bình, tức khoảng 1.667 lần mỗi giờ. Mỗi lần bán vé hoặc lập phiếu, nhân viên thao tác trên phần mềm từ 32 đến 44 giây (ước lượng theo KLM ở mục 5.2.7); thời gian hỏi khách và đọc giấy tờ không gửi yêu cầu nào tới máy chủ nên không tính. Lấy 44 giây, số nhân viên thao tác cùng lúc ở giờ cao điểm là 1.667 x 44 / 3.600, khoảng 20,4 người. Nhóm làm tròn lên 25 người dùng, phần dư dành cho Quản lý và các lần tra cứu không dẫn tới bán vé, và lấy 25 làm mức thiết kế ở mục 1.2.3. Các con số 3 năm, 300 ngày, 8 giờ và hệ số cao điểm 3 do nhóm đặt, đề không nêu.
 1.4. Mô tả quy trình thực hiện và các công việc chính của đề tài
 1.4.1. Quy trình nghiệp vụ của phòng vé
 Quy trình nghiệp vụ mà phần mềm hỗ trợ được mô tả trong Hình 1.1. Biểu đồ gồm ba làn ứng với Quản lý, Nhân viên bán vé và Đồng hồ hệ thống. Quy trình bắt đầu ở làn Quản lý: Quản lý đăng nhập rồi thực hiện ba công việc chuẩn bị là thay đổi quy định (QĐ6), phân quyền tài khoản và quản lý chuyến bay (thêm, sửa, xóa chuyến bay theo BM1). Sau khi các công việc này hoàn tất, Nhân viên bán vé đăng nhập và tiếp nhận yêu cầu của hành khách; nếu hành khách chưa biết chuyến bay, nhân viên tra cứu chuyến bay (BM4) trước. Tùy yêu cầu của hành khách, nhân viên bán vé trực tiếp khi hành khách thanh toán ngay, ghi nhận đặt vé khi hành khách chỉ đặt chỗ, hoặc bán vé từ phiếu đặt chỗ khi hành khách quay lại thanh toán. Kết quả nhân viên trả cho hành khách là Vé (BM2) hoặc Phiếu đặt chỗ (BM3), được vẽ bằng nút đối tượng hình chữ nhật góc vuông nối sau hoạt động tạo ra nó. Từ nút đối tượng Phiếu đặt chỗ có một luồng đi lên hoạt động Bán vé từ phiếu đặt chỗ với điều kiện [chưa hủy, đã thanh toán]: khi phiếu chưa bị hủy và hành khách đã thanh toán, phiếu được chuyển thành vé. Công việc này lặp lại khi còn hành khách. Cuối tháng, cuối năm, luồng chuyển sang làn Quản lý để lập báo cáo doanh thu (BM5.1, BM5.2); quy trình kết thúc sau khi có Báo cáo doanh thu.
@@ -2328,7 +2329,7 @@ Dễ sửa lỗi (CN01): lỗi kiểm tra quy định chỉ cần tìm trong l�
 Tái sử dụng (CN03): các thành phần đăng nhập, phân quyền (MH_DangNhap, MH_PhanQuyen, MH_ThemSuaTaiKhoan, XL_DangNhap, XL_PhanQuyen, DAL_TaiKhoan, TienIch_BaoMat, PhienLamViec), thay đổi quy định (MH_ThayDoiQD, MH_CapNhatQD, XL_ThayDoiQD) và lập báo cáo doanh thu (MH_BaoCao, XL_BaoCao) là các lớp riêng, không gọi màn hình hay lớp XL_ của nghiệp vụ khác và chỉ lấy dữ liệu qua lớp DAL_ và DTO. Vì vậy, khi xây dựng phần mềm bán vé tàu hoặc xe khách có yêu cầu tương tự, các lớp này được dùng lại nguyên, không phải sửa mã; phần mềm mới chỉ cần có các lớp DAL_ cung cấp cùng phương thức.
 Dễ mang chuyển (CN04): toàn bộ câu lệnh SQL nằm trong tầng truy xuất dữ liệu, các tầng trên chỉ làm việc với DTO; khi đổi sang hệ quản trị cơ sở dữ liệu quan hệ khác, phần phải làm lại gồm tầng truy xuất dữ liệu, kịch bản tạo bảng (kiểu dữ liệu, chỉ mục) và lệnh sao lưu, còn các tầng giao diện và xử lý giữ nguyên, nên khối lượng công việc nằm trong giới hạn 2 ngày làm việc của CN04.
 Dễ kiểm tra (CN06): các lớp XL_ không phụ thuộc giao diện nên các xử lý nghiệp vụ được kiểm thử đơn vị tự động bằng xUnit (Bảng 3.2) mà không cần mở giao diện; mỗi trường hợp kiểm thử ghi mã yêu cầu mà nó kiểm tra.
-Về triển khai, máy chủ ứng dụng và cơ sở dữ liệu SQL Server được cài trên một máy trong mạng nội bộ của phòng vé; nhân viên mở địa chỉ của máy chủ bằng trình duyệt trên máy của mình. Mọi yêu cầu đều do một máy chủ xử lý trên một cơ sở dữ liệu nên mọi nhân viên cùng thấy một số ghế trống. Vì nhiều người dùng cùng lúc, các thao tác có thể làm hết chỗ (bán vé trực tiếp, lập phiếu đặt chỗ, giảm số ghế của chuyến bay) được thực hiện trong một giao dịch: khóa dòng số ghế của hạng vé trên chuyến bay, tính lại số ghế trống rồi mới ghi, nhờ vậy hai yêu cầu gửi cùng lúc không bán trùng chỗ. Các thao tác chỉ đổi tình trạng (hủy vé, hủy phiếu, tự động hủy phiếu ở UC06) làm số ghế trống tăng nên không cần kiểm tra lại. Các chỉ tiêu hiệu quả ở Bảng 1.11 được đặt ra cho đúng cấu hình triển khai này, với mạng nội bộ có dây (mục 1.2.3).
+Về triển khai, máy chủ ứng dụng và cơ sở dữ liệu SQL Server được cài trên một máy trong mạng nội bộ của phòng vé; nhân viên mở địa chỉ của máy chủ bằng trình duyệt trên máy của mình. Mọi yêu cầu đều do một máy chủ xử lý trên một cơ sở dữ liệu nên mọi nhân viên cùng thấy một số ghế trống. Vì nhiều người dùng cùng lúc (tối đa 25 người dùng theo mức thiết kế ở mục 1.2.3), các thao tác có thể làm hết chỗ (bán vé trực tiếp, lập phiếu đặt chỗ, giảm số ghế của chuyến bay) được thực hiện trong một giao dịch: khóa dòng số ghế của hạng vé trên chuyến bay, tính lại số ghế trống rồi mới ghi, nhờ vậy hai yêu cầu gửi cùng lúc không bán trùng chỗ. Các thao tác chỉ đổi tình trạng (hủy vé, hủy phiếu, tự động hủy phiếu ở UC06) làm số ghế trống tăng nên không cần kiểm tra lại. Các chỉ tiêu hiệu quả ở Bảng 1.11 được đặt ra cho đúng cấu hình triển khai này, với mạng nội bộ có dây (mục 1.2.3).
 Sau khi đăng nhập thành công (UC01), máy chủ cấp cho trình duyệt một phiên làm việc. Mỗi yêu cầu gửi lên sau đó đều được phần giao tiếp kiểm tra phiên và nhóm quyền trước khi gọi tầng xử lý, nên Nhân viên bán vé không thực hiện được chức năng của Quản lý kể cả khi tự nhập địa chỉ của màn hình (BMT01 đến BMT09). Khi tài khoản bị khóa hoặc bị đổi nhóm quyền, phiên đang mở của tài khoản đó hết hiệu lực ở yêu cầu kế tiếp, vì ở mỗi yêu cầu phần giao tiếp gọi XL_DangNhap.tiepTucPhien để đối chiếu phiên với tài khoản đang lưu (mục 3.3.1.5).
 Use case UC06 Tự động hủy phiếu đặt chỗ không có màn hình. Khi máy chủ ứng dụng khởi động, bộ định thời BoDinhThoi gọi XL_HuyPhieuDat.kichHoatDinhKy(thoiDiemHienTai) một lần rồi lặp lại sau mỗi 15 phút, đóng vai trò tác nhân Đồng hồ hệ thống. Lệnh hủy chỉ cập nhật các phiếu còn ở tình trạng Chờ thanh toán nên một phiếu không bị hủy hai lần. Bộ định thời chạy trên máy chủ nên độ trễ tối đa 15 phút ở giả định 7 đúng trong suốt thời gian máy chủ hoạt động; nếu máy chủ tạm dừng thì các phiếu quá hạn được hủy ngay ở lần kiểm tra đầu tiên khi máy chủ khởi động lại. Mỗi lần có phiếu bị hủy, XL_HuyPhieuDat ghi thời điểm kiểm tra và số phiếu đã hủy vào tập tin nhật ký qua lớp TienIch_NhatKy (dòng 10 của Bảng 3.1).
 Việc sao lưu hằng ngày (AT01) được thực hiện ngoài phần mềm: phiên bản SQL Server Express không có dịch vụ lập lịch riêng nên nhóm dùng Task Scheduler của Windows trên máy chủ chạy lệnh sqlcmd sao lưu cơ sở dữ liệu vào cuối mỗi ngày, lưu tập tin .bak sang ổ đĩa khác. Khi cần phục hồi, người phụ trách phục hồi từ bản sao lưu gần nhất bằng lệnh sqlcmd hoặc SQL Server Management Studio (mục 6.1.6).
@@ -7542,7 +7543,7 @@ Hạng 1 có 5 vé Đã bán với 5 mã vé khác nhau, 0 phiếu Chờ thanh t
 15 yêu cầu (5 bán vé, 10 đặt chỗ), đều 409 HET_CHO
 5 vé Đã bán, 0 phiếu Chờ thanh toán, bằng đúng 5 ghế Hạng 1
 Ở cả hai lượt, đúng 5 chỗ được cấp và 15 yêu cầu bị từ chối vì hết chỗ, không có chỗ nào bị bán trùng, kể cả khi trộn bán vé và đặt chỗ (ở lượt thứ hai, cả 5 chỗ được cấp cho yêu cầu bán vé, lần đo ngày 12/11/2026 cấp 4 vé và 1 phiếu). Kết quả này khớp với hai ca xUnit bán đồng thời ở Bảng 5.8 nhưng được kiểm qua HTTP trên máy chủ đang chạy, với chuyến bay nằm giữa 20.000 chuyến bay và 2.000.000 vé.
-Tăng tải dần và quá tải. Theo tài liệu môn học [2, tr. 51–52], kiểm thử hiệu năng tăng dần tải cho tới khi hiệu năng không còn chấp nhận được, rồi cho tải vượt mức thiết kế để xem hệ thống hỏng ra sao và có tự hồi phục hay không. Nhóm chạy script 11_tang_tai.ps1 trên cơ sở dữ liệu QLBANVE_HQ, có lượng dữ liệu bằng mức Bảng 1.11, và lấy 20 người dùng đồng thời, bằng số phiên ở Bảng 5.32, làm mức tham chiếu. Các mức được đo là 5, 10, 20, 50, 100, 200, 400, 800 và 1.000 người dùng đồng thời. Mỗi người dùng là một phiên Nhân viên bán vé đã đăng nhập sẵn, cùng gửi một yêu cầu tại một thời điểm, không có thời gian nghỉ; thời gian đăng nhập không tính vào phép đo. Hai tác vụ được đo là tra cứu chuyến bay theo tuyến trong một năm (ngưỡng 10 giây) và bán vé (ngưỡng 5 giây). Mỗi mức dùng một chuyến bay riêng có 1.000 ghế; các mức đến 200 chạy ba lượt, mức 400 hai lượt, mức 800 và 1.000 một lượt. Sau mỗi mức, nhóm hạ tải về 5 người dùng để xem hệ thống có tự hồi phục không. Kết quả được trình bày trong Bảng 5.33, thời gian tính bằng mili giây, p95 là thời gian mà 95% số yêu cầu không vượt quá.
+Tăng tải dần và quá tải. Theo tài liệu môn học [2, tr. 51–52], kiểm thử hiệu năng tăng dần tải cho tới khi hiệu năng không còn chấp nhận được, rồi cho tải vượt mức thiết kế để xem hệ thống hỏng ra sao và có tự hồi phục hay không. Nhóm chạy script 11_tang_tai.ps1 trên cơ sở dữ liệu QLBANVE_HQ, có lượng dữ liệu bằng mức Bảng 1.11. Mức thiết kế là 25 người dùng thao tác cùng lúc (mục 1.2.3, giả định 18). Các mức được đo là 5, 10, 20, 50, 100, 200, 400, 800 và 1.000 người dùng đồng thời; mức 20 bằng số phiên ở Bảng 5.32, và mức thiết kế nằm giữa hai mức đo 20 và 50. Mỗi người dùng là một phiên Nhân viên bán vé đã đăng nhập sẵn, cùng gửi một yêu cầu tại một thời điểm, không có thời gian nghỉ; thời gian đăng nhập không tính vào phép đo. Vì vậy tải ở mỗi mức nặng hơn tải của cùng số nhân viên làm việc thật, vốn chỉ gửi yêu cầu ở một vài bước của mỗi lần bán vé. Hai tác vụ được đo là tra cứu chuyến bay theo tuyến trong một năm (ngưỡng 10 giây) và bán vé (ngưỡng 5 giây). Mỗi mức dùng một chuyến bay riêng có 1.000 ghế; các mức đến 200 chạy ba lượt, mức 400 hai lượt, mức 800 và 1.000 một lượt. Sau mỗi mức, nhóm hạ tải về 5 người dùng để xem hệ thống có tự hồi phục không. Kết quả được trình bày trong Bảng 5.33, thời gian tính bằng mili giây, p95 là thời gian mà 95% số yêu cầu không vượt quá.
 Bảng 5.33. Kết quả tăng tải dần và quá tải với tra cứu chuyến bay và bán vé
 Mức tải (người dùng đồng thời)
 Tra cứu: p95 (ms)
@@ -7565,7 +7566,7 @@ Kết luận theo ngưỡng
 32,0
 0
 Đạt
-20 (mức tham chiếu)
+20 (như Bảng 5.32)
 85,0
 95,7
 30,8
@@ -7621,7 +7622,7 @@ Hồi phục: hạ về 5 sau mỗi mức
 ≤ 37
 0
 Tự hồi phục; sau mức 1.000, bán vé nhận 409 HET_CHO vì chuyến đã hết ghế
-Thời gian tăng dần theo tải. Tra cứu vượt ngưỡng 10 giây lần đầu ở mức 1.000 người dùng đồng thời (p95 11,3 giây, lớn nhất 11,6 giây), gấp 50 lần mức tham chiếu; đây là điểm hiệu năng không còn chấp nhận được trong phạm vi đã đo. Bán vé tới mức 1.000 vẫn đạt, lớn nhất 2,06 giây. Mỗi lần hạ tải về 5 người dùng, thời gian trở lại gần như ban đầu (tra cứu không quá 70 mili giây, bán vé không quá 37 mili giây), nên hệ thống tự hồi phục mà không cần khởi động lại máy chủ. Ở mọi mức không có lỗi 5xx, nhật ký máy chủ không có dòng báo lỗi, và đối chiếu cơ sở dữ liệu cho thấy số vé Đã bán của mỗi chuyến bằng đúng số yêu cầu bán thành công: không bán trùng, không bán quá số ghế. Sau mức 1.000, chuyến bay đo đã bán hết đúng 1.000 ghế nên 5 yêu cầu bán của lượt hồi phục nhận mã 409 HET_CHO; đây là cách từ chối đúng khi hết chỗ. Giới hạn của phép đo: chương trình gửi yêu cầu và máy chủ chạy trên cùng một máy nên hai bên tranh tài nguyên của nhau; số liệu chỉ mang tính tham khảo cho cấu hình máy chủ riêng trong mạng nội bộ.
+Thời gian tăng dần theo tải. Tra cứu vượt ngưỡng 10 giây lần đầu ở mức 1.000 người dùng đồng thời (p95 11,3 giây, lớn nhất 11,6 giây), gấp 40 lần mức thiết kế 25 người dùng; đây là điểm hiệu năng không còn chấp nhận được trong phạm vi đã đo. Bán vé tới mức 1.000 vẫn đạt, lớn nhất 2,06 giây. Ở hai mức đo kẹp mức thiết kế là 20 và 50 người dùng, tra cứu lớn nhất 95,7 và 215,4 mili giây, bán vé lớn nhất 35,6 và 92,7 mili giây, đều dưới ngưỡng hàng chục lần; cả hai tác vụ còn đạt ngưỡng tới mức 800, gấp 32 lần mức thiết kế. Mỗi lần hạ tải về 5 người dùng, thời gian trở lại gần như ban đầu (tra cứu không quá 70 mili giây, bán vé không quá 37 mili giây), nên hệ thống tự hồi phục mà không cần khởi động lại máy chủ. Ở mọi mức không có lỗi 5xx, nhật ký máy chủ không có dòng báo lỗi, và đối chiếu cơ sở dữ liệu cho thấy số vé Đã bán của mỗi chuyến bằng đúng số yêu cầu bán thành công: không bán trùng, không bán quá số ghế. Sau mức 1.000, chuyến bay đo đã bán hết đúng 1.000 ghế nên 5 yêu cầu bán của lượt hồi phục nhận mã 409 HET_CHO; đây là cách từ chối đúng khi hết chỗ. Giới hạn của phép đo: chương trình gửi yêu cầu và máy chủ chạy trên cùng một máy nên hai bên tranh tài nguyên của nhau; số liệu chỉ mang tính tham khảo cho cấu hình máy chủ riêng trong mạng nội bộ.
 5.2.4. Tương thích
 Các yêu cầu TT01 đến TT03 đã có ca kiểm thử chức năng ở Bảng 5.24; ở mục này nhóm kiểm tra lại trên dữ liệu lớn và mở các tập tin nhận được bằng công cụ độc lập với chương trình: thư viện openpyxl để đọc tập tin Excel, thư viện pypdf để đếm trang, đọc khổ giấy và trích chữ của tập tin PDF, rồi đối chiếu số liệu trong tập tin với kết quả truy vấn SQL trực tiếp. Mục này cũng xét môi trường chạy của phần mềm theo CN05: trình duyệt Chrome hoặc Edge bản hiện hành. Kết quả được trình bày trong Bảng 5.34.
 Bảng 5.34. Kết quả kiểm tra các yêu cầu tương thích và môi trường chạy
@@ -8037,7 +8038,7 @@ xUnit, Playwright (Bảng 5.24, Bảng 5.27); hiệu lực tức thời đo trê
 4
 Hiệu quả HQ01 đến HQ07
 7
-Đo thời gian ở hai mức trên dữ liệu bằng mức Bảng 1.11; ca xUnit cho HQ04; 20 yêu cầu đồng thời; tăng tải dần tới 1.000 người dùng đồng thời (Bảng 5.30 đến Bảng 5.33)
+Đo thời gian ở hai mức trên dữ liệu bằng mức Bảng 1.11; ca xUnit cho HQ04; 20 yêu cầu đồng thời; tăng tải dần tới 1.000 người dùng đồng thời, gấp 40 lần mức thiết kế 25 người dùng (Bảng 5.30 đến Bảng 5.33)
 Đạt trên máy đo; chưa đo trên cấu hình Windows 10 tối thiểu và mạng nội bộ thật
 5
 Tương thích TT01 đến TT03
@@ -8219,7 +8220,7 @@ Máy chủ
 Máy nhân viên
 1
 Vai trò
-Chạy cơ sở dữ liệu, máy chủ ứng dụng và tác vụ sao lưu hằng ngày
+Chạy cơ sở dữ liệu, máy chủ ứng dụng và tác vụ sao lưu hằng ngày; phục vụ tối đa 25 người dùng thao tác cùng lúc (mục 1.2.3)
 Mở phần mềm bằng trình duyệt để làm việc
 2
 Hệ điều hành
@@ -8765,7 +8766,7 @@ Kết quả đạt được. So với mục tiêu đặt ra ở Chương 1, nhó
 Cài đặt đủ sáu yêu cầu nghiệp vụ NV01 đến NV06 của đề bài cùng các biểu mẫu BM1 đến BM5 và các quy định QĐ1, QĐ2, QĐ3, QĐ6; các tham số của quy định được lưu trong cơ sở dữ liệu nên Quản lý thay đổi được ngay trên phần mềm mà không phải sửa mã.
 Bổ sung các chức năng mà một phòng vé cần khi dùng thật nhưng đề bài chưa nêu, đã ghi thành yêu cầu tương thích, yêu cầu bảo mật (mục 1.2.4, mục 1.2.5) và giả định ở mục 1.3.4: đăng nhập và phân quyền theo hai nhóm Quản lý, Nhân viên bán vé; tra cứu, sửa, hủy vé và phiếu đặt chỗ; tự động hủy phiếu đặt chỗ quá hạn; nhập lịch chuyến bay từ Excel, xuất danh sách và báo cáo ra Excel, PDF.
 Phần mềm là ứng dụng web chạy trong mạng nội bộ, gồm 14 màn hình, tổ chức theo kiến trúc ba tầng (giao diện, xử lý nghiệp vụ, truy xuất dữ liệu) với cơ sở dữ liệu 10 bảng; các lớp và bảng trong mã nguồn giữ đúng tên ở bản thiết kế nên đối chiếu được từ yêu cầu tới mã.
-Kiểm thử tự động ở ba mức: 178 ca cho tầng xử lý và phần giao tiếp, 73 bước kiểm tra nhanh qua HTTP, 167 ca kiểm thử giao diện (50 ca theo use case và 117 ca bổ sung); tất cả đều đạt trên Windows 11. Khi rà soát và chạy bộ kiểm thử, nhóm tìm ra và sửa thêm nhiều lỗi (mục 5.3), trong đó có lỗi bảng nhiều trang không về trang đầu khi tra cứu lại. Với 20.000 chuyến bay, 2.000.000 vé và 2.000.000 phiếu đặt chỗ, thời gian đo được của các thao tác lưu, tra cứu, lập báo cáo và hủy phiếu định kỳ đều thấp hơn nhiều so với ngưỡng của các yêu cầu HQ01 đến HQ07.
+Kiểm thử tự động ở ba mức: 178 ca cho tầng xử lý và phần giao tiếp, 73 bước kiểm tra nhanh qua HTTP, 167 ca kiểm thử giao diện (50 ca theo use case và 117 ca bổ sung); tất cả đều đạt trên Windows 11. Khi rà soát và chạy bộ kiểm thử, nhóm tìm ra và sửa thêm nhiều lỗi (mục 5.3), trong đó có lỗi bảng nhiều trang không về trang đầu khi tra cứu lại. Với 20.000 chuyến bay, 2.000.000 vé và 2.000.000 phiếu đặt chỗ, thời gian đo được của các thao tác lưu, tra cứu, lập báo cáo và hủy phiếu định kỳ đều thấp hơn nhiều so với ngưỡng của các yêu cầu HQ01 đến HQ07; khi tăng tải dần, tra cứu và bán vé vẫn đạt ngưỡng tới 800 người dùng đồng thời, gấp 32 lần mức thiết kế 25 người dùng (mục 1.2.3).
 Về cách làm việc, nhóm đã phân công theo vai trò, quản lý mã nguồn bằng Git, viết ca kiểm thử cho từng use case và giữ cho báo cáo, bản thiết kế, mã nguồn khớp nhau sau mỗi lần thay đổi.
 Hạn chế. Trong phạm vi đồ án, phần mềm và việc kiểm thử còn các hạn chế sau:
 Các phép đo hiệu quả được thực hiện trên máy phát triển của nhóm, máy chủ ứng dụng, cơ sở dữ liệu và trình duyệt cùng nằm trên một máy; nhóm chưa đo trên máy Windows 10 cấu hình tối thiểu ở mục 1.2.3, chưa đo qua mạng nội bộ của một phòng vé thật và bộ kiểm thử giao diện mới chạy bằng Chromium trên Windows 11, chưa chạy trên Chrome, Edge thật (CN05). Các yêu cầu CN01, CN03, CN04 chưa có cách kiểm trong phạm vi đồ án; CN03, CN04 mới có ước lượng ở mục 5.2.6.
