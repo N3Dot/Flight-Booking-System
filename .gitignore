@@ -18,6 +18,7 @@ Thumbs.db
 .env*
 appsettings.Development.json
 nhat_ky/
+api/QuanLyBanVe.Api/phien/
 *.bak
 # kiem thu
 test-results/

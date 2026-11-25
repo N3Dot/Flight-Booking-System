@@ -1,3 +1,10 @@
+using System.Data;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using QuanLyBanVe.Api.TienIch;
 using QuanLyBanVe.Api.DTO;
 using QuanLyBanVe.Api.TruyXuat;
 using QuanLyBanVe.Api.XuLy;
@@ -76,6 +83,44 @@ public class KiemThuUC06_HuyPhieuDat : KiemThuCoSo
         Assert.Equal(PhieuDatCho.DA_HUY, tinhTrang(phieu));
     }
 
+    [Fact(DisplayName = "TH07/QĐ3/UC06: đổi thời gian hủy đặt vé có hiệu lực ngay, trước mốc mới một phút giữ phiếu, đúng mốc thì hủy")]
+    public void DoiThoiGianHuy_KiemTraHaiPhiaMocMoi()
+    {
+        DateTime khoiHanh = HOM_NAY.AddDays(3).AddHours(18);
+        DateTime mocMoi = khoiHanh.Date.AddDays(-2);
+        taoChuyenBay("CB503", khoiHanh);
+        dongHo.BayGio = mocMoi.AddHours(-2);
+        PhieuDatCho phieu = xlDatVe.datVe("CB503", "H2", khach(1), out _);
+        var dalThamSo = lay<DAL_ThamSoQuyDinh>();
+        ThamSoQuyDinh cu = dalThamSo.layThamSoQuyDinh();
+        var thayDoiQD = lay<XL_ThayDoiQD>();
+
+        // Phiếu mới đặt chưa đủ 24 giờ để chỉ kiểm tra nhánh QĐ3.
+        Assert.True(mocMoi - phieu.ThoiDiemDat < TimeSpan.FromHours(24));
+        Assert.Equal(0, xl.kichHoatDinhKy(mocMoi));
+        Assert.Equal(PhieuDatCho.CHO_THANH_TOAN, tinhTrang(phieu));
+        try
+        {
+            thayDoiQD.capNhatThamSo("ThoiGianDatVeChamNhat", 3);
+            thayDoiQD.capNhatThamSo("ThoiGianHuyDatVe", 2);
+            Assert.Equal(2, dalThamSo.layThoiGianHuyDatVe());
+
+            Assert.Equal(0, xl.kichHoatDinhKy(mocMoi.AddMinutes(-1)));
+            Assert.Equal(PhieuDatCho.CHO_THANH_TOAN, tinhTrang(phieu));
+            Assert.Equal(1, xl.kichHoatDinhKy(mocMoi));
+            Assert.Equal(PhieuDatCho.DA_HUY, tinhTrang(phieu));
+            Assert.Equal(0, xl.kichHoatDinhKy(mocMoi));
+        }
+        finally
+        {
+            // Trả mốc hủy trước để không vi phạm ràng buộc hủy nhỏ hơn đặt.
+            thayDoiQD.capNhatThamSo("ThoiGianHuyDatVe", cu.ThoiGianHuyDatVe);
+            thayDoiQD.capNhatThamSo("ThoiGianDatVeChamNhat", cu.ThoiGianDatVeChamNhat);
+        }
+        Assert.Equal(cu.ThoiGianHuyDatVe, dalThamSo.layThoiGianHuyDatVe());
+        Assert.Equal(cu.ThoiGianDatVeChamNhat, dalThamSo.layThoiGianDatVeChamNhat());
+    }
+
     [Fact(DisplayName = "UC06 bước 5, luồng 5a: chỉ ghi nhật ký khi có phiếu bị hủy, kèm thời điểm và số phiếu")]
     public void GhiNhatKy()
     {
@@ -101,7 +146,48 @@ public class KiemThuUC06_HuyPhieuDat : KiemThuCoSo
         Assert.Contains("2 phiếu", noiDung);
     }
 
+    [Fact(DisplayName = "CT-03 đường D5 của kichHoatDinhKy: phiếu quá hạn vừa bị máy khác hủy trước thì không tính, không ghi nhật ký")]
+    public async Task DuongChay_MayKhacHuyTruoc()
+    {
+        taoChuyenBay("CB500", HOM_NAY.AddDays(8), gheH1: 0, gheH2: 5);
+        dongHo.BayGio = HOM_NAY.AddHours(8);
+        PhieuDatCho phieu = xlDatVe.datVe("CB500", "H2", khach(1), out _);
+
+        // máy khác giữ khóa cập nhật trên phiếu: máy này vẫn đọc được phiếu nhưng lệnh hủy phải chờ
+        await using var mayKhac = new SqlConnection(csdl.ChuoiKetNoi);
+        await mayKhac.OpenAsync();
+        await using SqlTransaction giaoDich = mayKhac.BeginTransaction();
+        await using var khoa = new SqlCommand("SELECT TinhTrang FROM PHIEUDATCHO WITH (UPDLOCK, ROWLOCK) WHERE MaPhieuDat = @ma; SELECT @@SPID;", mayKhac, giaoDich);
+        khoa.Parameters.Add("@ma", SqlDbType.VarChar, 10).Value = phieu.MaPhieuDat;
+        int spidMayKhac;
+        await using (SqlDataReader doc = await khoa.ExecuteReaderAsync())
+        {
+            await doc.NextResultAsync();
+            await doc.ReadAsync();
+            spidMayKhac = Convert.ToInt32(doc.GetValue(0));
+        }
+
+        Task<int> chay = Task.Run(() => xl.kichHoatDinhKy(HOM_NAY.AddDays(1).AddHours(8)));
+        for (int i = 0; i < 200 && !chay.IsCompleted
+            && csdl.dem($"SELECT COUNT(*) FROM sys.dm_exec_requests WHERE blocking_session_id = {spidMayKhac}") == 0; i++)
+            await Task.Delay(50);
+        Assert.False(chay.IsCompleted, "lệnh hủy của máy này phải đang chờ khóa");
+
+        await using (var huy = new SqlCommand("UPDATE PHIEUDATCHO WITH (ROWLOCK) SET TinhTrang = N'Đã hủy' WHERE MaPhieuDat = @ma", mayKhac, giaoDich))
+        {
+            huy.Parameters.Add("@ma", SqlDbType.VarChar, 10).Value = phieu.MaPhieuDat;
+            await huy.ExecuteNonQueryAsync();
+        }
+        await giaoDich.CommitAsync();
+
+        Assert.Equal(0, await chay);
+        Assert.Equal(PhieuDatCho.DA_HUY, tinhTrang(phieu));
+        Assert.False(File.Exists(csdl.TapTinNhatKy));
+    }
+
+    // đo độ phủ thì loại ca này bằng --filter "Loai!=HieuNang" vì công cụ đo làm chậm mã
     [Fact(DisplayName = "HQ04: một lần kiểm tra hủy xong 1.000 phiếu đến hạn trong không quá 10 giây")]
+    [Trait("Loai", "HieuNang")]
     public void Huy1000PhieuTrong10Giay()
     {
         taoChuyenBay("CB500", HOM_NAY.AddDays(8), gheH1: 0, gheH2: 2000);
@@ -119,5 +205,106 @@ public class KiemThuUC06_HuyPhieuDat : KiemThuCoSo
         Assert.Equal(1000, soDaHuy);
         Assert.True(dongHoBam.Elapsed < TimeSpan.FromSeconds(10), "Mất " + dongHoBam.Elapsed.TotalSeconds + " giây");
         Assert.Equal(0, csdl.dem("SELECT COUNT(*) FROM PHIEUDATCHO WHERE TinhTrang = N'Chờ thanh toán'"));
+    }
+
+    [Fact(DisplayName = "HQ04 QĐ3 UC06: hủy hết 1.000 phiếu chưa quá 24 giờ tại mốc hủy chuyến bay trong dưới 10 giây")]
+    [Trait("Loai", "HieuNang")]
+    public void Huy1000PhieuTheoQD3Trong10Giay()
+    {
+        DateTime mocHuy = HOM_NAY.AddDays(1);
+        taoChuyenBay("CB530", mocHuy.AddHours(6), gheH1: 0, gheH2: 500);
+        taoChuyenBay("CB531", mocHuy.AddHours(18), gheH1: 0, gheH2: 500);
+        csdl.thucThi(@"
+            INSERT INTO HANHKHACH (HoTen, LoaiGiayTo, SoGiayTo, DienThoai)
+            SELECT TOP (1000) N'Khách QĐ3', N'Căn cước',
+                RIGHT('000000000000' + CAST(ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS varchar(12)), 12), '0901234567'
+            FROM sys.all_objects a CROSS JOIN sys.all_objects b;
+            INSERT INTO PHIEUDATCHO (MaChuyenBay, MaHanhKhach, MaHangVe, GiaTien, ThoiDiemDat, TinhTrang)
+            SELECT CASE WHEN ROW_NUMBER() OVER (ORDER BY MaHanhKhach) <= 500 THEN 'CB530' ELSE 'CB531' END,
+                MaHanhKhach, 'H2', 1000000, '2026-11-12T22:00:00', N'Chờ thanh toán'
+            FROM HANHKHACH;");
+        Assert.Equal(0, lay<DAL_ThamSoQuyDinh>().layThoiGianHuyDatVe());
+        Assert.Equal(1000, csdl.dem("SELECT COUNT(*) FROM PHIEUDATCHO WHERE TinhTrang = N'Chờ thanh toán'"));
+        Assert.Empty(dalPhieu.layPhieuQuaHan(mocHuy));
+        Assert.Equal(0, xl.kichHoatDinhKy(mocHuy.AddMinutes(-1)));
+
+        var dongHoBam = System.Diagnostics.Stopwatch.StartNew();
+        int soDaHuy = xl.kichHoatDinhKy(mocHuy);
+        dongHoBam.Stop();
+
+        Assert.Equal(1000, soDaHuy);
+        Assert.True(dongHoBam.Elapsed < TimeSpan.FromSeconds(10), "Mất " + dongHoBam.Elapsed.TotalSeconds + " giây");
+        Assert.Equal(1000, csdl.dem("SELECT COUNT(*) FROM PHIEUDATCHO"));
+        Assert.Equal(1000, csdl.dem("SELECT COUNT(*) FROM PHIEUDATCHO WHERE TinhTrang = N'Đã hủy'"));
+        Assert.Equal(0, csdl.dem("SELECT COUNT(*) FROM PHIEUDATCHO WHERE TinhTrang = N'Chờ thanh toán'"));
+        foreach (string ma in new[] { "CB530", "CB531" })
+            Assert.Equal(500, lay<DAL_ChuyenBay>().laySoGheTrong(ma, "H2"));
+    }
+
+    private static IConfiguration cauHinhDinhThoi(bool bat) => new ConfigurationBuilder()
+        .AddInMemoryCollection(new Dictionary<string, string?> { ["BoDinhThoi:Bat"] = bat ? "true" : "false", ["BoDinhThoi:ChuKyPhut"] = "15" })
+        .Build();
+
+    /// <summary>Ghi lại các dòng nhật ký mức Error để kiểm tra bộ định thời báo lỗi mà không dừng.</summary>
+    private sealed class NhatKyGhiLoi : ILogger<BoDinhThoi>
+    {
+        public int SoLoi;
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel muc) => true;
+        public void Log<TState>(LogLevel muc, EventId id, TState trangThai, Exception? loi, Func<TState, Exception?, string> dinhDang)
+        {
+            if (muc == LogLevel.Error) Interlocked.Increment(ref SoLoi);
+        }
+    }
+
+    /// <summary>Một phiếu đặt lúc 8 giờ hôm nay, đồng hồ đặt sang 8 giờ 1 phút hôm sau nên phiếu đã quá 24 giờ.</summary>
+    private PhieuDatCho phieuQuaHan()
+    {
+        taoChuyenBay("CB520", HOM_NAY.AddDays(8).AddHours(7), gheH1: 0, gheH2: 5);
+        dongHo.BayGio = HOM_NAY.AddHours(8);
+        PhieuDatCho phieu = xlDatVe.datVe("CB520", "H2", khach(1), out _);
+        dongHo.BayGio = HOM_NAY.AddDays(1).AddHours(8).AddMinutes(1);
+        return phieu;
+    }
+
+    [Fact(DisplayName = "UC06 Đồng hồ hệ thống: bộ định thời chạy một lần kiểm tra ngay khi máy chủ khởi động (giả định 7) và dừng gọn khi máy chủ dừng")]
+    public async Task BoDinhThoi_KiemTraKhiKhoiDong()
+    {
+        PhieuDatCho phieu = phieuQuaHan();
+        var nhatKy = new NhatKyGhiLoi();
+        using var boDinhThoi = new BoDinhThoi(lay<IServiceScopeFactory>(), cauHinhDinhThoi(bat: true), nhatKy);
+
+        await boDinhThoi.StartAsync(CancellationToken.None);
+        for (int i = 0; i < 100 && tinhTrang(phieu) != PhieuDatCho.DA_HUY; i++) await Task.Delay(100);
+        await boDinhThoi.StopAsync(CancellationToken.None);
+
+        Assert.Equal(PhieuDatCho.DA_HUY, tinhTrang(phieu));
+        Assert.Equal(0, nhatKy.SoLoi);
+        Assert.True(boDinhThoi.ExecuteTask!.IsCompletedSuccessfully);
+    }
+
+    [Fact(DisplayName = "UC06 Đồng hồ hệ thống: BoDinhThoi:Bat = false thì không hủy phiếu nào; một lần kiểm tra bị lỗi chỉ ghi nhật ký, bộ định thời không dừng")]
+    public async Task BoDinhThoi_TatVaLoiMotLan()
+    {
+        PhieuDatCho phieu = phieuQuaHan();
+        using (var tat = new BoDinhThoi(lay<IServiceScopeFactory>(), cauHinhDinhThoi(bat: false), NullLogger<BoDinhThoi>.Instance))
+        {
+            await tat.StartAsync(CancellationToken.None);
+            await Task.Delay(500);
+            await tat.StopAsync(CancellationToken.None);
+        }
+        Assert.Equal(PhieuDatCho.CHO_THANH_TOAN, tinhTrang(phieu));
+
+        // phạm vi dịch vụ thiếu XL_HuyPhieuDat: lần kiểm tra đầu ném lỗi bên trong bộ định thời
+        using ServiceProvider thieu = new ServiceCollection().AddSingleton<DongHoHeThong>(dongHo).BuildServiceProvider();
+        var nhatKy = new NhatKyGhiLoi();
+        using var loi = new BoDinhThoi(thieu.GetRequiredService<IServiceScopeFactory>(), cauHinhDinhThoi(bat: true), nhatKy);
+        await loi.StartAsync(CancellationToken.None);
+        for (int i = 0; i < 50 && nhatKy.SoLoi == 0; i++) await Task.Delay(100);
+
+        Assert.Equal(1, nhatKy.SoLoi);
+        Assert.False(loi.ExecuteTask!.IsCompleted);
+        await loi.StopAsync(CancellationToken.None);
+        Assert.True(loi.ExecuteTask.IsCompletedSuccessfully);
     }
 }

@@ -1,0 +1,27 @@
+﻿Tăng tải 20261122_114936_366 | mức 1000 | 1 lượt | tra cứu /api/chuyen-bay?sanBayDi=SGN&sanBayDen=HAN&tuNgay=2026-01-01&denNgay=2026-12-31
+Mức 1000 | chuyến đo TED0DFE7FD | 1000 ghế H1
+  Đăng nhập 1000 phiên trước khi phát lệnh: 69.5 s (không tính vào thời gian đo)
+  TangDan N=1000 TraCuu lượt 1: nhỏ nhất 5880.8 | lớn nhất 11629.2 ms | HTTP 200x1000
+  TangDan N=1000 BanVe lượt 1: nhỏ nhất 1743.2 | lớn nhất 2063.5 ms | HTTP 201x1000
+  CSDL TED0DFE7FD: tổng ghế 1000 | vé Đã bán 1000 | MaVe khác nhau 1000 | yêu cầu 201 1000 | khớp mã vé True => Đạt
+Hồi phục sau mức 1000 | tải về 5 | chuyến TED0DFE7FD
+  HoiPhuc N=5 TraCuu lượt 1: nhỏ nhất 35.6 | lớn nhất 42.8 ms | HTTP 200x5
+  HoiPhuc N=5 BanVe lượt 1: nhỏ nhất 61.7 | lớn nhất 62.6 ms | HTTP 409x5
+  CSDL TED0DFE7FD: tổng ghế 1000 | vé Đã bán 1000 | MaVe khác nhau 1000 | yêu cầu 201 1000 | khớp mã vé True => Đạt
+BẢNG TỔNG HỢP (mili giây, gộp các lượt của cùng mức)
+
+GiaiDoan  Muc Loai   SoYeuCau NhoNhat TrungVi     P95 LonNhat Loi MaHttp  
+--------  --- ----   -------- ------- -------     --- ------- --- ------  
+TangDan  1000 TraCuu     1000  5880.8  9465.5 11335.2 11629.2   0 200x1000
+TangDan  1000 BanVe      1000  1743.2  1900.9  2016.5  2063.5   0 201x1000
+HoiPhuc     5 TraCuu        5    35.6    36.5    42.8    42.8   0 200x5   
+HoiPhuc     5 BanVe         5    61.7    62.1    62.6    62.6   5 409x5   
+
+
+
+Mức đầu tiên vượt ngưỡng (TraCuu): 1000
+Mức đầu tiên vượt ngưỡng (BanVe): không có tới mức 1000
+Yêu cầu lỗi: 5 / 2010. Mã HTTP lỗi: 409, HET_CHO x5. Lỗi 5xx: 0
+Dòng fail/crit/Exception trong nhật ký máy chủ HQ: 0
+Kiểm tra CSDL tổng: Đạt
+Chuyến đo: N=1000 TED0DFE7FD

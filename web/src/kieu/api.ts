@@ -38,6 +38,12 @@ export interface NguoiDung {
 }
 
 /* ---------- Trang Kiểm thử (chỉ Quản lý, ngoài các use case của đề tài) ---------- */
+/** Kết quả POST /api/sao-luu: đường dẫn tập tin trên máy chủ cơ sở dữ liệu và thời điểm tạo */
+export interface KetQuaSaoLuu {
+  tapTin: string;
+  thoiDiem: string;
+}
+
 export interface CaKiemThu {
   stt: number;
   /** "tập tin:dòng", gửi lại khi chạy */

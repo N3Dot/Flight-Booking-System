@@ -64,4 +64,14 @@ public class KiemThuDTO
         Assert.False(TienIch_BaoMat.kiemTraMatKhau("quanly@123", bam1));
         Assert.False(TienIch_BaoMat.kiemTraMatKhau("Quanly@123", "khong-phai-chuoi-bam"));
     }
+
+    [Theory(DisplayName = "CT-02: chuỗi băm mật khẩu hỏng định dạng thì coi là sai mật khẩu, không phát sinh lỗi")]
+    [InlineData("SHA1$100000$AAAA$AAAA")]                 // sai tiền tố
+    [InlineData("PBKDF2-SHA256$nhieu$AAAA$AAAA")]         // số vòng lặp không phải số
+    [InlineData("PBKDF2-SHA256$0$AAAA$AAAA")]             // số vòng lặp bằng 0
+    [InlineData("PBKDF2-SHA256$1000$khong-base64!$AAAA")] // muối không phải base64
+    public void CT02_ChuoiBamHong(string chuoiBam)
+    {
+        Assert.False(TienIch_BaoMat.kiemTraMatKhau("Quanly@123", chuoiBam));
+    }
 }

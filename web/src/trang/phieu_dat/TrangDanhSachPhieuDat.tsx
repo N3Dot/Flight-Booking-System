@@ -63,7 +63,8 @@ export function TrangDanhSachPhieuDat() {
   const [tieuChi, datTieuChi] = useState<TieuChiTimPhieu>(() => sangTieuChi(banDau));
   const [chon, datChon] = useState<string | null>(null);
   const [dangHuy, datDangHuy] = useState<string | null>(null);
-  const chuyenBay = dungLuaChonMoiChuyenBay();
+  const [tuKhoaChuyenBay, datTuKhoaChuyenBay] = useState('');
+  const chuyenBay = dungLuaChonMoiChuyenBay(tuKhoaChuyenBay, nhap.maChuyenBay);
 
   const { data, isPending, isFetching, error } = useQuery({
     queryKey: khoaTruyVan.phieuDat(tieuChi),
@@ -83,7 +84,9 @@ export function TrangDanhSachPhieuDat() {
   }, [data]);
   const chamTran = thongKe.tong >= SO_KET_QUA_TOI_DA;
 
+  const [lanTim, datLanTim] = useState(0);
   const tim = () => {
+    datLanTim((n) => n + 1);
     datChon(null);
     const moi = sangTieuChi(nhap);
     if (JSON.stringify(moi) === JSON.stringify(tieuChi)) qc.invalidateQueries({ queryKey: khoaTruyVan.phieuDat(moi) });
@@ -200,6 +203,7 @@ export function TrangDanhSachPhieuDat() {
                 giaTri={nhap.maChuyenBay}
                 onDoi={(x) => datNhap({ ...nhap, maChuyenBay: x })}
                 luaChon={chuyenBay.luaChon}
+                onDoiTuKhoa={datTuKhoaChuyenBay}
                 dangTai={chuyenBay.dangTai}
                 placeholder="Tất cả"
                 iconTrai={<PlaneTakeoff size={18} />}
@@ -250,6 +254,7 @@ export function TrangDanhSachPhieuDat() {
             }
           />
           <BangDuLieu<PhieuDat>
+            lanTim={lanTim}
             className={`${s.bang} ${s.bangGon}`}
             nhan="Danh sách phiếu đặt chỗ"
             duLieu={data}

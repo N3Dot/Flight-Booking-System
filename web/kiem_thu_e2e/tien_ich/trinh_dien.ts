@@ -12,22 +12,17 @@ const CHAM = Number(process.env.CHAM_MS ?? 0);
 export const BUOC_XEM_CSDL = 'Mở CSDL kiểm chứng';
 
 const DANH_DAU = `(() => {
-  const css = document.createElement('style');
-  css.textContent = '@keyframes ktVong{from{transform:translate(-50%,-50%) scale(.3);opacity:1}to{transform:translate(-50%,-50%) scale(1.6);opacity:0}}'
-    + '.kt-vong{position:fixed;z-index:2147483647;width:44px;height:44px;border:4px solid #EC2029;border-radius:50%;pointer-events:none;animation:ktVong .9s ease-out forwards}'
-    + '.kt-dang-nhap{outline:3px solid #EC2029 !important;outline-offset:2px !important}';
-  const gan = () => document.documentElement.appendChild(css);
-  if (document.documentElement) gan(); else addEventListener('DOMContentLoaded', gan);
+  // trang có Content-Security-Policy nên không chèn được thẻ <style>: gán style qua mã và dùng Web Animations
   addEventListener('mousedown', (e) => {
     const v = document.createElement('div');
-    v.className = 'kt-vong';
-    v.style.left = e.clientX + 'px';
-    v.style.top = e.clientY + 'px';
+    v.style.cssText = 'position:fixed;z-index:2147483647;width:44px;height:44px;border:4px solid #EC2029;border-radius:50%;pointer-events:none;left:' + e.clientX + 'px;top:' + e.clientY + 'px';
     document.documentElement.appendChild(v);
+    v.animate([{ transform: 'translate(-50%,-50%) scale(.3)', opacity: 1 }, { transform: 'translate(-50%,-50%) scale(1.6)', opacity: 0 }], { duration: 900, easing: 'ease-out', fill: 'forwards' });
     setTimeout(() => v.remove(), 1000);
   }, true);
-  addEventListener('focusin', (e) => e.target.classList && e.target.classList.add('kt-dang-nhap'), true);
-  addEventListener('focusout', (e) => e.target.classList && e.target.classList.remove('kt-dang-nhap'), true);
+  const vien = (e, bat) => { if (e.target && e.target.style) { e.target.style.outline = bat ? '3px solid #EC2029' : ''; e.target.style.outlineOffset = bat ? '2px' : ''; } };
+  addEventListener('focusin', (e) => vien(e, true), true);
+  addEventListener('focusout', (e) => vien(e, false), true);
 })()`;
 
 export const test = goc.extend<{ danhDauThaoTac: void }>({
@@ -63,7 +58,7 @@ let cookie: Promise<string> | undefined;
 async function dangNhapQuanLy(): Promise<string> {
   const ph = await fetch(`${DIA_CHI}/api/dang-nhap`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
     body: JSON.stringify({ tenDangNhap: TAI_KHOAN.quanLy.ten, matKhau: TAI_KHOAN.quanLy.matKhau }),
   });
   if (!ph.ok) throw new Error(`Không đăng nhập được để xem CSDL: ${ph.status}`);

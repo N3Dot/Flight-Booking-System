@@ -13,6 +13,15 @@ export function dinhDangTien(n: number, donVi = '₫'): string {
   return `${dinhDangSo(n)} ${donVi}`;
 }
 
+/**
+ * Giá tiền của hạng (QĐ2): giá vé x tỉ lệ đơn giá / 100, làm tròn nửa lên như HangVe.tinhGiaTien ở máy chủ.
+ * Tính bằng số nguyên vì số thực làm lệch 1 đồng ở các giá trị đúng nửa (125 x 129,2% = 161,5 thành 161).
+ */
+export function giaTienTheoHang(giaVe: number, tiLeDonGia: number): number {
+  if (!Number.isSafeInteger(giaVe) || giaVe < 0) return Math.round((giaVe * tiLeDonGia) / 100);
+  return Number((BigInt(giaVe) * BigInt(Math.round(tiLeDonGia * 100)) + 5000n) / 10000n);
+}
+
 /** 12.3456 sang '12,35%' */
 export function dinhDangPhanTram(n: number, soLe = 2): string {
   return `${n.toLocaleString('vi-VN', { minimumFractionDigits: soLe, maximumFractionDigits: soLe })}%`;

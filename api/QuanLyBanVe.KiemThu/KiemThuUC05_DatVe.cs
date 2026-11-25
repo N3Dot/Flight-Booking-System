@@ -95,7 +95,8 @@ public class KiemThuUC05_DatVe : KiemThuCoSo
         LoiNghiepVu hetHang = batLoi(() => xl.datVe("CB500", "H1", khach(3), out _));
         Assert.Equal(MaLoi.HET_CHO, hetHang.Ma);
         Assert.Equal("Hạng vé đã hết chỗ.", hetHang.Message);
-        Assert.Equal(MaLoi.HET_CHO, batLoi(() => xl.kiemTraChoTrong("CB500", "H1")).Ma);
+        // kiểm qua layThongTinDat vì màn hình đặt vé dùng đường này
+        Assert.Equal(0, xl.layThongTinDat("CB500").Hang.Single(h => h.MaHangVe == "H1").SoGheTrong);
 
         for (int i = 3; i <= 5; i++) xl.datVe("CB500", "H2", khach(i), out _);
         LoiNghiepVu hetChuyen = batLoi(() => xl.kiemTraChuyenBay("CB500"));
@@ -234,5 +235,65 @@ public class KiemThuUC05_DatVe : KiemThuCoSo
         // mốc sau hôm nay: xóa thêm phiếu vừa hủy, vẫn không xóa phiếu Chờ thanh toán và phiếu đã thành vé
         Assert.Equal(1, xl.xoaPhieuDaHuy(HOM_NAY.AddDays(1)));
         Assert.Equal(2, csdl.dem("SELECT COUNT(*) FROM PHIEUDATCHO"));
+    }
+
+    [Fact(DisplayName = "TH06 (TH-11): đổi thời gian chậm nhất khi đặt vé thành 3 ngày thì chuyến sau đúng 3 ngày đặt được, sau 2 ngày thì không")]
+    public void TH11_HaiPhiaBienDatVeMoi()
+    {
+        lay<XL_ThayDoiQD>().capNhatThamSo("ThoiGianDatVeChamNhat", 3);
+        taoChuyenBay("CB501", HOM_NAY.AddDays(3).AddHours(0.5));  // 00:30 ngày 15, đúng 3 ngày lịch
+        taoChuyenBay("CB502", HOM_NAY.AddDays(2).AddHours(23.5)); // 23:30 ngày 14, 2 ngày lịch
+
+        xl.datVe("CB501", "H2", khach(1), out _);
+        LoiNghiepVu loi = batLoi(() => xl.datVe("CB502", "H2", khach(2), out _));
+
+        Assert.Equal(MaLoi.QUA_HAN_DAT_VE, loi.Ma);
+        Assert.Contains("chậm nhất 3 ngày", loi.Message);
+        Assert.Equal(1, dalChuyenBay.tinhSoGheDat("CB501"));
+        Assert.Equal(0, dalChuyenBay.tinhSoGheDat("CB502"));
+    }
+
+    [Fact(DisplayName = "TH06 (TH-12): phiếu lập trước khi đổi thời gian chậm nhất khi đặt vé vẫn còn hiệu lực và bán được")]
+    public void TH12_PhieuCuGiuHieuLucSauKhiDoiQD()
+    {
+        taoChuyenBay("CB501", HOM_NAY.AddDays(2).AddHours(10));
+        PhieuDatCho phieu = xl.datVe("CB501", "H2", khach(1), out DateTime han);
+
+        lay<XL_ThayDoiQD>().capNhatThamSo("ThoiGianDatVeChamNhat", 3);
+        LoiNghiepVu datMoi = batLoi(() => xl.datVe("CB501", "H2", khach(2), out _));
+        PhieuDatCho sauKhiDoi = dalPhieu.layThongTinPhieu(phieu.MaPhieuDat)!;
+        Ve ve = lay<XL_BanVe>().banVeTuPhieu(phieu.MaPhieuDat);
+
+        Assert.Equal(MaLoi.QUA_HAN_DAT_VE, datMoi.Ma);
+        Assert.Equal(PhieuDatCho.CHO_THANH_TOAN, sauKhiDoi.TinhTrang);
+        Assert.Equal(dongHo.BayGio.AddHours(24), han);
+        Assert.Equal(phieu.GiaTien, ve.GiaTien);
+        Assert.Equal(phieu.MaPhieuDat, ve.MaPhieuDat);
+    }
+
+    [Fact(DisplayName = "B4: phiếu quá 24 giờ mà lần tự hủy chưa chạy vẫn Chờ thanh toán, sửa và hủy tay được, không bán được")]
+    public void B4_PhieuQuaHanChuaTuHuy()
+    {
+        PhieuDatCho phieu = xl.datVe("CB500", "H2", khach(1), out _);
+        dongHo.BayGio = phieu.ThoiDiemDat.AddHours(24).AddMinutes(5);
+
+        string tinhTrangLucQuaHan = dalPhieu.layThongTinPhieu(phieu.MaPhieuDat)!.TinhTrang;
+        xl.suaPhieuDat(phieu.MaPhieuDat, new HanhKhach("", "Khách Đã Đổi Tên", HanhKhach.CAN_CUOC, 1.ToString("D12"), "0901234501"));
+        LoiNghiepVu ban = batLoi(() => lay<XL_BanVe>().banVeTuPhieu(phieu.MaPhieuDat));
+        xl.huyPhieuDat(phieu.MaPhieuDat);
+
+        Assert.Equal(PhieuDatCho.CHO_THANH_TOAN, tinhTrangLucQuaHan);
+        Assert.Equal(1, csdl.dem("SELECT COUNT(*) FROM HANHKHACH WHERE HoTen = N'Khách Đã Đổi Tên'"));
+        Assert.Equal(MaLoi.PHIEU_HET_HAN, ban.Ma);
+        Assert.Equal(PhieuDatCho.DA_HUY, dalPhieu.layThongTinPhieu(phieu.MaPhieuDat)!.TinhTrang);
+        Assert.Equal(0, csdl.dem("SELECT COUNT(*) FROM VE"));
+    }
+
+    [Fact(DisplayName = "CT-02: kiểm tra chỗ trống khi đặt vé trả giá tiền của hạng còn chỗ; chuyến bay không có thì báo không tìm thấy")]
+    public void CT02_KiemTraChoTrongVaKhongCoChuyenBay()
+    {
+        Assert.Equal(1_500_000m, xl.kiemTraChoTrong("CB500", "H2"));
+        Assert.Equal(1_575_000m, xl.kiemTraChoTrong("CB500", "H1"));
+        Assert.Equal(LoaiLoi.KhongTimThay, batLoi(() => xl.layThongTinDat("KHONGCO")).Loai);
     }
 }

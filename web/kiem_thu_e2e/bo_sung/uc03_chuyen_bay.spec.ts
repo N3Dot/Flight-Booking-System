@@ -353,33 +353,30 @@ test.describe('Bổ sung UC03 Quản lý chuyến bay', () => {
       }
     });
 
-    test('UC03.19 Giá vé 999.999.999.999 lưu được, thêm một chữ số thì bị chặn hoặc báo lỗi (cột decimal(12,0))', async ({ page }) => {
+    test('UC03.19 Giá vé lớn nhất mà giá tiền hạng đắt nhất còn vừa cột tiền thì lưu được, lớn hơn thì báo lỗi (cột decimal(12,0))', async ({ page }) => {
+      // Hạng 1 có tỉ lệ 105%: giá vé lớn nhất là 952.380.952.380 (x 105% = 999.999.999.999)
       const ma = maMoi('KT');
       await dangNhap(page, 'quanLy', '/chuyen-bay/them');
-      await dienBieuMau(page, { ma, giaVe: '999999999999' });
+      await dienBieuMau(page, { ma, giaVe: '952380952380' });
       await luuThanhCong(page, ma);
       await page.goto(`/chuyen-bay/${ma}`);
-      await expect(page.getByRole('main')).toContainText('999.999.999.999');
+      await expect(page.getByRole('main')).toContainText('952.380.952.380');
 
       const maVuot = maMoi('KT');
       await page.goto('/chuyen-bay/them');
       await dienBieuMau(page, { ma: maVuot, giaVe: '999999999999' });
+      await nutLuu(page).click();
+      await expect(loiO(page, 'giaVe')).toContainText('Giá vé quá lớn: giá tiền Hạng 1');
+      await expect(page).toHaveURL(/\/chuyen-bay\/them$/);
+      expect(await trangThaiChuyenBay(page, maVuot)).toBe(404);
+      // ô không nhận chữ số thứ 13
       const oGia = page.getByRole('textbox', { name: 'Giá vé (VND)' });
       await oGia.press('End');
       await oGia.pressSequentially('9');
-      const chuSo = (await oGia.inputValue()).replace(/\D/g, '');
-      await nutLuu(page).click();
-      // không bao giờ ra lỗi hệ thống
-      await expect(hopThoai(page, 'Lưu chuyến bay không thành công')).toHaveCount(0);
-      if (chuSo.length > 12) {
-        await expect(loiO(page, 'giaVe')).toContainText('không được vượt quá 999.999.999.999');
-        expect(await trangThaiChuyenBay(page, maVuot)).toBe(404);
-      } else {
-        // ô không nhận chữ số thứ 13
-        expect(chuSo).toBe('999999999999');
-      }
-      await xemCsdl(page, `chuyến bay ${ma} lưu giá vé lớn nhất`,
-        { bang: 'CHUYENBAY', cot: 'MaChuyenBay', giaTri: ma, soDong: 1, dung: { GiaVe: 999999999999 } });
+      expect((await oGia.inputValue()).replace(/\D/g, '')).toBe('999999999999');
+      await xemCsdl(page, `chuyến bay ${ma} lưu giá vé lớn nhất, chuyến bay ${maVuot} không được lưu`,
+        { bang: 'CHUYENBAY', cot: 'MaChuyenBay', giaTri: ma, soDong: 1, dung: { GiaVe: 952380952380 } },
+        { bang: 'CHUYENBAY', cot: 'MaChuyenBay', giaTri: maVuot, soDong: 0 });
     });
 
     test('UC03.20 Số ghế: cả hai hạng 0 bị từ chối, một hạng 0 lưu được và hạng đó không bán, số âm bị từ chối (giả định 12)', async ({ page }) => {
@@ -428,7 +425,7 @@ test.describe('Bổ sung UC03 Quản lý chuyến bay', () => {
       }
     });
 
-    test('UC03.21 Mã chuyến bay có chữ thường, dấu, ký tự đặc biệt, khoảng trắng được tự chuẩn hóa (ràng buộc CHUYENBAY) (cần chốt)', async ({ page }) => {
+    test('UC03.21 Mã chuyến bay có chữ thường, dấu, ký tự đặc biệt, khoảng trắng được tự chuẩn hóa (ràng buộc CHUYENBAY)', async ({ page }) => {
       // hành vi hiện tại: ô mã tự đổi sang chữ in hoa và bỏ ký tự không phải chữ A-Z hoặc số
       const ma = maMoi('K');
       const oMa = page.getByRole('textbox', { name: 'Mã chuyến bay' });
@@ -505,7 +502,7 @@ test.describe('Bổ sung UC03 Quản lý chuyến bay', () => {
       expect(await trangThaiChuyenBay(page, ma)).toBe(404);
     });
 
-    test('UC03.25 Bấm Lưu chuyến bay hai lần thật nhanh chỉ tạo một chuyến bay (Sommerville: lặp lại cùng thao tác)', async ({ page }) => {
+    test('UC03.25 Bấm Lưu chuyến bay hai lần thật nhanh chỉ tạo một chuyến bay (Chương 7, tr. 46)', async ({ page }) => {
       const ma = maMoi('KT');
       await dangNhap(page, 'quanLy', '/chuyen-bay/them');
       await dienBieuMau(page, { ma });
@@ -661,7 +658,7 @@ test.describe('Bổ sung UC03 Quản lý chuyến bay', () => {
         { bang: 'CHUYENBAY', cot: 'MaChuyenBay', giaTri: cb.maChuyenBay, soDong: 1, dung: { GiaVe: 2000000 } });
     });
 
-    test('UC03.32 Sửa số ghế một hạng xuống thấp hơn số đã bán và đặt thì báo lỗi (giả định 1, 2) (cần chốt)', async ({ page }) => {
+    test('UC03.32 Sửa số ghế một hạng xuống thấp hơn số đã bán và đặt thì báo lỗi (giả định 1, 2)', async ({ page }) => {
       const api = await ApiThu.moi();
       const cb = await api.themChuyenBay(); // Hạng 2 có 5 ghế
       await api.banVe(cb.maChuyenBay, 'H2');
@@ -1007,5 +1004,115 @@ test.describe('Bổ sung UC03 Quản lý chuyến bay', () => {
         { bang: 'CHUYENBAY', cot: 'MaChuyenBay', giaTri: maB, soDong: 1 },
         { bang: 'CHITIETTRUNGGIAN', cot: 'MaChuyenBay', giaTri: maA, soDong: 1, dung: { MaSanBay: 'DAD' } });
     });
+  });
+
+  test('UC03.48 Bảng chuyến bay nhiều trang: 11 dòng thì có trang 2, dòng đầu và cuối đúng chỗ, tra cứu lại thì về trang 1; đúng 10 dòng thì một trang (CH-01, NV04)', async ({ page }) => {
+    const api = await ApiThu.moi();
+    // 5 chữ ngẫu nhiên làm phần chung của 11 mã để ô Mã chuyến bay (lọc theo chứa) chỉ ra đúng các chuyến này
+    const goc = 'P' + Array.from({ length: 5 }, () => String.fromCharCode(65 + Math.floor(Math.random() * 26))).join('');
+    const cacMa = Array.from({ length: 11 }, (_, i) => `${goc}${String(i + 1).padStart(2, '0')}`);
+    try {
+      // khởi hành cách nhau một ngày nên thứ tự theo giờ khởi hành trùng thứ tự mã
+      for (const [i, ma] of cacMa.entries()) await api.themChuyenBay({ maChuyenBay: ma, lechNgay: 10 + i });
+      await dangNhap(page, 'nhanVien', '/chuyen-bay');
+      const dongDuLieu = page.getByRole('table', { name: 'Danh sách chuyến bay' }).locator('tbody tr');
+      const phanTrang = page.getByRole('navigation', { name: 'Phân trang' });
+      const tim = page.getByRole('button', { name: 'Tìm', exact: true });
+
+      await page.getByRole('textbox', { name: 'Mã chuyến bay' }).fill(goc);
+      await tim.click();
+      await expect(page.getByText(/Hiển thị\s*1\s*đến\s*10\s*trong\s*11\s*chuyến bay/)).toBeVisible();
+      await expect(dongDuLieu).toHaveCount(10);
+      await expect(dongDuLieu.first()).toContainText(cacMa[0]);
+      await expect(dongDuLieu.last()).toContainText(cacMa[9]);
+      await expect(phanTrang.getByRole('button', { name: 'Trang trước' })).toBeDisabled();
+
+      await phanTrang.getByRole('button', { name: 'Trang sau' }).click();
+      await expect(page.getByText(/Hiển thị\s*11\s*đến\s*11\s*trong\s*11\s*chuyến bay/)).toBeVisible();
+      await expect(dongDuLieu).toHaveCount(1);
+      await expect(dongDuLieu.first()).toContainText(cacMa[10]);
+      await expect(phanTrang.getByRole('button', { name: '2', exact: true })).toHaveAttribute('aria-current', 'page');
+      await expect(phanTrang.getByRole('button', { name: 'Trang sau' })).toBeDisabled();
+
+      // đang ở trang 2 mà bấm Tìm lại thì kết quả mới hiện từ trang 1
+      await tim.click();
+      await expect(phanTrang.getByRole('button', { name: '1', exact: true })).toHaveAttribute('aria-current', 'page');
+      await expect(dongDuLieu.first()).toContainText(cacMa[0]);
+
+      // lọc tới ngày khởi hành của chuyến thứ 10: đúng 10 dòng thì không còn phân trang
+      await nhapNgay(page, 'Đến ngày', mocVN(19).vn);
+      await tim.click();
+      await expect(page.getByText(/Hiển thị\s*1\s*đến\s*10\s*trong\s*10\s*chuyến bay/)).toBeVisible();
+      await expect(dongDuLieu).toHaveCount(10);
+      await expect(dongDuLieu.last()).toContainText(cacMa[9]);
+      await expect(phanTrang).toHaveCount(0);
+    } finally {
+      for (const ma of cacMa) await api.xoaChuyenBayNeuCo(ma);
+      await api.dong();
+    }
+  });
+
+  test('UC03.49 Nút chọn nhanh 7 ngày tới điền sẵn hai ô ngày và tìm ngay trong một thao tác; sau đó vẫn sửa tay được ô Đến ngày (TD04)', async ({ page }) => {
+    const api = await ApiThu.moi();
+    const goc = 'Q' + Array.from({ length: 5 }, () => String.fromCharCode(65 + Math.floor(Math.random() * 26))).join('');
+    const [gan, xa] = [`${goc}01`, `${goc}02`];
+    try {
+      await api.themChuyenBay({ maChuyenBay: gan, lechNgay: 2 });
+      await api.themChuyenBay({ maChuyenBay: xa, lechNgay: 9 });
+      await dangNhap(page, 'nhanVien', '/chuyen-bay');
+      const bang = page.getByRole('table', { name: 'Danh sách chuyến bay' });
+      await page.getByRole('textbox', { name: 'Mã chuyến bay' }).fill(goc);
+
+      await page.getByRole('group', { name: 'Chọn nhanh khoảng ngày' }).getByRole('button', { name: '7 ngày tới' }).click();
+      await expect(page.getByText('Tìm thấy 1 chuyến bay thỏa tiêu chí.')).toBeVisible();
+      await expect(bang).toContainText(gan);
+      await expect(bang).not.toContainText(xa);
+      await expect(page.getByLabel('Từ ngày').first()).toHaveValue(mocVN(0).vn);
+      await expect(page.getByLabel('Đến ngày').first()).toHaveValue(mocVN(6).vn);
+
+      // khoảng tự chọn vẫn dùng được như cũ
+      await nhapNgay(page, 'Đến ngày', mocVN(10).vn);
+      await page.getByRole('button', { name: 'Tìm', exact: true }).click();
+      await expect(page.getByText('Tìm thấy 2 chuyến bay thỏa tiêu chí.')).toBeVisible();
+    } finally {
+      for (const ma of [gan, xa]) await api.xoaChuyenBayNeuCo(ma);
+      await api.dong();
+    }
+  });
+
+  test('UC03.50 Nhấn Ctrl+S lưu biểu mẫu thêm chuyến bay hợp lệ thành công (UC03)', async ({ page }) => {
+    const api = await ApiThu.moi();
+    const ma = maMoi('CS');
+    const ngayGio = mocVN(15, 9, 0);
+    try {
+      await dangNhap(page, 'quanLy', '/chuyen-bay/them');
+      await dienBieuMau(page, { ma, ngayGio: ngayGio.vnGio });
+
+      const choLuu = page.waitForResponse((ph) =>
+        new URL(ph.url()).pathname === '/api/chuyen-bay' && ph.request().method() === 'POST',
+      );
+      await page.keyboard.press('Control+s');
+      expect((await choLuu).ok()).toBeTruthy();
+      await expect(toast(page, `Thêm chuyến bay ${ma} thành công.`)).toBeVisible();
+      await expect(page).toHaveURL(/\/chuyen-bay$/);
+
+      const daLuu = await page.request.get(`/api/chuyen-bay/${ma}`);
+      expect(daLuu.status()).toBe(200);
+      expect(await daLuu.json()).toMatchObject({
+        maChuyenBay: ma, giaVe: 1_500_000, maSanBayDi: 'SGN', maSanBayDen: 'HAN',
+        ngayGioKhoiHanh: ngayGio.isoGio, thoiGianBay: 130,
+        gheTheoHang: expect.arrayContaining([
+          expect.objectContaining({ maHangVe: 'H1', soLuongGhe: 10 }),
+          expect.objectContaining({ maHangVe: 'H2', soLuongGhe: 60 }),
+        ]),
+      });
+    } finally {
+      try {
+        await api.xoaChuyenBayNeuCo(ma);
+      } finally {
+        await api.dong();
+      }
+    }
+    expect(await trangThaiChuyenBay(page, ma)).toBe(404);
   });
 });

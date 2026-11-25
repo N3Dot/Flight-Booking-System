@@ -1,6 +1,6 @@
 // UC02 Phân quyền: Quản lý thêm tài khoản, đổi nhóm quyền, khóa và mở khóa tài khoản (BMT02).
 import { expect, request, test, xemCsdl, type Locator, type Page } from './tien_ich/trinh_dien';
-import { ApiThu, DIA_CHI, bamTrongHopThoai, dangNhap, hopThoai, tenDangNhapMoi, toast } from './tien_ich/chung';
+import { ApiThu, DIA_CHI, bamTrongHopThoai, dangNhap, hopThoai, tenDangNhapMoi, toast, khoaTaiKhoanThuSauMoiCa } from './tien_ich/chung';
 
 const MAT_KHAU = 'Kiemthu@123';
 
@@ -35,6 +35,7 @@ async function moThemTaiKhoan(page: Page) {
 }
 
 test.describe('UC02 Phân quyền', () => {
+  khoaTaiKhoanThuSauMoiCa(test);
   test('UC02.1 Thêm tài khoản Nhân viên bán vé rồi đăng nhập được (BMT02)', async ({ page }) => {
     const ten = tenDangNhapMoi('nv');
     await dangNhap(page, 'quanLy', '/tai-khoan');

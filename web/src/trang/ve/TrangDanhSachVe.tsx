@@ -55,7 +55,8 @@ export function TrangDanhSachVe() {
   const [chon, datChon] = useState<string | null>(null);
   const [dangHuy, datDangHuy] = useState<string | null>(null);
   const [loiNgay, datLoiNgay] = useState<string | undefined>();
-  const chuyenBay = dungLuaChonMoiChuyenBay();
+  const [tuKhoaChuyenBay, datTuKhoaChuyenBay] = useState('');
+  const chuyenBay = dungLuaChonMoiChuyenBay(tuKhoaChuyenBay, nhap.maChuyenBay);
   const bayGio = dungBayGio();
 
   const { data, isPending, isFetching, error } = useQuery({
@@ -73,7 +74,9 @@ export function TrangDanhSachVe() {
   // giống XL_BanVe.huyVe: không hủy vé của chuyến bay đã khởi hành
   const daKhoiHanh = (v: Ve) => !!v.ngayGioKhoiHanh && docIso(v.ngayGioKhoiHanh) <= bayGio;
 
+  const [lanTim, datLanTim] = useState(0);
   const tim = () => {
+    datLanTim((n) => n + 1);
     if (nhap.tuNgay && nhap.denNgay && nhap.tuNgay > nhap.denNgay) {
       datLoiNgay('Đến ngày phải sau hoặc bằng Từ ngày.');
       return;
@@ -194,6 +197,7 @@ export function TrangDanhSachVe() {
                 giaTri={nhap.maChuyenBay}
                 onDoi={(x) => datNhap({ ...nhap, maChuyenBay: x })}
                 luaChon={chuyenBay.luaChon}
+                onDoiTuKhoa={datTuKhoaChuyenBay}
                 dangTai={chuyenBay.dangTai}
                 placeholder="Tất cả"
                 iconTrai={<PlaneTakeoff size={18} />}
@@ -240,6 +244,7 @@ export function TrangDanhSachVe() {
             }
           />
           <BangDuLieu<Ve>
+            lanTim={lanTim}
             className={s.bang}
             nhan="Danh sách vé"
             duLieu={data}

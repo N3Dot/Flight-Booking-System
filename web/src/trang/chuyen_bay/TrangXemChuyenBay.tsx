@@ -10,7 +10,7 @@ import { ChiKhiCoQuyen } from '@/thanh_phan/BaoVeDuongDan';
 import { KhungTrang } from '@/thanh_phan/KhungTrang';
 import { NhanTrangThai } from '@/thanh_phan/NhanTrangThai';
 import { Nut } from '@/thanh_phan/Nut';
-import { dinhDangSo, dinhDangTien } from '@/tien_ich/dinh_dang';
+import { dinhDangSo, dinhDangTien, giaTienTheoHang } from '@/tien_ich/dinh_dang';
 import { dungBayGio } from '@/tien_ich/hook';
 import { conLai, dinhDangNgayGio, dinhDangThoiLuong, docIso } from '@/tien_ich/thoi_gian';
 import { KhongTimThayChuyenBay, KhungChoChuyenBay } from './KhungChoChuyenBay';
@@ -105,7 +105,7 @@ function NoiDungXem({ cb, quyDinh }: { cb: ChuyenBayChiTiet; quyDinh: QuyDinh })
                       <b>{g.tenHangVe}</b>
                     </span>
                   </td>
-                  <td className={`${s.giaHang} ${s.phai}`}>{dinhDangTien(Math.round((cb.giaVe * tiLe(g.maHangVe)) / 100))}</td>
+                  <td className={`${s.giaHang} ${s.phai}`}>{dinhDangTien(giaTienTheoHang(cb.giaVe, tiLe(g.maHangVe)))}</td>
                   <td className={`${s.soDung} ${s.phai}`}>
                     <b>{dinhDangSo(g.soLuongGhe)}</b>
                   </td>
@@ -229,8 +229,9 @@ export function TrangXemChuyenBay() {
   const chiTiet = useQuery({ queryKey: khoaTruyVan.chuyenBayChiTiet(ma), queryFn: () => apiChuyenBay.chiTiet(ma) });
   const cb = chiTiet.data;
   const trong = cb?.gheTheoHang.reduce((t, g) => t + g.soGheTrong, 0) ?? 0;
-  const khongBan = !cb || docIso(cb.ngayGioKhoiHanh) <= bayGio || trong <= 0;
-  const lyDo = cb && docIso(cb.ngayGioKhoiHanh) <= bayGio ? 'Chuyến bay đã khởi hành' : 'Chuyến bay đã hết chỗ';
+  const daBay = !!cb && docIso(cb.ngayGioKhoiHanh) <= bayGio;
+  const khongBan = !cb || daBay || trong <= 0;
+  const lyDo = daBay ? 'Chuyến bay đã khởi hành' : 'Chuyến bay đã hết chỗ';
 
   return (
     <KhungTrang
@@ -249,7 +250,14 @@ export function TrangXemChuyenBay() {
                 Đặt vé
               </Nut>
               <ChiKhiCoQuyen quyen={CHI_QUAN_LY}>
-                <Nut bienThe="phu" muiTen={false} iconTrai={<Pencil size={17} />} den={`/chuyen-bay/${ma}/sua`} disabled={!cb}>
+                <Nut
+                  bienThe="phu"
+                  muiTen={false}
+                  iconTrai={<Pencil size={17} />}
+                  den={`/chuyen-bay/${ma}/sua`}
+                  disabled={!cb || daBay}
+                  title={daBay ? 'Chuyến bay đã khởi hành, không sửa được' : undefined}
+                >
                   Sửa
                 </Nut>
               </ChiKhiCoQuyen>

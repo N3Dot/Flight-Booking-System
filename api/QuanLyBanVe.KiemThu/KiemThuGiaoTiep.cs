@@ -18,28 +18,37 @@ namespace QuanLyBanVe.KiemThu;
 public class KiemThuGiaoTiep : IDisposable
 {
     private readonly WebApplicationFactory<Program> mayChu;
+    private readonly CoSoDuLieuThu csdl;
+    // mỗi lớp thử có thư mục phiên riêng, không ghi vào thư mục phiên của máy chủ đang chạy thật
+    private readonly string thuMucPhien = Path.Combine(Path.GetTempPath(), "qlbv_phien_" + Guid.NewGuid().ToString("N"));
 
     public KiemThuGiaoTiep(CoSoDuLieuThu csdl)
     {
+        this.csdl = csdl;
         csdl.lamSach();
         mayChu = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
             builder.ConfigureAppConfiguration((_, cauHinh) => cauHinh.AddInMemoryCollection(new Dictionary<string, string?>
             {
                 ["ConnectionStrings:QLBANVE"] = csdl.ChuoiKetNoi,
                 ["BoDinhThoi:Bat"] = "false",
-                ["NhatKy:ThuMuc"] = csdl.ThuMucNhatKy
+                ["NhatKy:ThuMuc"] = csdl.ThuMucNhatKy,
+                ["Phien:ThuMuc"] = thuMucPhien
             })));
     }
 
     public void Dispose()
     {
         mayChu.Dispose();
+        if (Directory.Exists(thuMucPhien)) Directory.Delete(thuMucPhien, recursive: true);
         GC.SuppressFinalize(this);
     }
 
     private HttpClient taoMayKhach()
     {
-        return mayChu.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true, AllowAutoRedirect = false });
+        HttpClient mayKhach = mayChu.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true, AllowAutoRedirect = false });
+        // giao diện gắn header này vào mọi yêu cầu; yêu cầu ghi thiếu nó bị từ chối
+        mayKhach.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
+        return mayKhach;
     }
 
     private async Task<HttpClient> dangNhap(string tenDangNhap, string matKhau)
@@ -132,6 +141,62 @@ public class KiemThuGiaoTiep : IDisposable
         await kiemTraLoi(await mayKhach.GetAsync("/api/phien"), HttpStatusCode.Unauthorized, "CHUA_DANG_NHAP");
     }
 
+    [Fact(DisplayName = "BMT01: đăng xuất hủy phiên ở máy chủ, cookie cũ gửi lại không còn dùng được")]
+    public async Task DangXuatHuyPhienOMayChu()
+    {
+        HttpClient mayKhach = taoMayKhach();
+        HttpResponseMessage phanHoi = await mayKhach.PostAsJsonAsync("/api/dang-nhap", new { tenDangNhap = "quanly", matKhau = "Quanly@123" });
+        string cookie = Assert.Single(phanHoi.Headers.GetValues("Set-Cookie")).Split(';')[0];
+
+        // một máy khác cầm bản sao cookie: còn dùng được khi chưa đăng xuất
+        HttpClient keGian = mayChu.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = false });
+        keGian.DefaultRequestHeaders.Add("Cookie", cookie);
+        Assert.Equal(HttpStatusCode.OK, (await keGian.GetAsync("/api/phien")).StatusCode);
+
+        Assert.Equal(HttpStatusCode.NoContent, (await mayKhach.PostAsync("/api/dang-xuat", null)).StatusCode);
+        await kiemTraLoi(await keGian.GetAsync("/api/phien"), HttpStatusCode.Unauthorized, "CHUA_DANG_NHAP");
+    }
+
+    [Fact(DisplayName = "BMT02: đặt lại mật khẩu thì các phiên đang đăng nhập của tài khoản đó hết hiệu lực")]
+    public async Task DatLaiMatKhauHuyPhien()
+    {
+        HttpClient quanLy = await dangNhapQuanLy();
+        HttpClient nhanVien = await dangNhapNhanVien();
+        Assert.Equal(HttpStatusCode.NoContent,
+            (await quanLy.PutAsJsonAsync("/api/tai-khoan/nhanvien", new { nhomQuyen = "NhanVien", matKhauMoi = "MatKhauMoi@2026" })).StatusCode);
+        await kiemTraLoi(await nhanVien.GetAsync("/api/phien"), HttpStatusCode.Unauthorized, "CHUA_DANG_NHAP");
+        await dangNhap("nhanvien", "MatKhauMoi@2026");
+    }
+
+    [Fact(DisplayName = "BMT01: sai mật khẩu 5 lần trong một phút thì khóa tạm, nhập đúng cũng bị từ chối 429")]
+    public async Task DangNhapSaiNhieuLan()
+    {
+        HttpClient mayKhach = taoMayKhach();
+        for (int lan = 0; lan < 5; lan++)
+            await kiemTraLoi(await mayKhach.PostAsJsonAsync("/api/dang-nhap", new { tenDangNhap = "nhanvien", matKhau = "sai-mat-khau" }),
+                HttpStatusCode.Unauthorized, "SAI_THONG_TIN_DANG_NHAP");
+
+        JsonElement khoa = await kiemTraLoi(
+            await mayKhach.PostAsJsonAsync("/api/dang-nhap", new { tenDangNhap = "nhanvien", matKhau = "Nhanvien@123" }),
+            HttpStatusCode.TooManyRequests, "DANG_NHAP_SAI_NHIEU_LAN");
+        Assert.Contains("5 phút", khoa.GetProperty("thongBao").GetString());
+        // tài khoản khác từ cùng máy không bị ảnh hưởng
+        await dangNhapQuanLy();
+    }
+
+    [Fact(DisplayName = "Bảo mật: yêu cầu ghi thiếu header X-Requested-With bị từ chối; phản hồi có header bảo mật")]
+    public async Task HeaderBaoMat()
+    {
+        HttpClient khongHeader = mayChu.CreateClient();
+        await kiemTraLoi(await khongHeader.PostAsJsonAsync("/api/dang-nhap", new { tenDangNhap = "quanly", matKhau = "Quanly@123" }),
+            HttpStatusCode.BadRequest, "THIEU_HEADER_YEU_CAU");
+
+        HttpResponseMessage phanHoi = await khongHeader.GetAsync("/api/phien");
+        Assert.Equal("DENY", Assert.Single(phanHoi.Headers.GetValues("X-Frame-Options")));
+        Assert.Equal("nosniff", Assert.Single(phanHoi.Headers.GetValues("X-Content-Type-Options")));
+        Assert.Contains("default-src 'self'", Assert.Single(phanHoi.Headers.GetValues("Content-Security-Policy")));
+    }
+
     [Fact(DisplayName = "BMT01: sai thông tin trả 401 SAI_THONG_TIN_DANG_NHAP, tài khoản khóa trả 403 TAI_KHOAN_BI_KHOA")]
     public async Task DangNhapKhongThanhCong()
     {
@@ -162,7 +227,7 @@ public class KiemThuGiaoTiep : IDisposable
         var tuChoi = new List<HttpResponseMessage>
         {
             await nhanVien.GetAsync("/api/tai-khoan"),
-            await nhanVien.PostAsJsonAsync("/api/tai-khoan", new { tenDangNhap = "moi", matKhau = "MatKhau@1", nhomQuyen = "QuanLy" }),
+            await nhanVien.PostAsJsonAsync("/api/tai-khoan", new { tenDangNhap = "moi", matKhau = "MatKhau@12", nhomQuyen = "QuanLy" }),
             await nhanVien.PostAsync("/api/tai-khoan/quanly/khoa", null),
             await nhanVien.PostAsJsonAsync("/api/chuyen-bay", lichChuyenBay("CB900")),
             await nhanVien.PutAsJsonAsync("/api/chuyen-bay/CB900", lichChuyenBay("CB900")),
@@ -204,12 +269,12 @@ public class KiemThuGiaoTiep : IDisposable
         await kiemTraLoi(await quanLy.PostAsync("/api/tai-khoan/quanly/khoa", null), HttpStatusCode.Conflict, "KHONG_DUOC_TU_KHOA");
         await kiemTraLoi(await quanLy.PutAsJsonAsync("/api/tai-khoan/quanly", new { nhomQuyen = "NhanVien" }),
             HttpStatusCode.Conflict, "KHONG_DUOC_TU_DOI_QUYEN");
-        await kiemTraLoi(await quanLy.PostAsJsonAsync("/api/tai-khoan", new { tenDangNhap = "nhanvien", matKhau = "MatKhau@1", nhomQuyen = "NhanVien" }),
+        await kiemTraLoi(await quanLy.PostAsJsonAsync("/api/tai-khoan", new { tenDangNhap = "nhanvien", matKhau = "MatKhau@12", nhomQuyen = "NhanVien" }),
             HttpStatusCode.Conflict, "TRUNG_MA");
 
         Assert.Equal(HttpStatusCode.Created, (await quanLy.PostAsJsonAsync("/api/tai-khoan",
-            new { tenDangNhap = "banve01", matKhau = "MatKhau@1", nhomQuyen = "NhanVien" })).StatusCode);
-        HttpClient banVe01 = await dangNhap("banve01", "MatKhau@1");
+            new { tenDangNhap = "banve01", matKhau = "MatKhau@12", nhomQuyen = "NhanVien" })).StatusCode);
+        HttpClient banVe01 = await dangNhap("banve01", "MatKhau@12");
 
         // khóa nhanvien: phiên đang mở của nhanvien không dùng tiếp được
         Assert.Equal(HttpStatusCode.OK, (await nhanVien.GetAsync("/api/ve")).StatusCode);
@@ -222,7 +287,7 @@ public class KiemThuGiaoTiep : IDisposable
         Assert.Equal(HttpStatusCode.NoContent,
             (await quanLy.PutAsJsonAsync("/api/tai-khoan/banve01", new { nhomQuyen = "QuanLy", matKhauMoi = "" })).StatusCode);
         await kiemTraLoi(await banVe01.GetAsync("/api/phien"), HttpStatusCode.Unauthorized, "CHUA_DANG_NHAP");
-        HttpClient banVe01Moi = await dangNhap("banve01", "MatKhau@1");
+        HttpClient banVe01Moi = await dangNhap("banve01", "MatKhau@12");
         Assert.Equal(HttpStatusCode.OK, (await banVe01Moi.GetAsync("/api/tai-khoan")).StatusCode);
     }
 
@@ -493,5 +558,233 @@ public class KiemThuGiaoTiep : IDisposable
         nguonLa.Headers.Add("Access-Control-Request-Method", "POST");
         HttpResponseMessage tuChoi = await mayKhach.SendAsync(nguonLa);
         Assert.False(tuChoi.Headers.Contains("Access-Control-Allow-Origin"));
+    }
+
+    private static async Task<HttpResponseMessage> guiJson(HttpClient mayKhach, string phuongThuc, string duongDan, string than)
+    {
+        var yeuCau = new HttpRequestMessage(new HttpMethod(phuongThuc), duongDan)
+        {
+            Content = new StringContent(than, System.Text.Encoding.UTF8, "application/json")
+        };
+        return await mayKhach.SendAsync(yeuCau);
+    }
+
+    [Fact(DisplayName = "GD-01: API ghi nhận thân rỗng {}, null hoặc sai kiểu (mảng ở ô chữ, chữ ở ô số) thì trả 400 có thông báo, không trả 500")]
+    public async Task GD01_ThanYeuCauRongHoacSaiKieu()
+    {
+        HttpClient quanLy = await dangNhapQuanLy();
+        (string PhuongThuc, string DuongDan, string SaiKieu)[] cacApi =
+        {
+            ("POST", "/api/dang-nhap", "{\"tenDangNhap\":[\"quanly\"],\"matKhau\":123}"),
+            ("POST", "/api/chuyen-bay", "{\"maChuyenBay\":[1,2],\"giaVe\":\"mot trieu\"}"),
+            ("POST", "/api/ve", "{\"maChuyenBay\":\"CB900\",\"maHangVe\":\"H2\",\"hanhKhach\":[1]}"),
+            ("POST", "/api/phieu-dat", "{\"maChuyenBay\":true,\"hanhKhach\":\"abc\"}"),
+            ("POST", "/api/tai-khoan", "{\"tenDangNhap\":[\"a\"],\"matKhau\":{}}"),
+            ("POST", "/api/san-bay", "{\"maSanBay\":{},\"tenSanBay\":[]}"),
+            ("POST", "/api/hang-ve", "{\"maHangVe\":\"H3\",\"tenHangVe\":\"Hạng thử\",\"tiLeDonGia\":\"nhieu\"}"),
+            ("PUT", "/api/quy-dinh/tham-so/thoiGianBayToiThieu", "{\"giaTriMoi\":[30]}"),
+        };
+
+        foreach (var (phuongThuc, duongDan, saiKieu) in cacApi)
+        {
+            foreach (string than in new[] { "{}", "null", saiKieu })
+            {
+                HttpResponseMessage phanHoi = await guiJson(quanLy, phuongThuc, duongDan, than);
+                string noiDung = await phanHoi.Content.ReadAsStringAsync();
+                Assert.True(phanHoi.StatusCode == HttpStatusCode.BadRequest, $"{phuongThuc} {duongDan} {than}: {(int)phanHoi.StatusCode} {noiDung}");
+                JsonElement loi = JsonDocument.Parse(noiDung).RootElement;
+                Assert.Equal("DU_LIEU_KHONG_HOP_LE", loi.GetProperty("ma").GetString());
+                Assert.False(string.IsNullOrWhiteSpace(loi.GetProperty("thongBao").GetString()));
+            }
+        }
+        Assert.Equal(0, csdl.dem("SELECT COUNT(*) FROM CHUYENBAY") + csdl.dem("SELECT COUNT(*) FROM VE") + csdl.dem("SELECT COUNT(*) FROM PHIEUDATCHO"));
+        Assert.Equal(30, (await docJson(await quanLy.GetAsync("/api/quy-dinh"))).GetProperty("thamSo").GetProperty("thoiGianBayToiThieu").GetInt32());
+    }
+
+    [Fact(DisplayName = "LO-02: gọi thẳng API với chuỗi 10.000 ký tự ở họ tên, ghi chú, tên đăng nhập, mật khẩu, hoặc thân JSON vài MB thì trả lỗi đúng dạng, không trả 500")]
+    public async Task LO02_ChuoiQuaDai()
+    {
+        HttpClient quanLy = await dangNhapQuanLy();
+        string dai = new string('a', 10_000);
+        Assert.Equal(HttpStatusCode.Created, (await quanLy.PostAsJsonAsync("/api/chuyen-bay", lichChuyenBay("CB900"))).StatusCode);
+
+        var lich = new
+        {
+            maChuyenBay = "CB901",
+            giaVe = 1500000,
+            maSanBayDi = "SGN",
+            maSanBayDen = "HAN",
+            ngayGioKhoiHanh = DateTime.Now.AddDays(10).ToString("yyyy-MM-dd'T'HH:mm:ss"),
+            thoiGianBay = 120,
+            gheTheoHang = new[] { new { maHangVe = "H2", soLuongGhe = 3 } },
+            trungGian = new[] { new { thuTu = 1, maSanBay = "DAD", thoiGianDung = 15, ghiChu = dai } }
+        };
+        await kiemTraLoi(await quanLy.PostAsJsonAsync("/api/chuyen-bay", lich), HttpStatusCode.BadRequest, "DU_LIEU_KHONG_HOP_LE");
+
+        object ve(string hoTen) => new
+        {
+            maChuyenBay = "CB900",
+            maHangVe = "H2",
+            hanhKhach = new { hoTen, loaiGiayTo = "CCCD", soGiayTo = "000000000001", dienThoai = "0901234567" }
+        };
+        await kiemTraLoi(await quanLy.PostAsJsonAsync("/api/ve", ve(dai)), HttpStatusCode.BadRequest, "DU_LIEU_KHONG_HOP_LE");
+        // thân JSON khoảng 3 MB
+        await kiemTraLoi(await quanLy.PostAsJsonAsync("/api/ve", ve(new string('a', 3_000_000))), HttpStatusCode.BadRequest, "DU_LIEU_KHONG_HOP_LE");
+
+        await kiemTraLoi(await quanLy.PostAsJsonAsync("/api/tai-khoan", new { tenDangNhap = dai, matKhau = "MatKhau@2026", nhomQuyen = "NhanVien" }),
+            HttpStatusCode.BadRequest, "DU_LIEU_KHONG_HOP_LE");
+        await kiemTraLoi(await quanLy.PostAsJsonAsync("/api/tai-khoan", new { tenDangNhap = "banve10k", matKhau = dai, nhomQuyen = "NhanVien" }),
+            HttpStatusCode.BadRequest, "DU_LIEU_KHONG_HOP_LE");
+        // đăng nhập bằng chuỗi rất dài chỉ là sai thông tin
+        await kiemTraLoi(await taoMayKhach().PostAsJsonAsync("/api/dang-nhap", new { tenDangNhap = dai, matKhau = dai }),
+            HttpStatusCode.Unauthorized, "SAI_THONG_TIN_DANG_NHAP");
+
+        Assert.Equal(0, csdl.dem("SELECT COUNT(*) FROM VE"));
+        Assert.Equal(1, csdl.dem("SELECT COUNT(*) FROM CHUYENBAY"));
+        Assert.Equal(0, csdl.dem("SELECT COUNT(*) FROM TAIKHOAN WHERE TenDangNhap = 'banve10k' OR LEN(TenDangNhap) > 30"));
+    }
+
+    [Fact(DisplayName = "GD-02: không kết nối được cơ sở dữ liệu thì trả 503 LOI_HE_THONG kèm câu thông báo, không trả 500")]
+    public async Task GD02_MatKetNoiCSDL()
+    {
+        // cổng 1 không có SQL Server nên kết nối bị từ chối ngay
+        using var mayChuMatCSDL = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+            builder.ConfigureAppConfiguration((_, cauHinh) => cauHinh.AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["ConnectionStrings:QLBANVE"] = "Server=tcp:127.0.0.1,1;Database=QLBANVE_KHONGCO;User Id=khongco;Password=khongco;Connect Timeout=2;TrustServerCertificate=True",
+                ["BoDinhThoi:Bat"] = "false",
+                ["NhatKy:ThuMuc"] = csdl.ThuMucNhatKy,
+                ["Phien:ThuMuc"] = thuMucPhien
+            })));
+        HttpClient mayKhach = mayChuMatCSDL.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true, AllowAutoRedirect = false });
+        mayKhach.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
+
+        JsonElement loi = await kiemTraLoi(await mayKhach.PostAsJsonAsync("/api/dang-nhap", new { tenDangNhap = "quanly", matKhau = "Quanly@123" }),
+            HttpStatusCode.ServiceUnavailable, "LOI_HE_THONG");
+
+        Assert.Equal("Không kết nối được cơ sở dữ liệu. Vui lòng thử lại sau.", loi.GetProperty("thongBao").GetString());
+    }
+
+    /// <summary>Máy chủ trong bộ nhớ với cấu hình trang Kiểm thử riêng; thư mục web trỏ tới chỗ không có để không gọi Playwright thật.</summary>
+    private WebApplicationFactory<Program> mayChuKiemThu(bool bat) =>
+        new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+            builder.ConfigureAppConfiguration((_, cauHinh) => cauHinh.AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["ConnectionStrings:QLBANVE"] = csdl.ChuoiKetNoi,
+                ["BoDinhThoi:Bat"] = "false",
+                ["NhatKy:ThuMuc"] = csdl.ThuMucNhatKy,
+                ["Phien:ThuMuc"] = thuMucPhien,
+                ["KiemThu:Bat"] = bat ? "true" : "false",
+                ["KiemThu:ThuMucWeb"] = Path.Combine(Path.GetTempPath(), "qlbv_khong_co_web_" + Guid.NewGuid().ToString("N")),
+            })));
+
+    private static async Task<HttpClient> dangNhapVao(WebApplicationFactory<Program> mc, string ten, string matKhau)
+    {
+        HttpClient mayKhach = mc.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true, AllowAutoRedirect = false });
+        mayKhach.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
+        Assert.Equal(HttpStatusCode.OK, (await mayKhach.PostAsJsonAsync("/api/dang-nhap", new { tenDangNhap = ten, matKhau })).StatusCode);
+        return mayKhach;
+    }
+
+    private static async Task<string> dangNhapLayCookie(WebApplicationFactory<Program> mc, string ten, string matKhau)
+    {
+        HttpClient mayKhach = mc.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = false });
+        mayKhach.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
+        HttpResponseMessage phanHoi = await mayKhach.PostAsJsonAsync("/api/dang-nhap", new { tenDangNhap = ten, matKhau });
+        Assert.Equal(HttpStatusCode.OK, phanHoi.StatusCode);
+        return Assert.Single(phanHoi.Headers.GetValues("Set-Cookie")).Split(';')[0];
+    }
+
+    private static HttpClient mayCamCookie(WebApplicationFactory<Program> mc, string cookie)
+    {
+        HttpClient mayKhach = mc.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = false });
+        mayKhach.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
+        mayKhach.DefaultRequestHeaders.Add("Cookie", cookie);
+        return mayKhach;
+    }
+
+    [Fact(DisplayName = "BMT01: khởi động lại máy chủ thì phiên đang mở vẫn dùng được, phiên đã đăng xuất vẫn bị từ chối; tập tin phiên không chứa tên đăng nhập")]
+    public async Task PhienConSauKhiKhoiDongLai()
+    {
+        string cookieMo, cookieDaXuat;
+        using (WebApplicationFactory<Program> lan1 = mayChuKiemThu(bat: false))
+        {
+            cookieMo = await dangNhapLayCookie(lan1, "quanly", "Quanly@123");
+            cookieDaXuat = await dangNhapLayCookie(lan1, "nhanvien", "Nhanvien@123");
+            Assert.Equal(HttpStatusCode.NoContent, (await mayCamCookie(lan1, cookieDaXuat).PostAsync("/api/dang-xuat", null)).StatusCode);
+        }
+
+        // chỉ còn phiên đang mở; nội dung phiên được mã hóa nên không đọc ra được tên đăng nhập
+        string[] dong = File.ReadAllLines(Path.Combine(thuMucPhien, "phien.dat"));
+        Assert.Single(dong);
+        Assert.DoesNotContain("quanly", dong[0]);
+
+        using WebApplicationFactory<Program> lan2 = mayChuKiemThu(bat: false);
+        HttpResponseMessage phien = await mayCamCookie(lan2, cookieMo).GetAsync("/api/phien");
+        Assert.Equal(HttpStatusCode.OK, phien.StatusCode);
+        Assert.Equal("quanly", (await docJson(phien)).GetProperty("tenDangNhap").GetString());
+        await kiemTraLoi(await mayCamCookie(lan2, cookieDaXuat).GetAsync("/api/phien"), HttpStatusCode.Unauthorized, "CHUA_DANG_NHAP");
+    }
+
+    [Fact(DisplayName = "AT01 bổ sung: POST /api/sao-luu chỉ dành cho Quản lý (Nhân viên bán vé nhận 403), trả đường dẫn tập tin và thời điểm")]
+    public async Task SaoLuuQuaHttp()
+    {
+        await kiemTraLoi(await (await dangNhapNhanVien()).PostAsync("/api/sao-luu", null), HttpStatusCode.Forbidden, "KHONG_CO_QUYEN");
+
+        HttpResponseMessage phanHoi = await (await dangNhapQuanLy()).PostAsync("/api/sao-luu", null);
+        Assert.Equal(HttpStatusCode.OK, phanHoi.StatusCode);
+        JsonElement kq = await docJson(phanHoi);
+        string tapTin = kq.GetProperty("tapTin").GetString()!;
+        try
+        {
+            Assert.Matches(@"QLBANVE_KIEMTHU_\d{8}_\d{6}_tay\.bak$", tapTin);
+            Assert.True(kq.TryGetProperty("thoiDiem", out _));
+        }
+        finally
+        {
+            csdl.thucThi($"EXEC master.sys.xp_delete_files N'{tapTin}'");
+        }
+    }
+
+    [Fact(DisplayName = "GD-03 trang Kiểm thử: KiemThu:Bat = false thì mọi đường dẫn trả 404; khi bật, Nhân viên bán vé bị từ chối 403")]
+    public async Task GD03_TrangKiemThuTatVaPhanQuyen()
+    {
+        using (WebApplicationFactory<Program> tat = mayChuKiemThu(bat: false))
+        {
+            HttpClient quanLy = await dangNhapVao(tat, "quanly", "Quanly@123");
+            foreach (string duongDan in new[] { "/api/kiem-thu/danh-sach", "/api/kiem-thu/trang-thai" })
+                await kiemTraLoi(await quanLy.GetAsync(duongDan), HttpStatusCode.NotFound, "KHONG_TIM_THAY");
+            await kiemTraLoi(await quanLy.PostAsJsonAsync("/api/kiem-thu/chay", new { cacCa = new[] { "a.spec.ts:1" }, chamMs = 0 }),
+                HttpStatusCode.NotFound, "KHONG_TIM_THAY");
+        }
+
+        using WebApplicationFactory<Program> bat = mayChuKiemThu(bat: true);
+        HttpClient nhanVien = await dangNhapVao(bat, "nhanvien", "Nhanvien@123");
+        await kiemTraLoi(await nhanVien.GetAsync("/api/kiem-thu/trang-thai"), HttpStatusCode.Forbidden, "KHONG_CO_QUYEN");
+    }
+
+    [Fact(DisplayName = "GD-04 trang Kiểm thử: chưa chọn ca hoặc tốc độ ngoài 0 đến 5.000 ms thì báo 400; không có thư mục kiểm thử thì báo 404, không chạy gì")]
+    public async Task GD04_TrangKiemThuKiemTraYeuCau()
+    {
+        using WebApplicationFactory<Program> mc = mayChuKiemThu(bat: true);
+        HttpClient quanLy = await dangNhapVao(mc, "quanly", "Quanly@123");
+
+        JsonElement trangThai = await docJson(await quanLy.GetAsync("/api/kiem-thu/trang-thai"));
+        Assert.False(trangThai.GetProperty("dangChay").GetBoolean());
+
+        JsonElement loi = await kiemTraLoi(await quanLy.PostAsJsonAsync("/api/kiem-thu/chay", new { cacCa = Array.Empty<string>(), chamMs = 0 }),
+            HttpStatusCode.BadRequest, "DU_LIEU_KHONG_HOP_LE");
+        Assert.True(loi.GetProperty("chiTiet").TryGetProperty("cacCa", out _));
+        foreach (int cham in new[] { -1, 5001 })
+        {
+            loi = await kiemTraLoi(await quanLy.PostAsJsonAsync("/api/kiem-thu/chay", new { cacCa = new[] { "a.spec.ts:1" }, chamMs = cham }),
+                HttpStatusCode.BadRequest, "DU_LIEU_KHONG_HOP_LE");
+            Assert.True(loi.GetProperty("chiTiet").TryGetProperty("chamMs", out _));
+        }
+
+        await kiemTraLoi(await quanLy.GetAsync("/api/kiem-thu/danh-sach"), HttpStatusCode.NotFound, "KHONG_TIM_THAY");
+        await kiemTraLoi(await quanLy.PostAsJsonAsync("/api/kiem-thu/chay", new { cacCa = new[] { "a.spec.ts:1" }, chamMs = 5000 }),
+            HttpStatusCode.NotFound, "KHONG_TIM_THAY");
+        Assert.False((await docJson(await quanLy.GetAsync("/api/kiem-thu/trang-thai"))).GetProperty("dangChay").GetBoolean());
     }
 }

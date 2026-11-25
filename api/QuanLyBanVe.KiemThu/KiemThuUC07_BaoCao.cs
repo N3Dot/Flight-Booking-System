@@ -53,6 +53,21 @@ public class KiemThuUC07_BaoCao : KiemThuCoSo
         Assert.Equal(new object[] { 3, "CB803", 0, 0m, 0m }, bang.Rows[2].ItemArray);
     }
 
+    [Fact(DisplayName = "NV05 BM5.1, BM5.2: tổng cột tỉ lệ đúng 100%, phần lệch do làm tròn dồn vào dòng doanh thu lớn nhất")]
+    public void TongTiLeDung100()
+    {
+        // ba chuyến bay cùng doanh thu: mỗi dòng làm tròn 33,33% thì tổng chỉ được 99,99%
+        foreach (string ma in new[] { "CB801", "CB802", "CB803" })
+        {
+            taoChuyenBay(ma, new DateTime(2026, 12, 5, 8, 0, 0));
+            xlBanVe.banVe(ma, "H2", khach(1));
+        }
+
+        DataTable thang = xl.lapBaoCaoThang(12, 2026, out _, out _);
+        Assert.Equal(new[] { 33.34m, 33.33m, 33.33m }, thang.Rows.Cast<DataRow>().Select(dong => (decimal)dong["TiLe"]));
+        Assert.Equal(100m, xl.lapBaoCaoNam(2026, out _).Rows.Cast<DataRow>().Sum(dong => (decimal)dong["TiLe"]));
+    }
+
     [Fact(DisplayName = "NV05 giả định 4: doanh thu tính theo tháng khởi hành, không theo ngày bán vé")]
     public void DoanhThuTheoThangKhoiHanh()
     {

@@ -2,7 +2,7 @@
 // hiệu lực ngay ở màn hình Đặt vé và biểu mẫu chuyến bay, kiểm tra mã và tên sân bay, hạng vé (TH01, TH05, giả định 11).
 // Mọi ca đổi tham số đều trả lại giá trị cũ trong finally; sân bay, hạng vé thử dùng mã mới và được xóa trong finally.
 import { expect, request, test, xemCsdl, type Locator, type Page } from '../tien_ich/trinh_dien';
-import { ApiThu, DIA_CHI, TAI_KHOAN, bamTrongHopThoai, dangNhap, hanhKhachMoi, hopThoai, mocVN, toast } from '../tien_ich/chung';
+import { ApiThu, DIA_CHI, TAI_KHOAN, bamTrongHopThoai, dangNhap, hanhKhachMoi, hopThoai, lichChuyenBayThu, mocVN, toast } from '../tien_ich/chung';
 
 /** Giá trị mặc định của bảng THAMSOQUYDINH trong dữ liệu mẫu. */
 const MAC_DINH: Record<string, number> = {
@@ -97,6 +97,17 @@ async function kiemBiChan(hop: Locator, o: Locator, chu: string): Promise<string
 }
 
 test.describe('Bổ sung UC08 Thay đổi quy định', () => {
+  test('UC08.22 Danh sách ban đầu có đúng 10 sân bay với các mã trong dữ liệu mẫu (QĐ1, TH01)', async ({ page }) => {
+    await dangNhap(page, 'quanLy', '/quy-dinh');
+    const cacDong = page.getByRole('table', { name: 'Danh sách sân bay' }).locator('tbody tr');
+    await expect(cacDong).toHaveCount(10);
+
+    const cacMa = await cacDong.evaluateAll((ds) =>
+      ds.map((dong) => dong.querySelectorAll('td')[1]?.textContent?.trim()).sort(),
+    );
+    expect(cacMa).toEqual(['SGN', 'HAN', 'DAD', 'CXR', 'PQC', 'HPH', 'HUI', 'VCA', 'DLI', 'VII'].sort());
+  });
+
   test('UC08.7 Tham số bằng 0, số âm, chữ, số lẻ: 0 được hay không tùy tham số, giá trị sai bị chặn và không lưu (Ràng buộc THAMSOQUYDINH)', async ({ page }) => {
     const api = await ApiThu.moi();
     const ten = ['soSanBayTrungGianToiDa', 'thoiGianDatVeChamNhat', 'thoiGianHuyDatVe'];
@@ -356,16 +367,7 @@ test.describe('Bổ sung UC08 Thay đổi quy định', () => {
     }
   });
 
-  test('UC08.14 Xóa sân bay đến khi chỉ còn 2 sân bay thì không xóa được sân bay thứ hai từ dưới lên (giả định 11)', async ({ page }) => {
-    await dangNhap(page, 'quanLy', '/quy-dinh');
-    const bang = page.getByRole('table', { name: 'Danh sách sân bay' });
-    await expect(bang.getByRole('row').filter({ hasText: 'SGN' })).toBeVisible();
-    expect(await bang.locator('tbody tr').count()).toBeGreaterThan(2);
-    await expect(page.getByText('Danh sách luôn còn ít nhất hai sân bay.', { exact: false })).toBeVisible();
-    // Máy chủ kiểm ràng buộc trong XL_ThayDoiQD.xoaSanBay (số sân bay <= 2 thì báo VI_PHAM_QD6), nhưng kiểm sau điều kiện
-    // "đang được chuyến bay sử dụng". Các sân bay mẫu đều có chuyến bay dùng nên không thể xóa xuống còn 2 trên CSDL dùng chung.
-    test.skip(true, 'Phải xóa gần hết sân bay mẫu đang được chuyến bay dùng; không làm được trên CSDL dùng chung');
-  });
+  // Quy tắc còn ít nhất 2 sân bay / 1 hạng vé được kiểm ở xUnit: ConItNhatHaiSanBay và XoaHangVe.
 
   test('UC08.15 Tỉ lệ đơn giá bằng 0, số âm, chữ thì báo lỗi, không lưu hạng vé (giả định 11, TH05)', async ({ page }) => {
     const api = await ApiThu.moi();
@@ -403,7 +405,7 @@ test.describe('Bổ sung UC08 Thay đổi quy định', () => {
     }
   });
 
-  test('UC08.16 Tên hạng vé trùng thì báo lỗi; không xóa được hạng vé cuối cùng (giả định 11, TH05)', async ({ page }) => {
+  test('UC08.16 Tên hạng vé trùng thì báo lỗi (giả định 11, TH05)', async ({ page }) => {
     const api = await ApiThu.moi();
     const ma = maChu('Q', 5, (await danhSachMa()).hangVe);
     try {
@@ -421,15 +423,6 @@ test.describe('Bổ sung UC08 Thay đổi quy định', () => {
       await xemCsdl(page, `hạng vé ${ma} trùng tên không được lưu, tên Hạng 1 vẫn chỉ có một dòng`,
         { bang: 'HANGVE', cot: 'MaHangVe', giaTri: ma, soDong: 0 },
         { bang: 'HANGVE', cot: 'TenHangVe', giaTri: 'Hạng 1', soDong: 1, dung: { MaHangVe: 'H1' } });
-
-      // hộp thoại xóa nhắc ràng buộc còn ít nhất một hạng vé; bấm Không thì không xóa
-      await page.getByRole('button', { name: 'Xóa hạng vé H2' }).click();
-      const hoi = hopThoai(page, /^Xóa hạng vé .*\?$/);
-      await expect(hoi).toContainText('Danh sách luôn còn ít nhất một hạng vé.');
-      await bamTrongHopThoai(page, /^Xóa hạng vé .*\?$/, 'Không');
-      // Máy chủ kiểm "còn ít nhất một hạng vé" trong XL_ThayDoiQD.xoaHangVe, sau điều kiện "đang được chuyến bay sử dụng".
-      // H1, H2 đều đang được chuyến bay mẫu dùng nên không thể xóa xuống còn 1 hạng trên CSDL dùng chung.
-      test.skip(true, 'Phần "xóa đến khi chỉ còn 1 hạng" phải xóa hạng vé mẫu đang được dùng; không làm được trên CSDL dùng chung');
     } finally {
       await api.xoaHangVeNeuCo(ma);
       await api.dong();
@@ -489,6 +482,83 @@ test.describe('Bổ sung UC08 Thay đổi quy định', () => {
       await xemCsdl(page, 'bấm Hủy nên thời gian bay tối thiểu giữ nguyên', { bang: 'THAMSOQUYDINH', dung: { ThoiGianBayToiThieu: cu.thoiGianBayToiThieu } });
     } finally {
       await traGiaTriCu(api, cu);
+      await api.dong();
+    }
+  });
+
+  test('UC08.19 Máy A đổi quy định thì thao tác kế tiếp ở máy B (trình duyệt khác, đã mở sẵn) dùng giá trị mới, không khởi động lại máy chủ (HQ07, TH-15)', async ({ page, browser }) => {
+    const api = await ApiThu.moi();
+    const cu = await docGiaTriCu(api, ['thoiGianBayToiThieu']);
+    const moi = cu.thoiGianBayToiThieu + 15;
+    const mayB = await browser.newContext({ baseURL: DIA_CHI, extraHTTPHeaders: { 'X-Requested-With': 'XMLHttpRequest' } });
+    const trangB = await mayB.newPage();
+    const cbCu = lichChuyenBayThu({ thoiGianBay: cu.thoiGianBayToiThieu });
+    const cbMoi = lichChuyenBayThu({ thoiGianBay: moi });
+    try {
+      // máy B đăng nhập và mở biểu mẫu khi quy định còn giá trị cũ
+      await dangNhap(trangB, 'quanLy', '/chuyen-bay/them');
+      await expect(trangB.getByRole('heading', { level: 1, name: 'Thêm chuyến bay' })).toBeVisible();
+
+      await dangNhap(page, 'quanLy', '/quy-dinh');
+      const hop = await moThamSo(page, 'Thời gian bay tối thiểu');
+      await go(oGiaTri(hop, 'phút'), String(moi));
+      await hop.getByRole('button', { name: 'Lưu' }).click();
+      await expect(toast(page, `Cập nhật quy định thành công: thời gian bay tối thiểu là ${moi} phút.`)).toBeVisible();
+
+      // thao tác kế tiếp của máy B, không tải lại trang: mức cũ bị từ chối theo mức mới, mức mới lưu được
+      const tuChoi = await trangB.request.post('/api/chuyen-bay', { data: cbCu });
+      expect(tuChoi.status()).toBe(409);
+      expect(await tuChoi.text()).toContain(`Thời gian bay phải từ ${moi} phút trở lên (QĐ1).`);
+      const luu = await trangB.request.post('/api/chuyen-bay', { data: cbMoi });
+      expect(luu.status()).toBe(201);
+      // máy B mở màn hình Quy định thì thấy giá trị mới
+      await trangB.getByRole('navigation', { name: 'Menu chính' }).getByRole('link', { name: 'Quy định', exact: true }).click();
+      await expect(theThamSo(trangB, 'Thời gian bay tối thiểu')).toHaveAccessibleName(`Thời gian bay tối thiểu: ${moi} phút. Bấm để thay đổi`);
+      await xemCsdl(page, `máy B lưu theo mức mới ${moi} phút`,
+        { bang: 'CHUYENBAY', cot: 'MaChuyenBay', giaTri: cbCu.maChuyenBay, soDong: 0 },
+        { bang: 'CHUYENBAY', cot: 'MaChuyenBay', giaTri: cbMoi.maChuyenBay, soDong: 1, dung: { ThoiGianBay: moi } });
+    } finally {
+      await traGiaTriCu(api, cu);
+      await api.xoaChuyenBayNeuCo(cbMoi.maChuyenBay);
+      await api.dong();
+      await mayB.close();
+    }
+  });
+
+  test('UC08.21 Sân bay vừa xóa không còn ở ô chọn của ô tra cứu và biểu mẫu chuyến bay, không cần tải lại trang (TH01, TH-01)', async ({ page }) => {
+    const ma = maChu('Q', 3, (await danhSachMa()).sanBay);
+    const api = await ApiThu.moi();
+    const menu = page.getByRole('navigation', { name: 'Menu chính' });
+    const luaChon = () => page.getByRole('option', { name: new RegExp(`^${ma}`) });
+    try {
+      await api.themSanBay(ma, `Kiểm thử xóa ${ma}`);
+      // mở trang tra cứu trước để danh sách sân bay (có sân bay thử) đã được nạp
+      await dangNhap(page, 'quanLy', '/chuyen-bay');
+      await page.getByRole('combobox', { name: 'Sân bay đi' }).click();
+      await page.getByRole('combobox', { name: 'Sân bay đi' }).fill(ma);
+      await expect(luaChon()).toBeVisible();
+
+      await menu.getByRole('link', { name: 'Quy định', exact: true }).click();
+      await page.getByRole('button', { name: `Xóa sân bay ${ma}` }).click();
+      await bamTrongHopThoai(page, `Xóa sân bay ${ma}?`, 'Xóa');
+      await expect(toast(page, `Xóa sân bay ${ma} thành công.`)).toBeVisible();
+
+      await menu.getByRole('link', { name: 'Chuyến bay', exact: true }).click();
+      for (const nhan of ['Sân bay đi', 'Sân bay đến']) {
+        await page.getByRole('combobox', { name: nhan }).click();
+        await page.getByRole('combobox', { name: nhan }).fill(ma);
+        await expect(luaChon(), `ô tra cứu ${nhan}`).toHaveCount(0);
+      }
+      await page.getByRole('link', { name: 'Thêm chuyến bay' }).click();
+      await expect(page.getByRole('heading', { level: 1, name: 'Thêm chuyến bay' })).toBeVisible();
+      for (const nhan of ['Sân bay đi', 'Sân bay đến']) {
+        await page.getByRole('combobox', { name: nhan }).click();
+        await page.getByRole('combobox', { name: nhan }).fill(ma);
+        await expect(luaChon(), `biểu mẫu ${nhan}`).toHaveCount(0);
+      }
+      await xemCsdl(page, `sân bay ${ma} đã bị xóa`, { bang: 'SANBAY', cot: 'MaSanBay', giaTri: ma, soDong: 0 });
+    } finally {
+      await api.xoaSanBayNeuCo(ma);
       await api.dong();
     }
   });

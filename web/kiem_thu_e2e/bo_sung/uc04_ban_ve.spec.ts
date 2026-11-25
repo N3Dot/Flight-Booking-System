@@ -286,7 +286,7 @@ test.describe('Bổ sung UC04 Quản lý bán vé', () => {
       { bang: 'VE', cot: 'MaChuyenBay', giaTri: cb.maChuyenBay, soDong: 2 });
   });
 
-  test('UC04.13 Cùng số giấy tờ nhưng nhập họ tên khác: vé dùng tên đã lưu, không đổi tên hành khách (giả định 8, 9) (cần chốt)', async ({ page }) => {
+  test('UC04.13 Cùng số giấy tờ nhưng nhập họ tên khác: vé dùng tên đã lưu, không đổi tên hành khách (giả định 8, 9)', async ({ page }) => {
     const api = await ApiThu.moi();
     const cb = await api.themChuyenBay();
     const hk = hanhKhachMoi('Đỗ Văn Tên Cũ');
@@ -609,6 +609,21 @@ test.describe('Bổ sung UC04 Quản lý bán vé', () => {
     await expect(bang.locator('tbody tr')).toHaveCount(0);
   });
 
+  test('UC04.31 Tìm và chọn chuyến bay ngoài danh sách ban đầu theo một phần mã (BMT04)', async ({ page }) => {
+    // Mô phỏng chuyến CB101 nằm ngoài danh sách ban đầu bị giới hạn.
+    await page.route('**/api/chuyen-bay', (route) => route.fulfill({ json: [] }));
+    await dangNhap(page, 'nhanVien', '/ve');
+    const oChon = page.getByRole('combobox', { name: 'Chuyến bay' });
+    const yeuCau = page.waitForRequest((req) => {
+      const url = new URL(req.url());
+      return req.method() === 'GET' && url.pathname === '/api/chuyen-bay' && url.searchParams.get('maChuyenBay') === 'B101';
+    });
+    await oChon.fill('b101');
+    await yeuCau;
+    await page.getByRole('option', { name: /^CB101\b/ }).click();
+    await expect(oChon).toHaveValue(/^CB101 · /);
+  });
+
   test('UC04.24 Màn hình Sửa vé: chuyến bay và hạng vé không sửa được, chỉ sửa thông tin hành khách (giả định 8)', async ({ page }) => {
     const api = await ApiThu.moi();
     const cb = await api.themChuyenBay();
@@ -693,15 +708,17 @@ test.describe('Bổ sung UC04 Quản lý bán vé', () => {
   test('UC04.27 Hủy vé của chuyến bay đã khởi hành: không cho hủy (giả định 8)', async ({ page }) => {
     await dangNhap(page, 'nhanVien', '/ve');
     // vé Đã bán của chuyến bay đã khởi hành trong dữ liệu mẫu (chỉ đọc, không sửa)
-    const bayGio = mocVN(0).isoGio;
-    const ds = (await (await page.request.get(`/api/ve?tuNgay=2000-01-01&denNgay=${mocVN(-1).iso}`)).json()) as {
+    const bayGio = mocVN(0);
+    const dsVe = await page.request.get(`/api/ve?tuNgay=2000-01-01&denNgay=${bayGio.iso}`);
+    expect(dsVe.ok(), 'đọc danh sách vé mẫu').toBeTruthy();
+    const ds = (await dsVe.json()) as {
       maVe: string;
       tinhTrang: string;
       ngayGioKhoiHanh: string;
     }[];
-    const ve = ds.find((v) => v.tinhTrang === 'DaBan' && v.ngayGioKhoiHanh < bayGio);
-    test.skip(!ve, 'Dữ liệu mẫu không có vé Đã bán của chuyến bay đã khởi hành');
-    const maVe = ve!.maVe;
+    const ve = ds.find((v) => v.tinhTrang === 'DaBan' && v.ngayGioKhoiHanh < bayGio.isoGio);
+    if (!ve) throw new Error('Dữ liệu mẫu thiếu vé Đã bán của chuyến bay đã khởi hành');
+    const { maVe } = ve;
 
     await page.getByRole('textbox', { name: 'Mã vé' }).fill(maVe);
     await nhapNgay(page, 'Từ ngày', '');
@@ -736,7 +753,7 @@ test.describe('Bổ sung UC04 Quản lý bán vé', () => {
     await xemCsdl(page, `vé ${maVe} vẫn Đã bán`, { bang: 'VE', cot: 'MaVe', giaTri: maVe, soDong: 1, dung: { TinhTrang: 'Đã bán' } });
   });
 
-  test('UC04.29 Bấm Bán vé trong hộp xác nhận hai lần thật nhanh: chỉ lập 1 vé (lặp lại cùng thao tác)', async ({ page }) => {
+  test('UC04.29 Bấm Bán vé trong hộp xác nhận hai lần thật nhanh: chỉ lập 1 vé (Chương 7, tr. 46)', async ({ page }) => {
     const api = await ApiThu.moi();
     const cb = await api.themChuyenBay();
     await api.dong();
@@ -752,6 +769,21 @@ test.describe('Bổ sung UC04 Quản lý bán vé', () => {
     await expect(hopThoai(page, 'Bán vé thành công')).toHaveCount(1);
     expect(await docCsdl('VE', 'MaChuyenBay', cb.maChuyenBay)).toHaveLength(1);
     await xemCsdl(page, `chuyến bay ${cb.maChuyenBay} chỉ có 1 vé`, { bang: 'VE', cot: 'MaChuyenBay', giaTri: cb.maChuyenBay, soDong: 1 });
+  });
+  test('UC04.30 Đang nhập dở ở màn hình Bán vé mà bấm menu khác thì hỏi xác nhận; chọn Tiếp tục nhập thì giữ thông tin, chọn Rời trang thì sang trang mới (B5, Ch.5 nguyên lý khôi phục)', async ({ page }) => {
+    await dangNhap(page, 'nhanVien', '/ban-ve');
+    await nhapHanhKhach(page, 'Lý Văn Nhập Dở', soCanCuocMoi());
+    const menu = page.getByRole('navigation', { name: 'Menu chính' });
+    await menu.getByRole('link', { name: 'Chuyến bay', exact: true }).click();
+    const hoi = hopThoai(page, 'Rời trang khi chưa lưu?');
+    await expect(hoi).toBeVisible();
+    await hoi.getByRole('button', { name: 'Tiếp tục nhập' }).click();
+    await expect(hoi).toHaveCount(0);
+    await expect(page).toHaveURL(/\/ban-ve/);
+    await expect(bieuMau(page).getByRole('textbox', { name: 'Hành khách' })).toHaveValue('Lý Văn Nhập Dở');
+    await menu.getByRole('link', { name: 'Chuyến bay', exact: true }).click();
+    await hopThoai(page, 'Rời trang khi chưa lưu?').getByRole('button', { name: 'Rời trang' }).click();
+    await expect(page).toHaveURL(/\/chuyen-bay/);
   });
 });
 

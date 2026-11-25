@@ -95,7 +95,8 @@ async function goiMayChuThat(phuongThuc: PhuongThuc, duongDan: string, tuyChon: 
     phanHoi = await fetch(url, {
       method: phuongThuc,
       credentials: 'include',
-      headers: tuyChon.than !== undefined && !coTapTin ? { 'Content-Type': 'application/json' } : undefined,
+      // máy chủ từ chối yêu cầu ghi không có X-Requested-With (chống giả mạo yêu cầu từ trang khác)
+      headers: { 'X-Requested-With': 'XMLHttpRequest', ...(tuyChon.than !== undefined && !coTapTin ? { 'Content-Type': 'application/json' } : {}) },
       body:
         tuyChon.than === undefined ? undefined : coTapTin ? (tuyChon.than as FormData) : JSON.stringify(tuyChon.than),
     });

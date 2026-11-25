@@ -1,6 +1,7 @@
 // Mô tả sáu tham số quy định: tên, đơn vị, quy định gốc, icon và ràng buộc giá trị mới
 import { CalendarClock, CalendarX2, Hourglass, MapPinned, Timer, TimerReset } from 'lucide-react';
 import type { TenThamSo, ThamSoQuyDinh } from '@/kieu/api';
+import { THOI_GIAN_BAY_TOI_DA } from '@/trang/chuyen_bay/kiem_tra';
 
 export interface MoTaThamSo {
   ten: TenThamSo;
@@ -24,7 +25,8 @@ export const THAM_SO: MoTaThamSo[] = [
     qd: 'QĐ1',
     icon: <Timer size={26} strokeWidth={2.2} />,
     moTa: () => 'Mỗi chuyến bay phải có thời gian bay không nhỏ hơn giá trị này.',
-    khoang: () => ({ nhoNhat: 0, lonNhat: PHUT_TOI_DA, goiY: 'Số nguyên không âm (phút).' }),
+    // vượt cận trên của thời gian bay thì không nhận được chuyến bay nào
+    khoang: () => ({ nhoNhat: 0, lonNhat: THOI_GIAN_BAY_TOI_DA, goiY: `Số nguyên từ 0 đến ${THOI_GIAN_BAY_TOI_DA} (phút).` }),
   },
   {
     ten: 'soSanBayTrungGianToiDa',

@@ -10,6 +10,9 @@ namespace QuanLyBanVe.Api.TruyXuat;
 /// </summary>
 public class KetNoiCSDL : IDisposable
 {
+    // mã lỗi SQL Server khi hết thời gian chờ (-2) hoặc mất kết nối giữa chừng
+    private static readonly HashSet<int> MA_LOI_KET_NOI = new() { -2, -1, 2, 53, 64, 121, 233, 4060, 6005, 10053, 10054, 10060, 10061 };
+
     private readonly string chuoiKetNoi;
     private SqlConnection? ketNoiGiaoDich;
     private SqlTransaction? giaoDichHienTai;
@@ -194,6 +197,11 @@ public class KetNoiCSDL : IDisposable
         catch (SqlException loi) when (loi.Number == 1205)
         {
             throw new LoiTranhChap(loi);
+        }
+        // báo như không kết nối được (503, mời thử lại) thay vì lỗi hệ thống 500
+        catch (SqlException loi) when (MA_LOI_KET_NOI.Contains(loi.Number))
+        {
+            throw new LoiKetNoiCSDL(loi);
         }
     }
 

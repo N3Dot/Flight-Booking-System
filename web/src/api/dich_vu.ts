@@ -13,6 +13,7 @@ import type {
   KetQuaBanVe,
   KetQuaDatVe,
   KetQuaNhapExcel,
+  KetQuaSaoLuu,
   LoaiGiayTo,
   MucDichBan,
   NguoiDung,
@@ -94,7 +95,7 @@ export const apiChuyenBay = {
 };
 
 /* ---------- Vé (UC04) ---------- */
-/** Tra cứu vé và tra cứu phiếu đặt chỗ chỉ trả về tối đa bấy nhiêu dòng (SO_DONG_TOI_DA ở DAL_Ve, DAL_PhieuDatCho) */
+/** Tra cứu chuyến bay, vé và phiếu đặt chỗ chỉ trả về tối đa bấy nhiêu dòng (SO_DONG_TOI_DA ở DAL_ChuyenBay, DAL_Ve, DAL_PhieuDatCho) */
 export const SO_KET_QUA_TOI_DA = 1000;
 
 export const apiVe = {
@@ -144,6 +145,11 @@ export const apiKiemThu = {
   trangThai: () => goiApi<TrangThaiKiemThu>('GET', '/api/kiem-thu/trang-thai'),
   chay: (yc: YeuCauChayKiemThu) => goiApi<void>('POST', '/api/kiem-thu/chay', { than: yc }),
   dung: () => goiApi<void>('POST', '/api/kiem-thu/dung'),
+};
+
+/* ---------- Sao lưu dữ liệu (chỉ Quản lý) ---------- */
+export const apiSaoLuu = {
+  saoLuu: () => goiApi<KetQuaSaoLuu>('POST', '/api/sao-luu'),
 };
 
 /** Khóa truy vấn dùng chung cho TanStack Query, để làm mới đúng chỗ sau khi ghi */

@@ -38,6 +38,7 @@ public class PhanHoiLoi
                     LoaiLoi.ChuaXacThuc => StatusCodes.Status401Unauthorized,
                     LoaiLoi.KhongCoQuyen => StatusCodes.Status403Forbidden,
                     LoaiLoi.KhongTimThay => StatusCodes.Status404NotFound,
+                    LoaiLoi.QuaNhieuLanThu => StatusCodes.Status429TooManyRequests,
                     _ => StatusCodes.Status409Conflict
                 };
                 return (maTrangThai, new PhanHoiLoi(nghiepVu.Ma, nghiepVu.Message, nghiepVu.ChiTiet));

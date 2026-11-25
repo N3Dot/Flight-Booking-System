@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuanLyBanVe.Api.TienIch;
-using QuanLyBanVe.Api.TruyXuat;
 using QuanLyBanVe.Api.XuLy;
 
 namespace QuanLyBanVe.Api.GiaoTiep;
@@ -57,10 +56,10 @@ public class KiemThuController : ControllerBase
 
     /// <summary>Đọc các dòng của một bảng (lọc theo cột = giá trị) để bộ kiểm thử mở ra cho người xem kiểm chứng.</summary>
     [HttpGet("api/kiem-thu/csdl")]
-    public IActionResult xemCsdl([FromServices] DAL_KiemThu dal, string bang, string? cot, string? giaTri)
+    public IActionResult xemCsdl([FromServices] XL_KiemThu xl, string bang, string? cot, string? giaTri)
     {
         kiemTraBat();
-        return Ok(dal.xemBang(bang, cot, giaTri) ?? throw LoiNghiepVu.khongTimThay("Không có bảng hoặc cột này."));
+        return Ok(xl.xemBang(bang, cot, giaTri));
     }
 
     private void kiemTraBat()

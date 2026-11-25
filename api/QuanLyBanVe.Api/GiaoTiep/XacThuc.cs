@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using QuanLyBanVe.Api.DTO;
+using QuanLyBanVe.Api.TienIch;
 using QuanLyBanVe.Api.XuLy;
 
 namespace QuanLyBanVe.Api.GiaoTiep;
@@ -11,7 +12,8 @@ public static class XacThuc
 {
     public const string TEN_COOKIE = "qlbv_phien";
 
-    public static void themXacThucCookie(this IServiceCollection dichVu)
+    /// <param name="chiHttps">Máy chủ có địa chỉ https: cookie phiên chỉ gửi qua HTTPS.</param>
+    public static void themXacThucCookie(this IServiceCollection dichVu, bool chiHttps)
     {
         dichVu.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(tuyChon =>
@@ -19,7 +21,7 @@ public static class XacThuc
                 tuyChon.Cookie.Name = TEN_COOKIE;
                 tuyChon.Cookie.HttpOnly = true;
                 tuyChon.Cookie.SameSite = SameSiteMode.Lax;
-                tuyChon.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                tuyChon.Cookie.SecurePolicy = chiHttps ? CookieSecurePolicy.Always : CookieSecurePolicy.SameAsRequest;
                 tuyChon.ExpireTimeSpan = TimeSpan.FromHours(8);
                 tuyChon.SlidingExpiration = true;
 
@@ -30,6 +32,9 @@ public static class XacThuc
                     StatusCodes.Status403Forbidden, MaLoi.KHONG_CO_QUYEN, "Bạn không có quyền thực hiện chức năng này.");
                 tuyChon.Events.OnValidatePrincipal = kiemTraPhien;
             });
+        // phiên giữ ở máy chủ (KhoPhien), cookie chỉ mang khóa phiên nên đăng xuất là hủy được phiên
+        dichVu.AddOptions<CookieAuthenticationOptions>(CookieAuthenticationDefaults.AuthenticationScheme)
+            .Configure<KhoPhien>((tuyChon, khoPhien) => tuyChon.SessionStore = khoPhien);
         dichVu.AddAuthorization();
     }
 

@@ -14,6 +14,7 @@ import { OChon } from '@/thanh_phan/OChon';
 import { ONhap } from '@/thanh_phan/ONhap';
 import { hienToast } from '@/thanh_phan/toast_kho';
 import { dinhDangTien, tenLoaiGiayTo } from '@/tien_ich/dinh_dang';
+import { dungHoiKhiRoiTrang } from '@/tien_ich/hoi_khi_roi_trang';
 import { dungPhimTat } from '@/tien_ich/phim_tat';
 import { dinhDangNgay, dinhDangNgayGio } from '@/tien_ich/thoi_gian';
 import { BangHanGiuCho, ChonHangVe, OGiaTien, OGiayTo } from './CacO';
@@ -133,6 +134,17 @@ export function BieuMauVe({ mucDich, banGhiSua, maChuyenBayBanDau = null, loc = 
   useEffect(() => {
     onDoiNhapDo?.(dangNhapDo);
   }, [dangNhapDo, onDoiNhapDo]);
+
+  // chỉ hỏi khi đang lập mới; đã lưu xong (có ketQua) thì không còn gì để mất
+  dungHoiKhiRoiTrang(!sua && dangNhapDo && !ketQua, () =>
+    hoiXacNhan({
+      tieuDe: 'Rời trang khi chưa lưu?',
+      noiDung: `Thông tin đã nhập sẽ không được lưu, ${ten.doiTuong} chưa được lập.`,
+      nutDongY: 'Rời trang',
+      nutHuy: 'Tiếp tục nhập',
+    }),
+    dieuHuong,
+  );
 
   /* rung các ô lỗi một lần rồi đưa con trỏ tới ô lỗi đầu tiên */
   useEffect(() => {
@@ -448,6 +460,7 @@ export function BieuMauVe({ mucDich, banGhiSua, maChuyenBayBanDau = null, loc = 
               batBuoc
               iconTrai={<UserRound size={18} />}
               placeholder="Họ và tên hành khách"
+              goiY={sua ? 'Thay đổi áp dụng cho mọi vé và phiếu đặt chỗ của hành khách này.' : undefined}
               maxLength={50}
               autoComplete="off"
               value={hk.hoTen}

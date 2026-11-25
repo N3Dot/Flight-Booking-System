@@ -26,6 +26,27 @@ const NHAN: Record<TrangThaiCaKiemThu, [LoaiNhan, string]> = {
 
 const laBoSung = (tenNhom: string) => tenNhom.startsWith('Bổ sung');
 
+// xếp nhóm theo thứ tự bảng ca kiểm thử của báo cáo: UC01 đến UC08, rồi chức năng chung, kịch bản, các ca còn lại;
+// "Phân quyền theo vai trò" là các ca KT-UC02-06 đến 09 nên đứng ngay sau UC02
+function hangNhom(tenNhom: string): number {
+  const ten = tenNhom.replace(/^Bổ sung\s*/, '');
+  const uc = /^UC0?(\d+)/.exec(ten);
+  if (uc) return Number(uc[1]) * 10;
+  if (ten.startsWith('Phân quyền theo vai trò')) return 25;
+  if (/chung/i.test(ten)) return 900;
+  if (/kịch bản/i.test(ten)) return 910;
+  return 950;
+}
+const soCuaMa = (ma: string) => Number(ma.split('.')[1]) || 0;
+const sapXep = (cacCa: CaKiemThu[]) =>
+  [...cacCa].sort(
+    (a, b) =>
+      Number(laBoSung(a.nhom)) - Number(laBoSung(b.nhom)) ||
+      hangNhom(a.nhom) - hangNhom(b.nhom) ||
+      soCuaMa(a.ma) - soCuaMa(b.ma) ||
+      a.stt - b.stt,
+  );
+
 export function TrangKiemThu() {
   const boTruyVan = useQueryClient();
   const danhSach = useQuery({ queryKey: khoaTruyVan.kiemThuDanhSach, queryFn: apiKiemThu.danhSach, staleTime: Infinity });
@@ -40,22 +61,19 @@ export function TrangKiemThu() {
   const [hienTrinhDuyet, datHienTrinhDuyet] = useState(true);
   const [dongNhom, datDongNhom] = useState<Set<string>>(new Set());
 
-  const cacCa = useMemo(() => danhSach.data ?? [], [danhSach.data]);
+  const cacCa = useMemo(() => sapXep(danhSach.data ?? []), [danhSach.data]);
   const ketQua = trangThai.data?.ketQua ?? {};
   const dangChay = !!trangThai.data?.dangChay;
 
   const daLoc = useMemo(() => cacCa.filter((ca) => khopTuKhoa(`${ca.ma} ${ca.ten} ${ca.nhom}`, tuKhoa)), [cacCa, tuKhoa]);
   const theoNhom = useMemo(() => {
     const nhom = new Map<string, CaKiemThu[]>();
+    // cacCa đã xếp nên nhóm hiện theo đúng thứ tự gặp đầu tiên
     for (const ca of daLoc) nhom.set(ca.nhom, [...(nhom.get(ca.nhom) ?? []), ca]);
-    // nhóm theo báo cáo đứng trước, nhóm "Bổ sung" (kiem_thu_e2e/bo_sung) xếp sau
-    return [...nhom.entries()].sort(([a], [b]) => Number(laBoSung(a)) - Number(laBoSung(b)));
+    return [...nhom.entries()];
   }, [daLoc]);
   // số thứ tự liền mạch theo thứ tự hiện trên trang (không đổi khi lọc)
-  const soThuTu = useMemo(
-    () => new Map([...cacCa].sort((a, b) => Number(laBoSung(a.nhom)) - Number(laBoSung(b.nhom))).map((ca, i) => [ca.id, i + 1])),
-    [cacCa],
-  );
+  const soThuTu = useMemo(() => new Map(cacCa.map((ca, i) => [ca.id, i + 1])), [cacCa]);
 
   const chay = useMutation({
     mutationFn: (cacId: string[]) => apiKiemThu.chay({ cacCa: cacId, chamMs, hienTrinhDuyet }),
@@ -156,7 +174,7 @@ export function TrangKiemThu() {
             const dauPhan = i === 0 || laBoSung(tenNhom) !== laBoSung(theoNhom[i - 1][0]);
             return (
               <Fragment key={tenNhom}>
-              {dauPhan && <h2 className={s.tieuDePhan}>{laBoSung(tenNhom) ? 'Bổ sung ngoài báo cáo' : 'Theo báo cáo (Chương 5)'}</h2>}
+              {dauPhan && <h2 className={s.tieuDePhan}>{laBoSung(tenNhom) ? 'Ca bổ sung (Bảng 5.22)' : 'Ca theo use case (Bảng 5.14 đến Bảng 5.21)'}</h2>}
               <div className={s.nhom}>
                 <div className={s.dauNhom}>
                   <OChonCo chon={soChon === idNhom.length} mot={soChon > 0 && soChon < idNhom.length} onDoi={(bat) => doiChon(idNhom, bat)} nhan={`Chọn cả nhóm ${tenNhom}`} />

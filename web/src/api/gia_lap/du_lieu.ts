@@ -11,6 +11,7 @@ import type {
   TrangThaiTaiKhoan,
 } from '@/kieu/api';
 import { congNgay, congPhut, dauNgay, docIso, sangIso } from '@/tien_ich/thoi_gian';
+import { giaTienTheoHang } from '@/tien_ich/dinh_dang';
 
 export interface TaiKhoanGia {
   tenDangNhap: string;
@@ -242,7 +243,7 @@ export function taoCoSoDuLieu(bayGio = new Date()): CoSoDuLieuGia {
             maVe: maVeTuSo(db.demVe),
             maChuyenBay: cb.maChuyenBay,
             maHangVe: g.maHangVe,
-            giaTien: Math.round((cb.giaVe * tiLe) / 100),
+            giaTien: giaTienTheoHang(cb.giaVe, tiLe),
             ngayBan: sangIso(ngayBan),
             tinhTrang: nn.so() < 0.04 ? 'DaHuy' : 'DaBan',
             maPhieuDat: null,
@@ -265,7 +266,7 @@ export function taoCoSoDuLieu(bayGio = new Date()): CoSoDuLieuGia {
             maPhieuDat: maPhieuTuSo(db.demPhieu),
             maChuyenBay: cb.maChuyenBay,
             maHangVe: g.maHangVe,
-            giaTien: Math.round((cb.giaVe * tiLe) / 100),
+            giaTien: giaTienTheoHang(cb.giaVe, tiLe),
             thoiDiemDat: sangIso(thoiDiemDat),
             hanThanhToan: sangIso(han),
             tinhTrang: nn.so() < 0.2 ? 'DaHuy' : 'ChoThanhToan',
@@ -308,7 +309,7 @@ export function taoCoSoDuLieu(bayGio = new Date()): CoSoDuLieuGia {
           maVe: maVeTuSo(db.demVe),
           maChuyenBay: cb.maChuyenBay,
           maHangVe: g.maHangVe,
-          giaTien: Math.round((cb.giaVe * tiLe) / 100),
+          giaTien: giaTienTheoHang(cb.giaVe, tiLe),
           ngayBan: sangIso(congPhut(bayGio, -nn.nguyen(60, 60 * 24 * 5))),
           tinhTrang: 'DaBan',
           maPhieuDat: null,

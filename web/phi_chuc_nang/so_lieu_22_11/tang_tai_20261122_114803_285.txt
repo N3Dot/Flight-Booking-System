@@ -1,0 +1,27 @@
+﻿Tăng tải 20261122_114803_285 | mức 800 | 1 lượt | tra cứu /api/chuyen-bay?sanBayDi=SGN&sanBayDen=HAN&tuNgay=2026-01-01&denNgay=2026-12-31
+Mức 800 | chuyến đo TEEEEAF3B9 | 1000 ghế H1
+  Đăng nhập 800 phiên trước khi phát lệnh: 55.8 s (không tính vào thời gian đo)
+  TangDan N=800 TraCuu lượt 1: nhỏ nhất 5061.3 | lớn nhất 7959.2 ms | HTTP 200x800
+  TangDan N=800 BanVe lượt 1: nhỏ nhất 1156.1 | lớn nhất 1428.5 ms | HTTP 201x800
+  CSDL TEEEEAF3B9: tổng ghế 1000 | vé Đã bán 800 | MaVe khác nhau 800 | yêu cầu 201 800 | khớp mã vé True => Đạt
+Hồi phục sau mức 800 | tải về 5 | chuyến TEEEEAF3B9
+  HoiPhuc N=5 TraCuu lượt 1: nhỏ nhất 19.4 | lớn nhất 35.4 ms | HTTP 200x5
+  HoiPhuc N=5 BanVe lượt 1: nhỏ nhất 3.9 | lớn nhất 7.6 ms | HTTP 201x5
+  CSDL TEEEEAF3B9: tổng ghế 1000 | vé Đã bán 805 | MaVe khác nhau 805 | yêu cầu 201 805 | khớp mã vé True => Đạt
+BẢNG TỔNG HỢP (mili giây, gộp các lượt của cùng mức)
+
+GiaiDoan Muc Loai   SoYeuCau NhoNhat TrungVi    P95 LonNhat Loi MaHttp 
+-------- --- ----   -------- ------- -------    --- ------- --- ------ 
+TangDan  800 TraCuu      800  5061.3    6931 7823.7  7959.2   0 200x800
+TangDan  800 BanVe       800  1156.1  1335.8 1380.8  1428.5   0 201x800
+HoiPhuc    5 TraCuu        5    19.4    34.9   35.4    35.4   0 200x5  
+HoiPhuc    5 BanVe         5     3.9     6.3    7.6     7.6   0 201x5  
+
+
+
+Mức đầu tiên vượt ngưỡng (TraCuu): không có tới mức 800
+Mức đầu tiên vượt ngưỡng (BanVe): không có tới mức 800
+Yêu cầu lỗi: 0 / 1610. Mã HTTP lỗi: . Lỗi 5xx: 0
+Dòng fail/crit/Exception trong nhật ký máy chủ HQ: 0
+Kiểm tra CSDL tổng: Đạt
+Chuyến đo: N=800 TEEEEAF3B9

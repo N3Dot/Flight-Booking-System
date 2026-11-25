@@ -1,0 +1,10 @@
+﻿== AT01: lịch sao lưu tự động bằng Task Scheduler ==
+PowerShell chạy với quyền Administrator: False
+Không tạo được tác vụ với -RunLevel Highest: Access is denied.
+Đã tạo tác vụ với -RunLevel Limited, chạy khi người dùng đang đăng nhập.
+Tác vụ: Sao luu QLBANVE_HQ; lịch 2026-11-22T22:00:00+07:00; chạy powershell.exe -NoProfile -ExecutionPolicy Bypass -File "E:\Projects\Docs\School\Nhập môn CNPM\Đồ án\Demo\Flight-Booking-System\web\phi_chuc_nang\ket_qua\sao_luu\sao_luu.ps1"
+Start-ScheduledTask: xong sau 3.9 s, LastRunTime 11/22/2026 5:40:40 AM, LastTaskResult 0
+Tệp tạo ra: QLBANVE_HQ_20261122.bak, 963252224 byte
+
+RESTORE VERIFYONLY: 0.83 s
+Sau khi dọn: còn tác vụ False, còn 0 tệp .bak

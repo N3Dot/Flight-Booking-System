@@ -5,7 +5,8 @@ JSON dùng tên camelCase, tiếng Việt không dấu, khớp tên thuộc tín
 Ngày giờ theo ISO 8601 giờ địa phương không kèm múi giờ (`2026-11-12T14:30:00`). Tiền là số nguyên VND.
 
 ## Quy ước chung
-- Xác thực bằng cookie HttpOnly `qlbv_phien` sau khi đăng nhập. Chưa đăng nhập: 401. Sai nhóm quyền: 403.
+- Xác thực bằng cookie HttpOnly `qlbv_phien` sau khi đăng nhập. Chưa đăng nhập: 401. Sai nhóm quyền: 403. Phiên giữ ở máy chủ, cookie chỉ mang khóa phiên: đăng xuất hoặc đặt lại mật khẩu là phiên hết hiệu lực ngay.
+- Mọi yêu cầu POST, PUT, DELETE tới `/api` phải có header `X-Requested-With` (giá trị bất kỳ, giao diện gửi `XMLHttpRequest`); thiếu thì 400 `THIEU_HEADER_YEU_CAU`.
 - Nhóm quyền: `QuanLy`, `NhanVien`. Trạng thái tài khoản: `HoatDong`, `DaKhoa`. Tình trạng vé: `DaBan`, `DaHuy`. Tình trạng phiếu: `ChoThanhToan`, `DaHuy`. Loại giấy tờ: `CCCD`, `HoChieu`.
 - Lỗi luôn có dạng `{ "ma": "MA_LOI", "thongBao": "câu tiếng Việt hiển thị cho người dùng", "chiTiet": { "tenTruong": "lỗi của ô" } }`.
   400 dữ liệu không hợp lệ (có `chiTiet`), 409 vi phạm quy định nghiệp vụ, 404 không tìm thấy.
@@ -32,7 +33,7 @@ Ngày giờ theo ISO 8601 giờ địa phương không kèm múi giờ (`2026-11
 | Phương thức | Đường dẫn | Thân yêu cầu | Trả về |
 |---|---|---|---|
 | GET | `/api/quy-dinh` | | `{thamSo: {thoiGianBayToiThieu, soSanBayTrungGianToiDa, thoiGianDungToiThieu, thoiGianDungToiDa, thoiGianDatVeChamNhat, thoiGianHuyDatVe}, sanBay: [{maSanBay, tenSanBay}], hangVe: [{maHangVe, tenHangVe, tiLeDonGia}]}` |
-| PUT | `/api/quy-dinh/tham-so/{tenThamSo}` | `{giaTriMoi}` | 204 |
+| PUT | `/api/quy-dinh/tham-so/{tenThamSo}` | `{giaTriMoi}` (`thoiGianBayToiThieu` từ 0 đến 1440) | 204 |
 | POST | `/api/san-bay` | `{maSanBay, tenSanBay}` | 201 |
 | PUT | `/api/san-bay/{maSanBay}` | `{tenSanBay}` | 204 |
 | DELETE | `/api/san-bay/{maSanBay}` | | 204, 409 `DANG_DUOC_SU_DUNG` |
@@ -46,12 +47,14 @@ Ngày giờ theo ISO 8601 giờ địa phương không kèm múi giờ (`2026-11
 | GET | `/api/chuyen-bay` | `?sanBayDi&sanBayDen&tuNgay&denNgay&maChuyenBay` | `[{maChuyenBay, maSanBayDi, tenSanBayDi, maSanBayDen, tenSanBayDen, ngayGioKhoiHanh, thoiGianBay, soGheTrong, soGheDat}]` (BM4) |
 | GET | `/api/chuyen-bay/{ma}` | | `{maChuyenBay, giaVe, maSanBayDi, maSanBayDen, ngayGioKhoiHanh, thoiGianBay, gheTheoHang: [{maHangVe, tenHangVe, soLuongGhe, soGheTrong, soDaBanVaDat}], trungGian: [{thuTu, maSanBay, tenSanBay, thoiGianDung, ghiChu}]}` |
 | POST | `/api/chuyen-bay` | như trên, không có các trường tính toán | 201 |
-| PUT | `/api/chuyen-bay/{ma}` | như POST | 204 |
+| PUT | `/api/chuyen-bay/{ma}` | như POST | 204, 409 `CHUYEN_BAY_DA_KHOI_HANH` (chuyến đã khởi hành không sửa được) |
 | DELETE | `/api/chuyen-bay/{ma}` | | 204, 409 `DA_CO_VE_HOAC_PHIEU` |
 | POST | `/api/chuyen-bay/nhap-excel` | multipart `tapTin` (.xlsx theo tập tin mẫu) | `{soDaThem, dongLoi: [{dong, lyDo}]}` |
 | GET | `/api/chuyen-bay/mau-excel` | | tập tin .xlsx mẫu |
 | GET | `/api/chuyen-bay/xuat-excel` | cùng tham số tra cứu | tập tin .xlsx |
 | GET | `/api/chuyen-bay/sap-khoi-hanh` | `?soLuong=5` | như tra cứu, sắp theo giờ khởi hành |
+
+Thêm, sửa và nhập Excel cùng kiểm: mỗi hạng vé tối đa 1000 ghế, thời gian bay tối đa 1440 phút, ngày giờ khởi hành (kể cả khi sửa) phải sau thời điểm hiện tại; sai thì trả 400 `DU_LIEU_KHONG_HOP_LE` kèm lỗi theo ô.
 
 ## Bán vé (UC04)
 | Phương thức | Đường dẫn | Thân yêu cầu / tham số | Trả về |
@@ -101,8 +104,15 @@ Máy chủ chạy bộ kiểm thử Playwright trong thư mục `web` (cần `np
 | POST | `/api/kiem-thu/dung` | 204, dừng lần chạy đang có (kể cả trình duyệt kiểm thử) |
 | GET | `/api/kiem-thu/csdl?bang=&cot=&giaTri=` | `{cauLenh, cacCot, cacDong}`: tối đa 50 dòng của một bảng trong danh sách cho phép, lọc `cot = giaTri` nếu có; cột `MatKhau` luôn hiện `(đã ẩn)`. Bảng hoặc cột lạ: 404 |
 
+## Sao lưu dữ liệu (chỉ Quản lý, giả định 19)
+
+| Phương thức | Đường dẫn | Ghi chú |
+|---|---|---|
+| POST | `/api/sao-luu` | `{tapTin, thoiDiem}`: SQL Server ghi bản sao lưu COPY_ONLY, có tổng kiểm, tên `<CSDL>_yyyyMMdd_HHmmss_tay.bak` vào thư mục `SaoLuu:ThuMuc` (trống: thư mục sao lưu mặc định của SQL Server). Thiếu quyền sao lưu hoặc SQL Server không ghi được vào thư mục: 409 `KHONG_SAO_LUU_DUOC`. Không có đường dẫn phục hồi |
+
 ## Ghi chú theo máy chủ đã cài đặt
-- Đăng nhập thất bại: 401 `SAI_THONG_TIN_DANG_NHAP`; tài khoản bị khóa: 403 `TAI_KHOAN_BI_KHOA`.
+- Đăng nhập thất bại: 401 `SAI_THONG_TIN_DANG_NHAP`; tài khoản bị khóa: 403 `TAI_KHOAN_BI_KHOA`; sai 5 lần trong một phút (cùng máy, cùng tên đăng nhập) hoặc 30 lần (cùng máy): 429 `DANG_NHAP_SAI_NHIEU_LAN`, khóa tạm 5 phút.
+- Mật khẩu khi thêm tài khoản hoặc đặt lại: 10 đến 100 ký tự, không trùng mật khẩu mặc định của các tài khoản ban đầu.
 - Mã lỗi chung thêm: `DU_LIEU_KHONG_HOP_LE` (400), `CHUA_DANG_NHAP` (401), `KHONG_CO_QUYEN` (403), `KHONG_TIM_THAY` (404), `VI_PHAM_QD6` (409, phải còn ít nhất 2 sân bay và 1 hạng vé), `LOI_HE_THONG` (500, 503).
 - `chiTiet` luôn là một đối tượng (có thể rỗng); khóa là tên ô phẳng (`hoTen`, `soGiayTo`, `dienThoai`...) kể cả khi thân yêu cầu có `hanhKhach` lồng. Lỗi 409 gắn được vào ô cũng kèm `chiTiet`.
 - Sửa chuyến bay mà giảm số ghế dưới số đã bán và đã đặt, hoặc bỏ hạng đã có vé: 409 `DA_CO_VE_HOAC_PHIEU`.
@@ -112,7 +122,10 @@ Máy chủ chạy bộ kiểm thử Playwright trong thư mục `web` (cần `np
 - `thong-tin-ban` luôn trả 200; khi không được phép thì `duocPhep` là false kèm `maLoi`, `thongBao`. Chuyến bay không tồn tại: 404.
 - `phieu-dat/con-han` không có phiếu thì trả mảng rỗng.
 - Tài khoản bị khóa hoặc bị đổi nhóm quyền thì phiên đang mở trả 401 ở yêu cầu kế tiếp.
-- Tra cứu: `maChuyenBay` lọc theo chứa; `maVe`, `maPhieuDat` theo tiền tố; `soGiayTo` khớp đúng. `GET /api/phieu-dat` không có tiêu chí thì trả mọi tình trạng. Danh sách vé và phiếu trả tối đa 1000 dòng mới nhất.
+- Tra cứu: `maChuyenBay` lọc theo chứa; `maVe`, `maPhieuDat` theo tiền tố; `soGiayTo` khớp đúng. `GET /api/phieu-dat` không có tiêu chí thì trả mọi tình trạng. Danh sách vé và phiếu trả tối đa 1000 dòng mới nhất; tra cứu và xuất Excel chuyến bay trả tối đa 1000 chuyến bay đầu theo giờ khởi hành.
+- Sửa chuyến bay: QĐ1 chỉ xét phần lịch bay vừa đổi (thời gian bay, các sân bay trung gian) so với bản đang lưu. Giá vé nhân tỉ lệ đơn giá của hạng đắt nhất mà chuyến bay có bán không được vượt 999.999.999.999.
+- Báo cáo: phần lệch do làm tròn tỉ lệ từng dòng được dồn vào dòng có doanh thu lớn nhất, tổng cột tỉ lệ đúng 100% khi tổng doanh thu lớn hơn 0; tổng doanh thu bằng 0 thì mọi tỉ lệ là 0%.
+- Lỗi SQL Server do hết thời gian chờ hoặc mất kết nối trả 503 `LOI_HE_THONG`.
 - Ngày giờ nhận cả dạng không có giây (`2026-11-22T08:30`).
 - POST tạo mới trả 201 kèm thân nhỏ (`{maChuyenBay}`, `{tenDangNhap}`, `{maSanBay}`, `{maHangVe}`).
 - `mau-excel` chỉ Quản lý tải được.

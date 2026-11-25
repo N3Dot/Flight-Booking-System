@@ -22,6 +22,8 @@ import type {
   YeuCauLuuChuyenBay,
 } from '@/kieu/api';
 import { congNgay, dauNgay, docIso, sangIso, soNgayGiua } from '@/tien_ich/thoi_gian';
+import { giaTienTheoHang } from '@/tien_ich/dinh_dang';
+import { SO_GHE_TOI_DA, THOI_GIAN_BAY_TOI_DA } from '@/trang/chuyen_bay/kiem_tra';
 import type { PhanHoiTho, PhuongThuc, ThamSo } from '../may_khach';
 import {
   type ChuyenBayGia,
@@ -87,7 +89,7 @@ const bayGio = () => new Date();
 const tenSanBay = (ma: string) => db.sanBay.find((s) => s.maSanBay === ma)?.tenSanBay ?? ma;
 const tenHang = (ma: string) => db.hangVe.find((h) => h.maHangVe === ma)?.tenHangVe ?? ma;
 const tiLeHang = (ma: string) => db.hangVe.find((h) => h.maHangVe === ma)?.tiLeDonGia ?? 100;
-const giaTien = (cb: ChuyenBayGia, maHang: string) => Math.round((cb.giaVe * tiLeHang(maHang)) / 100);
+const giaTien = (cb: ChuyenBayGia, maHang: string) => giaTienTheoHang(cb.giaVe, tiLeHang(maHang));
 
 function timChuyenBay(ma: string): ChuyenBayGia {
   const cb = db.chuyenBay.find((c) => c.maChuyenBay === ma);
@@ -231,12 +233,14 @@ function kiemTraChuyenBay(yc: Partial<YeuCauLuuChuyenBay>, laThem: boolean) {
   if (!db.sanBay.some((s) => s.maSanBay === yc.maSanBayDen)) chiTiet.maSanBayDen = 'Vui lòng chọn sân bay đến.';
   else if (yc.maSanBayDen === yc.maSanBayDi) chiTiet.maSanBayDen = 'Sân bay đến phải khác sân bay đi.';
   if (!yc.ngayGioKhoiHanh || isNaN(docIso(yc.ngayGioKhoiHanh).getTime())) chiTiet.ngayGioKhoiHanh = 'Vui lòng chọn ngày giờ khởi hành.';
-  else if (laThem && docIso(yc.ngayGioKhoiHanh) <= bayGio()) chiTiet.ngayGioKhoiHanh = 'Ngày giờ khởi hành phải sau thời điểm hiện tại.';
+  else if (docIso(yc.ngayGioKhoiHanh) <= bayGio()) chiTiet.ngayGioKhoiHanh = 'Ngày giờ khởi hành phải sau thời điểm hiện tại.';
   if (!yc.thoiGianBay || yc.thoiGianBay <= 0) chiTiet.thoiGianBay = 'Vui lòng nhập thời gian bay.';
+  else if (yc.thoiGianBay > THOI_GIAN_BAY_TOI_DA) chiTiet.thoiGianBay = `Thời gian bay không được vượt quá ${THOI_GIAN_BAY_TOI_DA} phút.`;
   // giả định 12: số ghế mỗi hạng là số nguyên không âm, ít nhất một hạng lớn hơn 0
   const ghe = yc.gheTheoHang ?? [];
   if (ghe.some((g) => !db.hangVe.some((h) => h.maHangVe === g.maHangVe))) chiTiet.gheTheoHang = 'Có hạng vé không có trong danh sách hạng vé.';
   else if (ghe.some((g) => !Number.isInteger(g.soLuongGhe) || g.soLuongGhe < 0)) chiTiet.gheTheoHang = 'Số lượng ghế của mỗi hạng phải là số nguyên không âm.';
+  else if (ghe.some((g) => g.soLuongGhe > SO_GHE_TOI_DA)) chiTiet.gheTheoHang = `Số lượng ghế của mỗi hạng không được vượt quá ${SO_GHE_TOI_DA}.`;
   else if (!ghe.some((g) => g.soLuongGhe > 0)) chiTiet.gheTheoHang = 'Phải có ít nhất một hạng vé có số lượng ghế lớn hơn 0.';
   kiemTraChiTiet(chiTiet);
 
@@ -318,7 +322,7 @@ them('POST', '/api/tai-khoan', 'quanLy', ({ than }) => {
     chiTiet.tenDangNhap = 'Tên đăng nhập tối đa 30 ký tự, không chứa khoảng trắng, chỉ gồm chữ không dấu, số, dấu chấm, gạch dưới, gạch nối.';
   const mk = chuoi(than?.matKhau);
   if (!mk) chiTiet.matKhau = 'Chưa nhập mật khẩu.';
-  else if (mk.length < 6 || mk.length > 100) chiTiet.matKhau = 'Mật khẩu phải có từ 6 đến 100 ký tự.';
+  else if (mk.length < 10 || mk.length > 100) chiTiet.matKhau = 'Mật khẩu phải có từ 10 đến 100 ký tự.';
   if (than?.nhomQuyen !== 'QuanLy' && than?.nhomQuyen !== 'NhanVien') chiTiet.nhomQuyen = 'Nhóm quyền phải là Quản lý hoặc Nhân viên bán vé.';
   kiemTraChiTiet(chiTiet);
   if (db.taiKhoan.some((t) => t.tenDangNhap.toLowerCase() === ten.toLowerCase()))
@@ -332,7 +336,7 @@ them('PUT', '/api/tai-khoan/{ten}', 'quanLy', ({ p, than, nguoiDung }) => {
   if (than?.nhomQuyen !== 'QuanLy' && than?.nhomQuyen !== 'NhanVien')
     kiemTraChiTiet({ nhomQuyen: 'Nhóm quyền phải là Quản lý hoặc Nhân viên bán vé.' });
   const mkMoi = chuoi(than.matKhauMoi);
-  if (mkMoi && (mkMoi.length < 6 || mkMoi.length > 100)) kiemTraChiTiet({ matKhauMoi: 'Mật khẩu phải có từ 6 đến 100 ký tự.' });
+  if (mkMoi && (mkMoi.length < 10 || mkMoi.length > 100)) kiemTraChiTiet({ matKhauMoi: 'Mật khẩu phải có từ 10 đến 100 ký tự.' });
   if (tk.tenDangNhap === nguoiDung?.tenDangNhap && than.nhomQuyen !== tk.nhomQuyen)
     throw loi(409, 'KHONG_DUOC_TU_DOI_QUYEN', 'Không được đổi nhóm quyền của tài khoản đang đăng nhập.', { nhomQuyen: 'Không được đổi nhóm quyền của tài khoản đang đăng nhập.' });
   if (tk.nhomQuyen === 'QuanLy' && than.nhomQuyen !== 'QuanLy' && tk.trangThai === 'HoatDong' && !conQuanLyKhac(tk.tenDangNhap))
@@ -366,7 +370,11 @@ them('PUT', '/api/quy-dinh/tham-so/{ten}', 'quanLy', ({ p, than }) => {
   if (than?.giaTriMoi === undefined || than?.giaTriMoi === null || than?.giaTriMoi === '') kiemTraChiTiet({ giaTriMoi: 'Chưa nhập giá trị mới.' });
   const gt = Number(than?.giaTriMoi);
   if (!Number.isInteger(gt) || gt < 0) kiemTraChiTiet({ giaTriMoi: 'Giá trị mới phải là số nguyên không âm.' });
-  const toiDa = ten === 'soSanBayTrungGianToiDa' ? 255 : ten === 'thoiGianDatVeChamNhat' || ten === 'thoiGianHuyDatVe' ? 365 : 100000;
+  const toiDa =
+    ten === 'soSanBayTrungGianToiDa' ? 255
+    : ten === 'thoiGianDatVeChamNhat' || ten === 'thoiGianHuyDatVe' ? 365
+    : ten === 'thoiGianBayToiThieu' ? THOI_GIAN_BAY_TOI_DA
+    : 100000;
   if (gt > toiDa) kiemTraChiTiet({ giaTriMoi: `Giá trị mới không được lớn hơn ${toiDa}.` });
   const moi = { ...db.thamSo, [ten]: gt };
   if (moi.thoiGianDungToiThieu > moi.thoiGianDungToiDa)
@@ -455,7 +463,7 @@ function locChuyenBay(t: ThamSo): ChuyenBayGia[] {
     .sort((a, b) => a.ngayGioKhoiHanh.localeCompare(b.ngayGioKhoiHanh));
 }
 
-them('GET', '/api/chuyen-bay', 'dangNhap', ({ thamSo }) => locChuyenBay(thamSo).map(tomTat));
+them('GET', '/api/chuyen-bay', 'dangNhap', ({ thamSo }) => locChuyenBay(thamSo).slice(0, 1000).map(tomTat));
 them('GET', '/api/chuyen-bay/sap-khoi-hanh', 'dangNhap', ({ thamSo }) => {
   const now = sangIso(bayGio());
   const soLuong = Math.max(1, Number(thamSo.soLuong) || 5);
@@ -583,6 +591,7 @@ them('POST', '/api/chuyen-bay', 'quanLy', ({ than }) => {
 }, 201);
 them('PUT', '/api/chuyen-bay/{ma}', 'quanLy', ({ p, than }) => {
   const cb = timChuyenBay(p[0]);
+  if (docIso(cb.ngayGioKhoiHanh) <= bayGio()) throw loi(409, 'CHUYEN_BAY_DA_KHOI_HANH', 'Không thể sửa chuyến bay đã khởi hành.');
   kiemTraChuyenBay(than ?? {}, false);
   const yc = than as YeuCauLuuChuyenBay;
   for (const g of cb.gheTheoHang) {
@@ -658,14 +667,16 @@ them('GET', '/api/ve', 'dangNhap', ({ thamSo: t }): Ve[] => {
   return db.ve
     .filter((v) => {
       const ngay = v.ngayBan.slice(0, 10);
-      if (t.maVe && !v.maVe.includes(chuoi(t.maVe).trim().toUpperCase())) return false;
-      if (t.soGiayTo && !v.soGiayTo.includes(chuoi(t.soGiayTo).trim().toUpperCase())) return false;
+      // như DAL_Ve: mã vé theo tiền tố, số giấy tờ khớp chính xác, tối đa 1.000 dòng
+      if (t.maVe && !v.maVe.startsWith(chuoi(t.maVe).trim().toUpperCase())) return false;
+      if (t.soGiayTo && v.soGiayTo !== chuoi(t.soGiayTo).trim().toUpperCase()) return false;
       if (t.maChuyenBay && v.maChuyenBay !== chuoi(t.maChuyenBay).trim().toUpperCase()) return false;
       if (tu && ngay < tu) return false;
       if (den && ngay > den) return false;
       return true;
     })
     .sort((a, b) => b.ngayBan.localeCompare(a.ngayBan))
+    .slice(0, 1000)
     .map(veRa);
 });
 them('PUT', '/api/ve/{ma}/hanh-khach', 'dangNhap', ({ p, than }) => {
@@ -708,13 +719,15 @@ them('POST', '/api/phieu-dat', 'dangNhap', ({ than }): KetQuaDatVe => {
 them('GET', '/api/phieu-dat', 'dangNhap', ({ thamSo: t }) =>
   db.phieu
     .filter((x) => {
-      if (t.maPhieuDat && !x.maPhieuDat.includes(chuoi(t.maPhieuDat).trim().toUpperCase())) return false;
-      if (t.soGiayTo && !x.soGiayTo.includes(chuoi(t.soGiayTo).trim().toUpperCase())) return false;
+      // như DAL_PhieuDatCho: mã phiếu theo tiền tố, số giấy tờ khớp chính xác, tối đa 1.000 dòng
+      if (t.maPhieuDat && !x.maPhieuDat.startsWith(chuoi(t.maPhieuDat).trim().toUpperCase())) return false;
+      if (t.soGiayTo && x.soGiayTo !== chuoi(t.soGiayTo).trim().toUpperCase()) return false;
       if (t.maChuyenBay && x.maChuyenBay !== chuoi(t.maChuyenBay).trim().toUpperCase()) return false;
       if (t.tinhTrang && x.tinhTrang !== t.tinhTrang) return false;
       return true;
     })
     .sort((a, b) => b.thoiDiemDat.localeCompare(a.thoiDiemDat))
+    .slice(0, 1000)
     .map(phieuRa),
 );
 them('GET', '/api/phieu-dat/sap-het-han', 'dangNhap', ({ thamSo }) =>
@@ -739,7 +752,7 @@ them('GET', '/api/phieu-dat/con-han', 'dangNhap', ({ thamSo: t }): PhieuConHan[]
       return {
         maPhieuDat: x.maPhieuDat,
         maChuyenBay: x.maChuyenBay,
-        tuyenBay: `${tenSanBay(cb.maSanBayDi)} → ${tenSanBay(cb.maSanBayDen)}`,
+        tuyenBay: `${cb.maSanBayDi} - ${cb.maSanBayDen}`,
         ngayGioKhoiHanh: cb.ngayGioKhoiHanh,
         tenHangVe: tenHang(x.maHangVe),
         hoTen: x.hoTen,
@@ -852,6 +865,14 @@ them('GET', '/api/bao-cao/nam/xuat', 'quanLy', ({ thamSo }) => {
 
 /* Thông báo */
 them('GET', '/api/thong-bao', 'dangNhap', () => [...db.nhatKy].sort((a, b) => b.thoiDiem.localeCompare(a.thoiDiem)).slice(0, 20));
+
+/* Sao lưu: chế độ giả lập không có SQL Server nên chỉ trả tên tập tin mẫu */
+them('POST', '/api/sao-luu', 'quanLy', () => {
+  const bayGio = new Date();
+  const so = (n: number) => String(n).padStart(2, '0');
+  const ten = `${bayGio.getFullYear()}${so(bayGio.getMonth() + 1)}${so(bayGio.getDate())}_${so(bayGio.getHours())}${so(bayGio.getMinutes())}${so(bayGio.getSeconds())}`;
+  return { tapTin: `(giả lập) QLBANVECHUYENBAY_${ten}_tay.bak`, thoiDiem: sangIso(bayGio) };
+});
 
 /* ---------- điểm vào ---------- */
 const cho = (ms: number) => new Promise((r) => setTimeout(r, ms));

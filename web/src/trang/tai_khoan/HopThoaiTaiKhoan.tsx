@@ -136,7 +136,7 @@ export function HopThoaiTaiKhoan({ cheDo, tenDangDangNhap, onDong }: { cheDo: Ch
     }
     if (!matKhau) {
       if (!laSua) l.matKhau = 'Chưa nhập mật khẩu.';
-    } else if (matKhau.length < 6) l[truongMk] = 'Mật khẩu phải có từ 6 đến 100 ký tự.';
+    } else if (matKhau.length < 10) l[truongMk] = 'Mật khẩu phải có từ 10 đến 100 ký tự.';
     if ((matKhau || nhapLai) && nhapLai !== matKhau) l.nhapLai = 'Mật khẩu nhập lại không khớp.';
     return l;
   };
@@ -283,7 +283,7 @@ export function HopThoaiTaiKhoan({ cheDo, tenDangDangNhap, onDong }: { cheDo: Ch
                 boLoi('matKhau');
               }}
               loi={loi.matKhau}
-              goiY="Từ 6 đến 100 ký tự; nên có chữ hoa, chữ thường, số và ký tự đặc biệt."
+              goiY="Từ 10 đến 100 ký tự; nên có chữ hoa, chữ thường, số và ký tự đặc biệt. Không dùng mật khẩu mặc định."
             />
             <ThanhDoManh matKhau={matKhau} />
             <OMatKhau nhan="Nhập lại mật khẩu" batBuoc giaTri={nhapLai} onDoi={datNhapLai} loi={loi.nhapLai} />

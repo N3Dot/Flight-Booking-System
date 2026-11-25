@@ -44,7 +44,9 @@ public static class TienIch_TapTin
     /// Đọc một trang tính thành bảng: dòng 1 là tiêu đề cột, mỗi dòng sau là một dòng dữ liệu.
     /// Cột đầu của bảng (Dong) là số thứ tự dòng trên trang tính để báo lỗi. Dòng trống bị bỏ qua.
     /// </summary>
-    public static DataTable docExcel(Stream tapTin, string tenTrang)
+    private const int SO_COT_TOI_DA = 50;
+
+    public static DataTable docExcel(Stream tapTin, string tenTrang, int soDongToiDa)
     {
         using var tapBang = new XLWorkbook(tapTin);
         if (!tapBang.TryGetWorksheet(tenTrang, out IXLWorksheet? trang) || trang == null)
@@ -57,6 +59,10 @@ public static class TienIch_TapTin
 
         int cotCuoi = vung.LastColumn().ColumnNumber();
         int dongCuoi = vung.LastRow().RowNumber();
+        // vùng dữ liệu quá lớn (vd một ô lạc ở cuối trang tính) thì từ chối ngay, không đọc từng ô
+        if (dongCuoi > soDongToiDa + 1 || cotCuoi > SO_COT_TOI_DA)
+            throw new TapTinKhongDungMau("Trang tính " + tenTrang + " có vùng dữ liệu quá lớn (tối đa " + soDongToiDa
+                + " dòng dữ liệu và " + SO_COT_TOI_DA + " cột). Hãy xóa các dòng, cột thừa rồi nhập lại.");
         for (int cot = 1; cot <= cotCuoi; cot++)
         {
             string ten = trang.Cell(1, cot).GetString().Trim();

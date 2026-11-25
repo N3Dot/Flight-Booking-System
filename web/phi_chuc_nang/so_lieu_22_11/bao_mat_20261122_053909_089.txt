@@ -1,0 +1,109 @@
+﻿  1 BMT01 chưa đăng nhập -> 401 CHUA_DANG_NHAP (mong 401 CHUA_DANG_NHAP) Đạt 51.6 ms
+  2 BMT01 chưa đăng nhập -> 401 CHUA_DANG_NHAP (mong 401 CHUA_DANG_NHAP) Đạt 1.6 ms
+  3 BMT01 chưa đăng nhập -> 401 CHUA_DANG_NHAP (mong 401 CHUA_DANG_NHAP) Đạt 13.6 ms
+  4 BMT01 chưa đăng nhập -> 401 CHUA_DANG_NHAP (mong 401 CHUA_DANG_NHAP) Đạt 1.9 ms
+  5 BMT01 chưa đăng nhập -> 401 CHUA_DANG_NHAP (mong 401 CHUA_DANG_NHAP) Đạt 1.3 ms
+  6 BMT01 chưa đăng nhập -> 401 CHUA_DANG_NHAP (mong 401 CHUA_DANG_NHAP) Đạt 1.3 ms
+  7 BMT01 chưa đăng nhập -> 401 CHUA_DANG_NHAP (mong 401 CHUA_DANG_NHAP) Đạt 1.1 ms
+  8 BMT01 chưa đăng nhập -> 401 CHUA_DANG_NHAP (mong 401 CHUA_DANG_NHAP) Đạt 1 ms
+  9 BMT01 chưa đăng nhập -> 401 CHUA_DANG_NHAP (mong 401 CHUA_DANG_NHAP) Đạt 1 ms
+ 10 BMT01 chưa đăng nhập -> 401 CHUA_DANG_NHAP (mong 401 CHUA_DANG_NHAP) Đạt 1.1 ms
+ 11 BMT01 chưa đăng nhập -> 401 CHUA_DANG_NHAP (mong 401 CHUA_DANG_NHAP) Đạt 1.3 ms
+ 12 BMT01 chưa đăng nhập -> 401 CHUA_DANG_NHAP (mong 401 CHUA_DANG_NHAP) Đạt 1.1 ms
+ 13 BMT01 chưa đăng nhập -> 401 CHUA_DANG_NHAP (mong 401 CHUA_DANG_NHAP) Đạt 1.1 ms
+ 14 BMT01 chưa đăng nhập -> 401 CHUA_DANG_NHAP (mong 401 CHUA_DANG_NHAP) Đạt 1.2 ms
+ 15 BMT01 quanly sai mật khẩu -> 401 SAI_THONG_TIN_DANG_NHAP (mong 401 SAI_THONG_TIN_DANG_NHAP) Đạt 62.8 ms
+ 16 BMT01 nhanvien2 (Đã khóa) đúng mật khẩu -> 403 TAI_KHOAN_BI_KHOA (mong 403 TAI_KHOAN_BI_KHOA) Đạt 59.4 ms
+ 17 BMT01 chèn SQL ' OR '1'='1' -- / x -> 401 SAI_THONG_TIN_DANG_NHAP (mong 401 SAI_THONG_TIN_DANG_NHAP) Đạt 119.1 ms
+ 18 BMT01 chèn SQL quanly'-- / x -> 401 SAI_THONG_TIN_DANG_NHAP (mong 401 SAI_THONG_TIN_DANG_NHAP) Đạt 59.8 ms
+ 19 BMT01 chèn SQL quanly / ' OR '1'='1 -> 401 SAI_THONG_TIN_DANG_NHAP (mong 401 SAI_THONG_TIN_DANG_NHAP) Đạt 60.7 ms
+ 20 BMT01 quanly đăng nhập -> 200  (mong 200) Đạt 85.5 ms
+Set-Cookie: qlbv_phien=***; path=/; samesite=lax; httponly
+Header bảo mật: X-Frame-Options=DENY; X-Content-Type-Options=nosniff; CSP=True
+ 21 BMT01 nhanvien đăng nhập -> 200  (mong 200) Đạt 69.3 ms
+MATKHAU|nhanvien|do dai 90|PBKDF2-SHA256$600000$|chua mat khau goc khong
+MATKHAU|nhanvien2|do dai 90|PBKDF2-SHA256$600000$|chua mat khau goc khong
+MATKHAU|quanly|do dai 90|PBKDF2-SHA256$600000$|chua mat khau goc khong
+
+Bản giao diện đang chạy có ô kiểu password: True (/assets/index-DU-K36_8.js)
+Tài khoản thử: bmt2aadd105
+ 22 BMT02 Quản lý tạo bmt2aadd105 -> 201  (mong 201) Đạt 80.8 ms
+ 23 BMT02 NV xem danh sách tài khoản -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 3.6 ms
+ 24 BMT02 NV thêm tài khoản -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 1.6 ms
+ 25 BMT02 NV sửa nhóm quyền -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 1.6 ms
+ 26 BMT02 NV khóa tài khoản -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 1.6 ms
+ 27 BMT02 NV mở khóa tài khoản -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 2 ms
+ 28 BMT02 bmt2aadd105 đăng nhập -> 200  (mong 200) Đạt 70.4 ms
+ 29 BMT02 bmt2aadd105 xem phiên -> 200  (mong 200) Đạt 11.6 ms
+ 30 BMT02 Quản lý khóa bmt2aadd105 -> 204  (mong 204) Đạt 15.2 ms
+ 31 BMT02 bmt2aadd105 gọi tiếp bằng phiên cũ -> 401 CHUA_DANG_NHAP (mong 401 CHUA_DANG_NHAP) Đạt 21.9 ms
+ 32 BMT02 bmt2aadd105 đăng nhập lại khi bị khóa -> 403 TAI_KHOAN_BI_KHOA (mong 403 TAI_KHOAN_BI_KHOA) Đạt 59.4 ms
+ 33 BMT02 Quản lý mở khóa bmt2aadd105 -> 204  (mong 204) Đạt 12.5 ms
+ 34 BMT02 bmt2aadd105 đăng nhập sau mở khóa -> 200  (mong 200) Đạt 69.9 ms
+ 35 BMT02 bmt2aadd105 (NV) xem tài khoản -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 2.1 ms
+ 36 BMT02 Quản lý đổi bmt2aadd105 sang Quản lý -> 204  (mong 204) Đạt 12.4 ms
+ 37 BMT02 bmt2aadd105 gọi bằng phiên trước khi đổi quyền -> 401 CHUA_DANG_NHAP (mong 401 CHUA_DANG_NHAP) Đạt 1.6 ms
+ 38 BMT02 bmt2aadd105 đăng nhập lại -> 200  (mong 200) Đạt 70.8 ms
+ 39 BMT02 bmt2aadd105 (Quản lý) xem tài khoản -> 200  (mong 200) Đạt 14 ms
+ 40 BMT02 Quản lý đổi bmt2aadd105 về Nhân viên bán vé -> 204  (mong 204) Đạt 10 ms
+ 41 BMT02 bmt2aadd105 gọi bằng phiên Quản lý cũ -> 401 CHUA_DANG_NHAP (mong 401 CHUA_DANG_NHAP) Đạt 1.4 ms
+ 42 BMT02 Quản lý tự khóa mình -> 409 KHONG_DUOC_TU_KHOA (mong 409 KHONG_DUOC_TU_KHOA) Đạt 2.1 ms
+ 43 BMT02 Quản lý khóa bmt2aadd105 khi kết thúc -> 204  (mong 204) Đạt 4.3 ms
+TAIKHOAN THU|bmt2aadd105|Nhân viên bán vé|Đã khóa
+
+ 44 BMT03 Quản lý tạo chuyến bay thử T1F501136C -> 201  (mong 201) Đạt 28.7 ms
+ 45 BMT03 NV thêm chuyến bay -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 1.6 ms
+ 46 BMT03 NV sửa chuyến bay -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 3.2 ms
+ 47 BMT03 NV xóa chuyến bay -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 1.8 ms
+ 48 BMT03 NV tải tập tin mẫu -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 1.6 ms
+ 49 BMT03 NV nhập lịch từ tập tin (multipart) -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 2.2 ms
+ 50 BMT03 chuyến bay thử vẫn còn -> 200  (mong 200) Đạt 14.1 ms
+Số ghế H1 sau các lượt của NV: 20
+ 51 BMT04 NV bán vé -> 201  (mong 201) Đạt 44.9 ms
+ 52 BMT04 NV tra cứu vé -> 200  (mong 200) Đạt 29.5 ms
+ 53 BMT04 NV sửa vé -> 204  (mong 204) Đạt 20.1 ms
+ 54 BMT04 NV hủy vé -> 204  (mong 204) Đạt 12.8 ms
+ 55 BMT05 NV lập phiếu -> 201  (mong 201) Đạt 21.2 ms
+ 56 BMT05 NV tra cứu phiếu -> 200  (mong 200) Đạt 25.7 ms
+ 57 BMT05 NV hủy phiếu -> 204  (mong 204) Đạt 13 ms
+Vé VE02000036, phiếu PD02000021
+ 58 BMT06 NV tra cứu chuyến bay -> 200  (mong 200) Đạt 61.8 ms
+ 59 BMT06 NV xuất Excel -> 200  (mong 200) Đạt 57.6 ms
+ 60 BMT06 chèn SQL /api/chuyen-bay?maChuyenBay=T1F501136C' OR '1'='1 -> 200  (mong 200) Đạt 48.1 ms
+    số dòng trả về: 1
+ 61 BMT06 chèn SQL /api/ve?soGiayTo=' OR 1=1 -- -> 200  (mong 200) Đạt 171.9 ms
+    số dòng trả về: 1
+ 62 BMT06 chèn SQL /api/phieu-dat?maPhieuDat='; DROP TABLE VE; -- -> 200  (mong 200) Đạt 10.6 ms
+    số dòng trả về: 1
+ 63 BMT06 chèn SQL /api/ve?maVe=x' UNION SELECT TenDangNhap,MatKhau FROM TAIKHOAN -- -> 200  (mong 200) Đạt 20.6 ms
+    số dòng trả về: 1
+Bảng VE trước/sau các chuỗi chèn SQL: 50 / 50
+ 64 BMT07 NV báo cáo tháng -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 2.1 ms
+ 65 BMT07 NV báo cáo năm -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 1.6 ms
+ 66 BMT07 NV xuất PDF -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 1.8 ms
+ 67 BMT07 NV xuất Excel -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 2.4 ms
+ 68 BMT08 NV đổi tham số -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 2.5 ms
+ 69 BMT08 NV thêm sân bay -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 1.7 ms
+ 70 BMT08 NV sửa sân bay -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 1.5 ms
+ 71 BMT08 NV xóa sân bay -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 1.8 ms
+ 72 BMT08 NV thêm hạng vé -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 1.7 ms
+ 73 BMT08 NV sửa hạng vé -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 1.4 ms
+ 74 BMT08 NV xóa hạng vé -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 1.4 ms
+ 75 BMT08 NV đọc quy định -> 200  (mong 200) Đạt 17 ms
+Quy định đọc được: thời gian bay tối thiểu 30, 10 sân bay, 2 hạng vé
+CSDL|ThoiGianBayToiThieu 30
+CSDL|SANBAY 10|ten SGN Tân Sơn Nhất
+CSDL|HANGVE 2|ten H1 Hạng 1
+
+ 76 BMT09 NV đếm phiếu đã hủy -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 2 ms
+ 77 BMT09 NV xóa phiếu đã hủy -> 403 KHONG_CO_QUYEN (mong 403 KHONG_CO_QUYEN) Đạt 1.1 ms
+Tổng 77 lượt, 77 đạt, 0 không đạt
+BMT01: 21 lượt, 21 đạt
+BMT02: 22 lượt, 22 đạt
+BMT03: 7 lượt, 7 đạt
+BMT04: 4 lượt, 4 đạt
+BMT05: 3 lượt, 3 đạt
+BMT06: 6 lượt, 6 đạt
+BMT07: 4 lượt, 4 đạt
+BMT08: 8 lượt, 8 đạt
+BMT09: 2 lượt, 2 đạt

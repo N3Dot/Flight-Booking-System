@@ -1,0 +1,86 @@
+﻿Tăng tải 20261122_114506_429 | mức 5,10,20,50,100,200 | 3 lượt | tra cứu /api/chuyen-bay?sanBayDi=SGN&sanBayDen=HAN&tuNgay=2026-01-01&denNgay=2026-12-31
+Mức 5 | chuyến đo TF93304F62 | 1000 ghế H1
+  Đăng nhập 5 phiên trước khi phát lệnh: 0.4 s (không tính vào thời gian đo)
+  TangDan N=5 TraCuu lượt 1: nhỏ nhất 16.6 | lớn nhất 32.6 ms | HTTP 200x5
+  TangDan N=5 BanVe lượt 1: nhỏ nhất 8.1 | lớn nhất 13 ms | HTTP 201x5
+  TangDan N=5 TraCuu lượt 2: nhỏ nhất 13.1 | lớn nhất 34.6 ms | HTTP 200x5
+  TangDan N=5 BanVe lượt 2: nhỏ nhất 5.7 | lớn nhất 10.4 ms | HTTP 201x5
+  TangDan N=5 TraCuu lượt 3: nhỏ nhất 12 | lớn nhất 17.2 ms | HTTP 200x5
+  TangDan N=5 BanVe lượt 3: nhỏ nhất 3.7 | lớn nhất 9 ms | HTTP 201x5
+  CSDL TF93304F62: tổng ghế 1000 | vé Đã bán 15 | MaVe khác nhau 15 | yêu cầu 201 15 | khớp mã vé True => Đạt
+Mức 10 | chuyến đo TA82A19794 | 1000 ghế H1
+  Đăng nhập 10 phiên trước khi phát lệnh: 0.7 s (không tính vào thời gian đo)
+  TangDan N=10 TraCuu lượt 1: nhỏ nhất 9.2 | lớn nhất 28.6 ms | HTTP 200x10
+  TangDan N=10 BanVe lượt 1: nhỏ nhất 9.7 | lớn nhất 20.9 ms | HTTP 201x10
+  TangDan N=10 TraCuu lượt 2: nhỏ nhất 11.1 | lớn nhất 44.8 ms | HTTP 200x10
+  TangDan N=10 BanVe lượt 2: nhỏ nhất 3 | lớn nhất 14.5 ms | HTTP 201x10
+  TangDan N=10 TraCuu lượt 3: nhỏ nhất 12.7 | lớn nhất 33.7 ms | HTTP 200x10
+  TangDan N=10 BanVe lượt 3: nhỏ nhất 5 | lớn nhất 32 ms | HTTP 201x10
+  CSDL TA82A19794: tổng ghế 1000 | vé Đã bán 30 | MaVe khác nhau 30 | yêu cầu 201 30 | khớp mã vé True => Đạt
+Mức 20 | chuyến đo TF25FAA9A8 | 1000 ghế H1
+  Đăng nhập 20 phiên trước khi phát lệnh: 1.4 s (không tính vào thời gian đo)
+  TangDan N=20 TraCuu lượt 1: nhỏ nhất 22.3 | lớn nhất 85 ms | HTTP 200x20
+  TangDan N=20 BanVe lượt 1: nhỏ nhất 3.7 | lớn nhất 28.8 ms | HTTP 201x20
+  TangDan N=20 TraCuu lượt 2: nhỏ nhất 28.9 | lớn nhất 84.8 ms | HTTP 200x20
+  TangDan N=20 BanVe lượt 2: nhỏ nhất 8.8 | lớn nhất 28.7 ms | HTTP 201x20
+  TangDan N=20 TraCuu lượt 3: nhỏ nhất 29.7 | lớn nhất 95.7 ms | HTTP 200x20
+  TangDan N=20 BanVe lượt 3: nhỏ nhất 4.2 | lớn nhất 35.6 ms | HTTP 201x20
+  CSDL TF25FAA9A8: tổng ghế 1000 | vé Đã bán 60 | MaVe khác nhau 60 | yêu cầu 201 60 | khớp mã vé True => Đạt
+Mức 50 | chuyến đo TDB42F82E6 | 1000 ghế H1
+  Đăng nhập 50 phiên trước khi phát lệnh: 3.6 s (không tính vào thời gian đo)
+  TangDan N=50 TraCuu lượt 1: nhỏ nhất 16.9 | lớn nhất 170.5 ms | HTTP 200x50
+  TangDan N=50 BanVe lượt 1: nhỏ nhất 58.7 | lớn nhất 84.7 ms | HTTP 201x50
+  TangDan N=50 TraCuu lượt 2: nhỏ nhất 122.9 | lớn nhất 180.5 ms | HTTP 200x50
+  TangDan N=50 BanVe lượt 2: nhỏ nhất 27 | lớn nhất 87.7 ms | HTTP 201x50
+  TangDan N=50 TraCuu lượt 3: nhỏ nhất 96.3 | lớn nhất 215.4 ms | HTTP 200x50
+  TangDan N=50 BanVe lượt 3: nhỏ nhất 36.2 | lớn nhất 92.7 ms | HTTP 201x50
+  CSDL TDB42F82E6: tổng ghế 1000 | vé Đã bán 150 | MaVe khác nhau 150 | yêu cầu 201 150 | khớp mã vé True => Đạt
+Mức 100 | chuyến đo TDC016ED4D | 1000 ghế H1
+  Đăng nhập 100 phiên trước khi phát lệnh: 7.1 s (không tính vào thời gian đo)
+  TangDan N=100 TraCuu lượt 1: nhỏ nhất 109.9 | lớn nhất 452 ms | HTTP 200x100
+  TangDan N=100 BanVe lượt 1: nhỏ nhất 144.8 | lớn nhất 183.7 ms | HTTP 201x100
+  TangDan N=100 TraCuu lượt 2: nhỏ nhất 30.7 | lớn nhất 425.4 ms | HTTP 200x100
+  TangDan N=100 BanVe lượt 2: nhỏ nhất 116.4 | lớn nhất 167 ms | HTTP 201x100
+  TangDan N=100 TraCuu lượt 3: nhỏ nhất 74.3 | lớn nhất 620.5 ms | HTTP 200x100
+  TangDan N=100 BanVe lượt 3: nhỏ nhất 113.8 | lớn nhất 184.8 ms | HTTP 201x100
+  CSDL TDC016ED4D: tổng ghế 1000 | vé Đã bán 300 | MaVe khác nhau 300 | yêu cầu 201 300 | khớp mã vé True => Đạt
+Mức 200 | chuyến đo TDEF88CA90 | 1000 ghế H1
+  Đăng nhập 200 phiên trước khi phát lệnh: 14 s (không tính vào thời gian đo)
+  TangDan N=200 TraCuu lượt 1: nhỏ nhất 555.4 | lớn nhất 1362.2 ms | HTTP 200x200
+  TangDan N=200 BanVe lượt 1: nhỏ nhất 250.8 | lớn nhất 330.2 ms | HTTP 201x200
+  TangDan N=200 TraCuu lượt 2: nhỏ nhất 100.4 | lớn nhất 951.8 ms | HTTP 200x200
+  TangDan N=200 BanVe lượt 2: nhỏ nhất 283.1 | lớn nhất 364.1 ms | HTTP 201x200
+  TangDan N=200 TraCuu lượt 3: nhỏ nhất 642.8 | lớn nhất 1116.3 ms | HTTP 200x200
+  TangDan N=200 BanVe lượt 3: nhỏ nhất 160.5 | lớn nhất 334.3 ms | HTTP 201x200
+  CSDL TDEF88CA90: tổng ghế 1000 | vé Đã bán 600 | MaVe khác nhau 600 | yêu cầu 201 600 | khớp mã vé True => Đạt
+Hồi phục sau mức 200 | tải về 5 | chuyến TDEF88CA90
+  HoiPhuc N=5 TraCuu lượt 1: nhỏ nhất 10.2 | lớn nhất 22.7 ms | HTTP 200x5
+  HoiPhuc N=5 BanVe lượt 1: nhỏ nhất 4.5 | lớn nhất 11.3 ms | HTTP 201x5
+  CSDL TDEF88CA90: tổng ghế 1000 | vé Đã bán 605 | MaVe khác nhau 605 | yêu cầu 201 605 | khớp mã vé True => Đạt
+BẢNG TỔNG HỢP (mili giây, gộp các lượt của cùng mức)
+
+GiaiDoan Muc Loai   SoYeuCau NhoNhat TrungVi    P95 LonNhat Loi MaHttp 
+-------- --- ----   -------- ------- -------    --- ------- --- ------ 
+TangDan    5 TraCuu       15      12    16.9   34.6    34.6   0 200x15 
+TangDan    5 BanVe        15     3.7     8.1     13      13   0 201x15 
+TangDan   10 TraCuu       30     9.2    23.6   37.1    44.8   0 200x30 
+TangDan   10 BanVe        30       3    12.6   20.9      32   0 201x30 
+TangDan   20 TraCuu       60    22.3    53.6     85    95.7   0 200x60 
+TangDan   20 BanVe        60     3.7    16.8   30.8    35.6   0 201x60 
+TangDan   50 TraCuu      150    16.9   133.6  182.2   215.4   0 200x150
+TangDan   50 BanVe       150      27    62.8   85.2    92.7   0 201x150
+TangDan  100 TraCuu      300    30.7   362.4  468.7   620.5   0 200x300
+TangDan  100 BanVe       300   113.8     148    171   184.8   0 201x300
+TangDan  200 TraCuu      600   100.4   765.5 1095.4  1362.2   0 200x600
+TangDan  200 BanVe       600   160.5   285.3  322.7   364.1   0 201x600
+HoiPhuc    5 TraCuu        5    10.2    16.1   22.7    22.7   0 200x5  
+HoiPhuc    5 BanVe         5     4.5     8.4   11.3    11.3   0 201x5  
+
+
+
+Mức đầu tiên vượt ngưỡng (TraCuu): không có tới mức 200
+Mức đầu tiên vượt ngưỡng (BanVe): không có tới mức 200
+Yêu cầu lỗi: 0 / 2320. Mã HTTP lỗi: . Lỗi 5xx: 0
+Dòng fail/crit/Exception trong nhật ký máy chủ HQ: 0
+Kiểm tra CSDL tổng: Đạt
+Chuyến đo: N=5 TF93304F62; N=10 TA82A19794; N=20 TF25FAA9A8; N=50 TDB42F82E6; N=100 TDC016ED4D; N=200 TDEF88CA90

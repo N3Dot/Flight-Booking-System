@@ -1,0 +1,22 @@
+/* Trang Sao lưu dữ liệu: một khung giải thích, nút sao lưu và kết quả lần sao lưu vừa làm (màu lấy từ bien.css) */
+.khung {
+  max-width: 760px;
+  display: grid;
+  gap: var(--k-4);
+  padding: var(--k-5);
+  background: var(--nen-0);
+  border: 1px solid var(--vien);
+  border-radius: var(--bo-khung);
+}
+
+.ghiChu {
+  color: var(--muc-500);
+  font-size: 14px;
+}
+
+.ketQua {
+  padding: var(--k-3) var(--k-4);
+  background: var(--nen-1);
+  border-radius: var(--bo-o);
+  overflow-wrap: anywhere;
+}

@@ -62,9 +62,13 @@ public partial class BoChayKiemThu
         }
 
         using Process lenh = Process.Start(taoLenh(new[] { "playwright", "test", "--list", "--reporter=json" }))!;
+        // đọc hai luồng ra ở nền rồi mới chờ có giới hạn; đọc đồng bộ thì lệnh treo sẽ làm yêu cầu treo theo
         Task<string> loiRa = lenh.StandardError.ReadToEndAsync();
-        string ra = lenh.StandardOutput.ReadToEnd();
-        if (!lenh.WaitForExit(120_000) || ra.IndexOf('{') < 0)
+        Task<string> dauRa = lenh.StandardOutput.ReadToEndAsync();
+        bool xong = lenh.WaitForExit(120_000);
+        if (!xong) lenh.Kill(entireProcessTree: true);
+        string ra = dauRa.Result;
+        if (!xong || ra.IndexOf('{') < 0)
         {
             nhatKyMayChu.LogError("Khong lay duoc danh sach kiem thu: {Loi}", loiRa.Result);
             throw LoiNghiepVu.viPham(MaLoi.LOI_HE_THONG,

@@ -1,7 +1,7 @@
 // Bổ sung UC02 Phân quyền: kiểm tra từng ô của biểu mẫu tài khoản, độ dài tên đăng nhập, đặt lại mật khẩu,
 // tìm và chuyển trang danh sách, hủy biểu mẫu, không lộ mật khẩu (BMT02).
 import { expect, request, test, xemCsdl, type Locator, type Page } from '../tien_ich/trinh_dien';
-import { ApiThu, DIA_CHI, bamTrongHopThoai, dangNhap, hopThoai, maMoi, tenDangNhapMoi, toast } from '../tien_ich/chung';
+import { ApiThu, DIA_CHI, bamTrongHopThoai, dangNhap, hopThoai, maMoi, tenDangNhapMoi, toast, khoaTaiKhoanThuSauMoiCa } from '../tien_ich/chung';
 
 const MAT_KHAU = 'Kiemthu@123';
 
@@ -53,6 +53,7 @@ async function coTaiKhoan(page: Page, ten: string): Promise<boolean> {
 }
 
 test.describe('Bổ sung UC02 Phân quyền', () => {
+  khoaTaiKhoanThuSauMoiCa(test);
   test('UC02.10 Mật khẩu và Nhập lại mật khẩu không khớp thì báo lỗi tại ô Nhập lại, không lưu (BMT02)', async ({ page }) => {
     const ten = tenDangNhapMoi('nl');
     await dangNhap(page, 'quanLy', '/tai-khoan');
@@ -181,7 +182,7 @@ test.describe('Bổ sung UC02 Phân quyền', () => {
 
   test('UC02.15 Sửa tài khoản đặt lại mật khẩu mới thì mật khẩu mới dùng được, mật khẩu cũ bị từ chối (UC02 bước 4)', async ({ page }) => {
     const ten = tenDangNhapMoi('dl');
-    const matKhauMoi = 'Moi@' + maMoi('M');
+    const matKhauMoi = 'MatKhauMoi@' + maMoi('M');
     const api = await ApiThu.moi();
     await api.themTaiKhoan(ten, MAT_KHAU, 'NhanVien');
     await api.dong();
@@ -274,7 +275,7 @@ test.describe('Bổ sung UC02 Phân quyền', () => {
 
   test('UC02.19 Danh sách tài khoản và CSDL không lộ mật khẩu (BMT01)', async ({ page }) => {
     const ten = tenDangNhapMoi('mk');
-    const matKhau = 'Rieng@' + maMoi('P');
+    const matKhau = 'MatKhauRieng@' + maMoi('P');
     const api = await ApiThu.moi();
     await api.themTaiKhoan(ten, matKhau, 'NhanVien');
     await api.dong();

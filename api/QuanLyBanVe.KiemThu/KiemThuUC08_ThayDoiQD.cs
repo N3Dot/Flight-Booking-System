@@ -59,6 +59,23 @@ public class KiemThuUC08_ThayDoiQD : KiemThuCoSo
         Assert.Equal(30, thamSo().ThoiGianBayToiThieu);
     }
 
+    [Theory(DisplayName = "TH02 giả định 12: thời gian bay tối thiểu không vượt cận trên 1.440 phút của thời gian bay")]
+    [InlineData(1440, true)]
+    [InlineData(1441, false)]
+    public void ThoiGianBayToiThieu_CanTren(int giaTri, bool hopLe)
+    {
+        if (hopLe)
+        {
+            xl.capNhatThamSo("ThoiGianBayToiThieu", giaTri);
+            Assert.Equal(giaTri, thamSo().ThoiGianBayToiThieu);
+            return;
+        }
+        LoiNghiepVu loi = batLoi(() => xl.capNhatThamSo("ThoiGianBayToiThieu", giaTri));
+        Assert.Equal(LoaiLoi.DuLieuKhongHopLe, loi.Loai);
+        Assert.Contains("1440", loi.Message);
+        Assert.Equal(30, thamSo().ThoiGianBayToiThieu);
+    }
+
     [Fact(DisplayName = "TH04 ngoại lệ 6a: thời gian dừng tối thiểu không lớn hơn tối đa")]
     public void ThoiGianDungToiThieuLonHonToiDa()
     {
@@ -176,5 +193,70 @@ public class KiemThuUC08_ThayDoiQD : KiemThuCoSo
         lay<XL_ChuyenBay>().xoaChuyenBay("CB500");
         LoiNghiepVu conMot = batLoi(() => xl.xoaHangVe("H2"));
         Assert.Equal("Danh sách phải còn ít nhất một hạng vé.", conMot.Message);
+    }
+
+    [Fact(DisplayName = "PH-09: cận trên của tham số: 100.000 phút, 365 ngày, 255 sân bay trung gian thì lưu được; vượt 1 thì bị từ chối")]
+    public void PH09_CanTrenThamSo()
+    {
+        void bienTren(string ten, int toiDa)
+        {
+            LoiNghiepVu loi = batLoi(() => xl.capNhatThamSo(ten, toiDa + 1));
+            Assert.Equal(LoaiLoi.DuLieuKhongHopLe, loi.Loai);
+            Assert.Equal("Giá trị mới không được lớn hơn " + toiDa + ".", loi.Message);
+        }
+
+        xl.capNhatThamSo("ThoiGianDungToiDa", 100_000);
+        bienTren("ThoiGianDungToiDa", 100_000);
+        xl.capNhatThamSo("ThoiGianDungToiThieu", 100_000);
+        bienTren("ThoiGianDungToiThieu", 100_000);
+        xl.capNhatThamSo("SoSanBayTrungGianToiDa", 255);
+        bienTren("SoSanBayTrungGianToiDa", 255);
+        xl.capNhatThamSo("ThoiGianDatVeChamNhat", 365);
+        bienTren("ThoiGianDatVeChamNhat", 365);
+        // thời gian hủy phải nhỏ hơn thời gian đặt (365) nên giá trị lớn nhất lưu được là 364
+        xl.capNhatThamSo("ThoiGianHuyDatVe", 364);
+        bienTren("ThoiGianHuyDatVe", 365);
+
+        ThamSoQuyDinh ts = thamSo();
+        Assert.Equal(new[] { 100_000, 100_000, 255, 365, 364 }, new[]
+        {
+            ts.ThoiGianDungToiDa, ts.ThoiGianDungToiThieu, ts.SoSanBayTrungGianToiDa, ts.ThoiGianDatVeChamNhat, ts.ThoiGianHuyDatVe
+        });
+    }
+
+    [Theory(DisplayName = "PH-12: tỉ lệ đơn giá 0,01 và 999,99 lưu được; 1.000 và 105,555 (ba số lẻ) bị từ chối")]
+    [InlineData("0.01", true)]
+    [InlineData("999.99", true)]
+    [InlineData("1000", false)]
+    [InlineData("105.555", false)]
+    public void PH12_BienTiLeDonGia(string chuoiTiLe, bool hopLe)
+    {
+        decimal tiLe = decimal.Parse(chuoiTiLe, System.Globalization.CultureInfo.InvariantCulture);
+
+        if (hopLe)
+        {
+            xl.themHangVe("H3", "Hạng thử", tiLe);
+            Assert.Equal(tiLe, lay<DAL_HangVe>().layHangVe("H3")!.TiLeDonGia);
+            return;
+        }
+        LoiNghiepVu loi = batLoi(() => xl.themHangVe("H3", "Hạng thử", tiLe));
+        Assert.Equal(LoaiLoi.DuLieuKhongHopLe, loi.Loai);
+        Assert.True(loi.ChiTiet.ContainsKey("tiLeDonGia"));
+        Assert.Null(lay<DAL_HangVe>().layHangVe("H3"));
+    }
+
+    [Fact(DisplayName = "PH-10 (B2): tên sân bay 100 ký tự lưu được, 101 ký tự bị từ chối, khi thêm và khi sửa")]
+    public void PH10_DoDaiTenSanBay()
+    {
+        string ten100 = new string('a', 100);
+
+        xl.themSanBay("VII", ten100);
+        LoiNghiepVu themDai = batLoi(() => xl.themSanBay("VKG", new string('b', 101)));
+        LoiNghiepVu suaDai = batLoi(() => xl.suaSanBay("VII", new string('c', 101)));
+
+        Assert.Equal(ten100, lay<DAL_SanBay>().laySanBay("VII")!.TenSanBay);
+        Assert.Equal("Tên sân bay tối đa 100 ký tự.", themDai.ChiTiet["tenSanBay"]);
+        Assert.Equal("Tên sân bay tối đa 100 ký tự.", suaDai.ChiTiet["tenSanBay"]);
+        Assert.Null(lay<DAL_SanBay>().laySanBay("VKG"));
     }
 }

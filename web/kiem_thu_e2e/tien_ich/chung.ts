@@ -19,7 +19,8 @@ const goc = Date.now();
 /** Mã gồm tiền tố và chữ số, tối đa 10 ký tự, khác nhau giữa các lần gọi và các lần chạy. */
 export function maMoi(tienTo = 'KT'): string {
   dem += 1;
-  const duoi = ((goc / 1000) % 1e6 | 0).toString(36).toUpperCase() + String(dem).padStart(2, '0');
+  // bộ đếm 3 chữ số: mã ...17 không còn là phần đầu của mã ...170 khi cả bộ gọi hàm này hơn 100 lần
+  const duoi = ((goc / 1000) % 1e6 | 0).toString(36).toUpperCase() + String(dem % 1000).padStart(3, '0');
   return (tienTo + duoi).slice(0, 10);
 }
 
@@ -165,6 +166,25 @@ export interface HanhKhachThu {
   dienThoai: string;
 }
 
+/** Lịch chuyến bay thử khởi hành sau lechNgay ngày (giờ Việt Nam), mặc định SGN đi HAN, 2 ghế Hạng 1 và 5 ghế Hạng 2. */
+export function lichChuyenBayThu(tuyChon: Partial<ChuyenBayThu> & { lechNgay?: number; gio?: number } = {}): ChuyenBayThu {
+  const { lechNgay = 10, gio = 8, ...con } = tuyChon;
+  return {
+    maChuyenBay: maMoi('KT'),
+    giaVe: 1_000_000,
+    maSanBayDi: 'SGN',
+    maSanBayDen: 'HAN',
+    ngayGioKhoiHanh: mocVN(lechNgay, gio, 30).isoGio,
+    thoiGianBay: 120,
+    gheTheoHang: [
+      { maHangVe: 'H1', soLuongGhe: 2 },
+      { maHangVe: 'H2', soLuongGhe: 5 },
+    ],
+    trungGian: [],
+    ...con,
+  };
+}
+
 export function hanhKhachMoi(hoTen = 'Nguyễn Văn Thử'): HanhKhachThu {
   return { hoTen, loaiGiayTo: 'CCCD', soGiayTo: soCanCuocMoi(), dienThoai: '0901234567' };
 }
@@ -194,21 +214,7 @@ export class ApiThu {
 
   /** Thêm chuyến bay khởi hành sau lechNgay ngày (giờ Việt Nam), mặc định SGN đi HAN, 2 ghế Hạng 1 và 5 ghế Hạng 2. */
   async themChuyenBay(tuyChon: Partial<ChuyenBayThu> & { lechNgay?: number; gio?: number } = {}): Promise<ChuyenBayThu> {
-    const { lechNgay = 10, gio = 8, ...con } = tuyChon;
-    const cb: ChuyenBayThu = {
-      maChuyenBay: maMoi('KT'),
-      giaVe: 1_000_000,
-      maSanBayDi: 'SGN',
-      maSanBayDen: 'HAN',
-      ngayGioKhoiHanh: mocVN(lechNgay, gio, 30).isoGio,
-      thoiGianBay: 120,
-      gheTheoHang: [
-        { maHangVe: 'H1', soLuongGhe: 2 },
-        { maHangVe: 'H2', soLuongGhe: 5 },
-      ],
-      trungGian: [],
-      ...con,
-    };
+    const cb = lichChuyenBayThu(tuyChon);
     await this.goi('post', '/api/chuyen-bay', cb);
     return cb;
   }
@@ -234,11 +240,47 @@ export class ApiThu {
     await this.goi('post', '/api/tai-khoan', { tenDangNhap, matKhau, nhomQuyen });
   }
 
+  async taiKhoan(): Promise<{ tenDangNhap: string; nhomQuyen: string; trangThai: string }[]> {
+    return this.goi('get', '/api/tai-khoan');
+  }
+
+  async khoaTaiKhoan(tenDangNhap: string) {
+    await this.goi('post', `/api/tai-khoan/${tenDangNhap}/khoa`);
+  }
+
   async xoaSanBayNeuCo(ma: string) {
     await this.yc.delete(`/api/san-bay/${ma}`);
+  }
+
+  async themSanBay(maSanBay: string, tenSanBay: string) {
+    await this.goi('post', '/api/san-bay', { maSanBay, tenSanBay });
+  }
+
+  /** Xóa chuyến bay thử chưa có vé, phiếu; không có hoặc không xóa được thì bỏ qua. */
+  async xoaChuyenBayNeuCo(ma: string) {
+    await this.yc.delete(`/api/chuyen-bay/${ma}`);
   }
 
   async xoaHangVeNeuCo(ma: string) {
     await this.yc.delete(`/api/hang-ve/${ma}`);
   }
+}
+
+/**
+ * Gọi trong test.describe của tập tin có tạo tài khoản thử: sau mỗi ca, khóa các tài khoản được tạo trong lúc chạy.
+ * Phần mềm không có chức năng xóa tài khoản, nên không để lại tài khoản thử (nhất là Quản lý) còn đăng nhập được.
+ */
+export function khoaTaiKhoanThuSauMoiCa(test: { beforeAll(ham: () => Promise<void>): void; afterEach(ham: () => Promise<void>): void }) {
+  let coSan = new Set<string>();
+  test.beforeAll(async () => {
+    const api = await ApiThu.moi();
+    coSan = new Set((await api.taiKhoan()).map((tk) => tk.tenDangNhap));
+    await api.dong();
+  });
+  test.afterEach(async () => {
+    const api = await ApiThu.moi();
+    for (const tk of await api.taiKhoan())
+      if (!coSan.has(tk.tenDangNhap) && tk.trangThai === 'HoatDong') await api.khoaTaiKhoan(tk.tenDangNhap);
+    await api.dong();
+  });
 }

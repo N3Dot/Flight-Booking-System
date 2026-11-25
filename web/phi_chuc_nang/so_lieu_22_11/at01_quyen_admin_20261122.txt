@@ -1,0 +1,10 @@
+﻿2026-11-22 08:30:10 Quyen Administrator: True; tai khoan: DESKTOP-T79TORP\Admin
+2026-11-22 08:30:10 Buoc 1: tao D:\SaoLuu, cap quyen ghi cho NT SERVICE\MSSQL$SQLEXPRESS
+2026-11-22 08:30:10 Buoc 2: tao D:\SaoLuu\sao_luu.ps1
+2026-11-22 08:30:12 Buoc 3: dang ky 'Sao luu QLBANVE_HQ': LogonType=S4U, RunLevel=Highest, lich=2026-11-22T22:00:00+07:00 hang ngay
+2026-11-22 08:30:24 Buoc 4: Start-ScheduledTask xong sau 11.0 giay, LastTaskResult=0, tep D:\SaoLuu\QLBANVE_HQ_20261122.bak co: True, kich thuoc 964,038,656 byte
+2026-11-22 08:30:24 RESTORE VERIFYONLY (ma 0): The backup set on file 1 is valid.
+2026-11-22 08:30:25 Tu chay: tam dat lich mot lan luc 08:32:24, cho toi da 5 phut
+2026-11-22 08:32:33 Tu chay: LastRunTime=08:32:32, LastTaskResult=0, tep cap nhat luc 08:32:29
+2026-11-22 08:32:37 Don dep: xoa tac vu 'Sao luu QLBANVE_HQ' va thu muc D:\SaoLuu (con tac vu: False, con thu muc: False)
+2026-11-22 08:32:37 XONG

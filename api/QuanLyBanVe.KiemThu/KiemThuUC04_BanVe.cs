@@ -62,10 +62,13 @@ public class KiemThuUC04_BanVe : KiemThuCoSo
         LoiNghiepVu loi = batLoi(() => xl.banVe("CB500", "H1", khach(3)));
         Assert.Equal(MaLoi.HET_CHO, loi.Ma);
         Assert.Equal("Hạng vé đã hết chỗ.", loi.Message);
-        Assert.Equal(MaLoi.HET_CHO, batLoi(() => xl.kiemTraChoTrong("CB500", "H1")).Ma);
+        // kiểm qua layThongTinBan vì màn hình bán vé dùng đường này
+        Assert.Equal(0, xl.layThongTinBan("CB500").Hang.Single(h => h.MaHangVe == "H1").SoGheTrong);
 
         xl.banVe("CB500", "H2", khach(3));
-        Assert.Equal(1_500_000m, xl.kiemTraChoTrong("CB500", "H2"));
+        ThongTinHang h2 = xl.layThongTinBan("CB500").Hang.Single(h => h.MaHangVe == "H2");
+        Assert.Equal(2, h2.SoGheTrong);
+        Assert.Equal(1_500_000m, h2.GiaTien);
     }
 
     [Fact(DisplayName = "NV02 giả định 2: phiếu Chờ thanh toán cũng giữ chỗ, hết chỗ thì không bán")]

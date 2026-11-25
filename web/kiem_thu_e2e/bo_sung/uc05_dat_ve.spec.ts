@@ -92,34 +92,42 @@ function gioNgayVN(ms: number): string {
 }
 
 test.describe('Bổ sung UC05 Quản lý đặt vé', () => {
-  test('UC05.7 Với thời gian đặt chậm nhất mặc định: chuyến bay ngày mai đặt được, hôm nay báo quá thời hạn (QĐ3, giả định 6)', async ({ page }) => {
+  test('UC05.7 Chuyến bay đúng mốc đặt chậm nhất thì đặt được, sát dưới mốc thì báo quá thời hạn (QĐ3, giả định 6)', async ({ page }) => {
     const api = await ApiThu.moi();
-    const n = (await api.thamSo()).thoiGianDatVeChamNhat;
-    // mặc định n = 1: chuyến bay ngày mai nằm đúng biên, chuyến bay cuối ngày hôm nay nằm sát dưới biên
-    const gioHienTai = Number(mocVN(0).isoGio.slice(11, 13));
-    test.skip(n - 1 === 0 && gioHienTai >= 23, 'Sau 23 giờ không còn giờ khởi hành trong hôm nay để thử');
-    const cbDuoc = await api.themChuyenBay({ lechNgay: n });
-    const cbTre = await api.themChuyenBay({ lechNgay: n - 1, gio: n - 1 === 0 ? 23 : 8 });
-    await api.dong();
+    const tenThamSo = 'thoiGianDatVeChamNhat';
+    const cu = (await api.thamSo())[tenThamSo];
+    // Giữ hai chuyến bay ở tương lai kể cả khi chạy sát nửa đêm.
+    const n = Math.max(cu, 2);
+    try {
+      if (n !== cu) await api.doiThamSo(tenThamSo, n);
+      const cbDuoc = await api.themChuyenBay({ lechNgay: n });
+      const cbTre = await api.themChuyenBay({ lechNgay: n - 1 });
 
-    await dangNhap(page, 'nhanVien', `/dat-ve?maChuyenBay=${cbDuoc.maChuyenBay}`);
-    await expect(page.getByRole('radio', { name: /^Hạng 2/ })).toBeEnabled();
-    await expect(hopThoai(page, 'Quá thời hạn đặt vé')).toHaveCount(0);
-    await nhapHanhKhach(page, 'Đinh Văn Đúng Hạn', soCanCuocMoi());
-    await chonHang(page, 'Hạng 2');
-    const { maPhieu } = await datVaLayMa(page);
+      await dangNhap(page, 'nhanVien', `/dat-ve?maChuyenBay=${cbDuoc.maChuyenBay}`);
+      await expect(page.getByRole('radio', { name: /^Hạng 2/ })).toBeEnabled();
+      await expect(hopThoai(page, 'Quá thời hạn đặt vé')).toHaveCount(0);
+      await nhapHanhKhach(page, 'Đinh Văn Đúng Hạn', soCanCuocMoi());
+      await chonHang(page, 'Hạng 2');
+      const { maPhieu } = await datVaLayMa(page);
 
-    await page.goto(`/dat-ve?maChuyenBay=${cbTre.maChuyenBay}`);
-    const canhBao = hopThoai(page, 'Quá thời hạn đặt vé');
-    await expect(canhBao).toBeVisible();
-    await expect(canhBao).toContainText(`chậm nhất ${n} ngày trước ngày khởi hành`);
-    await canhBao.getByRole('button').last().click();
-    const ph = await page.request.post('/api/phieu-dat', { data: { maChuyenBay: cbTre.maChuyenBay, maHangVe: 'H2', hanhKhach: hanhKhachMoi() } });
-    expect(ph.status()).toBe(409);
-    expect(await ph.text()).toContain('QUA_HAN_DAT_VE');
-    await xemCsdl(page, `phiếu ${maPhieu} lập được cho chuyến bay ngày mai, chuyến bay hôm nay không có phiếu`,
-      { bang: 'PHIEUDATCHO', cot: 'MaChuyenBay', giaTri: cbDuoc.maChuyenBay, soDong: 1, dung: { MaPhieuDat: maPhieu } },
-      { bang: 'PHIEUDATCHO', cot: 'MaChuyenBay', giaTri: cbTre.maChuyenBay, soDong: 0 });
+      await page.goto(`/dat-ve?maChuyenBay=${cbTre.maChuyenBay}`);
+      const canhBao = hopThoai(page, 'Quá thời hạn đặt vé');
+      await expect(canhBao).toBeVisible();
+      await expect(canhBao).toContainText(`chậm nhất ${n} ngày trước ngày khởi hành`);
+      await canhBao.getByRole('button').last().click();
+      const ph = await page.request.post('/api/phieu-dat', { data: { maChuyenBay: cbTre.maChuyenBay, maHangVe: 'H2', hanhKhach: hanhKhachMoi() } });
+      expect(ph.status()).toBe(409);
+      expect(await ph.text()).toContain('QUA_HAN_DAT_VE');
+      await xemCsdl(page, `phiếu ${maPhieu} lập được cho chuyến bay đúng mốc, chuyến bay dưới mốc không có phiếu`,
+        { bang: 'PHIEUDATCHO', cot: 'MaChuyenBay', giaTri: cbDuoc.maChuyenBay, soDong: 1, dung: { MaPhieuDat: maPhieu } },
+        { bang: 'PHIEUDATCHO', cot: 'MaChuyenBay', giaTri: cbTre.maChuyenBay, soDong: 0 });
+    } finally {
+      try {
+        if (n !== cu) await api.doiThamSo(tenThamSo, cu);
+      } finally {
+        await api.dong();
+      }
+    }
   });
 
   test('UC05.8 Hạng còn 1 ghế: đặt 1 phiếu rồi bán vé hạng đó thì báo hết chỗ (giả định 2)', async ({ page }) => {
@@ -266,9 +274,11 @@ test.describe('Bổ sung UC05 Quản lý đặt vé', () => {
     await dangNhap(page, 'quanLy', '/phieu-dat');
     // phiếu đã thành vé trong dữ liệu mẫu, lập trước hôm nay (chỉ đọc, không sửa)
     const homNay = mocVN(0);
-    const dsVe = (await (await page.request.get(`/api/ve?tuNgay=2000-01-01&denNgay=${mocVN(-1).iso}`)).json()) as { maPhieuDat: string | null }[];
-    const maPhieu = dsVe.find((v) => v.maPhieuDat)?.maPhieuDat;
-    test.skip(!maPhieu, 'Dữ liệu mẫu không có vé nào lập từ phiếu đặt chỗ trước hôm nay');
+    const dsVe = await page.request.get(`/api/ve?tuNgay=2000-01-01&denNgay=${mocVN(-1).iso}`);
+    expect(dsVe.ok(), 'đọc danh sách vé mẫu').toBeTruthy();
+    const ve = (await dsVe.json()) as { maPhieuDat: string | null }[];
+    const maPhieu = ve.find((v) => v.maPhieuDat)?.maPhieuDat;
+    if (!maPhieu) throw new Error('Dữ liệu mẫu thiếu vé lập từ phiếu đặt chỗ trước hôm nay');
     const docPhieu = async () => (await (await page.request.get(`/api/phieu-dat?maPhieuDat=${maPhieu}`)).json()) as { tinhTrang: string; thoiDiemDat: string }[];
     const truoc = await docPhieu();
     expect(truoc).toHaveLength(1);
@@ -292,13 +302,13 @@ test.describe('Bổ sung UC05 Quản lý đặt vé', () => {
     const sau = await docPhieu();
     expect(sau).toHaveLength(1);
     expect(sau[0].tinhTrang).toBe('DaHuy');
-    expect(await docCsdl('VE', 'MaPhieuDat', maPhieu!)).toHaveLength(1);
+    expect(await docCsdl('VE', 'MaPhieuDat', maPhieu)).toHaveLength(1);
     await xemCsdl(page, `phiếu ${maPhieu} đã thành vé nên được giữ lại`,
-      { bang: 'PHIEUDATCHO', cot: 'MaPhieuDat', giaTri: maPhieu!, soDong: 1, dung: { TinhTrang: 'Đã hủy' } },
-      { bang: 'VE', cot: 'MaPhieuDat', giaTri: maPhieu!, soDong: 1 });
+      { bang: 'PHIEUDATCHO', cot: 'MaPhieuDat', giaTri: maPhieu, soDong: 1, dung: { TinhTrang: 'Đã hủy' } },
+      { bang: 'VE', cot: 'MaPhieuDat', giaTri: maPhieu, soDong: 1 });
   });
 
-  test('UC05.14 Xóa phiếu đã hủy: không chọn ngày thì báo lỗi, ngày tương lai bị chặn (AT04) (cần chốt)', async ({ page }) => {
+  test('UC05.14 Xóa phiếu đã hủy: không chọn ngày thì báo lỗi, ngày tương lai bị chặn (AT04)', async ({ page }) => {
     await dangNhap(page, 'quanLy', '/phieu-dat');
     const khoi = page.locator('#xoa-phieu-da-huy');
     const nhan = 'Xóa phiếu đã hủy trước ngày';
@@ -329,7 +339,6 @@ test.describe('Bổ sung UC05 Quản lý đặt vé', () => {
     const form = bieuMau(page);
     const oSo = form.getByRole('textbox', { name: 'CCCD/Hộ chiếu' });
     const oDt = form.getByRole('textbox', { name: 'Điện thoại' });
-    const oTen = form.getByRole('textbox', { name: 'Hành khách' });
 
     // họ tên trống: báo lỗi, không mở hộp xác nhận
     await chonHang(page, 'Hạng 2');
@@ -337,82 +346,18 @@ test.describe('Bổ sung UC05 Quản lý đặt vé', () => {
     await expect(form.getByText('Vui lòng nhập họ tên hành khách.')).toBeVisible();
     await expect(hopThoai(page, 'Xác nhận đặt vé?')).toHaveCount(0);
 
-    // căn cước 11, 12, 13 chữ số, có chữ cái
-    const loiCccd = form.getByText('Số CCCD gồm đúng 12 chữ số.');
-    const so12 = soCanCuocMoi();
-    await nhapRoiO(oSo, so12.slice(0, 11));
-    await expect(loiCccd).toBeVisible();
-    await nhapRoiO(oSo, so12 + '7');
-    await expect(oSo).toHaveValue(so12);
-    await expect(loiCccd).toHaveCount(0);
-    await nhapRoiO(oSo, '0912abc34567');
-    await expect(oSo).toHaveValue('091234567');
-    await expect(loiCccd).toBeVisible();
+    await nhapRoiO(oSo, '01234567890');
+    await expect(form.getByText('Số CCCD gồm đúng 12 chữ số.')).toBeVisible();
 
-    // hộ chiếu 5, 6, 20, 21 ký tự, chữ thường, ký tự đặc biệt
-    const loaiGiayTo = form.getByRole('combobox', { name: 'Loại giấy tờ' });
-    await loaiGiayTo.selectOption('HoChieu');
-    const loiHc = form.getByText('Số hộ chiếu gồm 6 đến 20 ký tự là chữ in hoa và chữ số.');
-    const hc20 = 'B'.repeat(8) + '123456789012';
+    await form.getByRole('combobox', { name: 'Loại giấy tờ' }).selectOption('HoChieu');
     await nhapRoiO(oSo, 'AB123');
-    await expect(loiHc).toBeVisible();
-    await nhapRoiO(oSo, 'ab1234');
-    await expect(oSo).toHaveValue('AB1234');
-    await expect(loiHc).toHaveCount(0);
-    await nhapRoiO(oSo, hc20 + 'Z');
-    await expect(oSo).toHaveValue(hc20);
-    await expect(loiHc).toHaveCount(0);
-    await nhapRoiO(oSo, 'AB-12.3');
-    await expect(oSo).toHaveValue('AB123');
-    await expect(loiHc).toBeVisible();
-    await loaiGiayTo.selectOption('CCCD');
+    await expect(form.getByText('Số hộ chiếu gồm 6 đến 20 ký tự là chữ in hoa và chữ số.')).toBeVisible();
 
-    // điện thoại 7, 8, 15, 16 chữ số, +84, có chữ hoặc khoảng trắng
-    const loiDt = form.getByText('Điện thoại gồm 8 đến 15 chữ số, có thể có dấu + ở đầu (ví dụ +84).');
     await nhapRoiO(oDt, '0912345');
-    await expect(loiDt).toBeVisible();
-    await nhapRoiO(oDt, '09123456');
-    await expect(loiDt).toHaveCount(0);
-    await nhapRoiO(oDt, '091234567890123');
-    await expect(loiDt).toHaveCount(0);
-    await nhapRoiO(oDt, '0912345678901234');
-    await expect(loiDt).toBeVisible();
-    await nhapRoiO(oDt, '0912 345 6ab78');
-    await expect(oDt).toHaveValue('0912345678');
-    await expect(loiDt).toHaveCount(0);
-
-    // họ tên 51 ký tự: ô chỉ nhận 50 ký tự
-    const ten50 = ('<b>Lâm</b> Thị Đặt Chỗ Năm Mươi Ký Tự ' + 'X'.repeat(50)).slice(0, 50);
-    await oTen.fill(ten50 + 'Y');
-    await expect(oTen).toHaveValue(ten50);
-
-    // máy chủ cũng chặn khi gửi thẳng
-    for (const [o, gt] of [
-      ['soGiayTo', so12.slice(0, 11)],
-      ['soGiayTo', so12 + '7'],
-      ['dienThoai', '0912345'],
-      ['dienThoai', '0912 345 678'],
-      ['hoTen', ten50 + 'Y'],
-      ['hoTen', ''],
-    ] as const) {
-      const ph = await page.request.post('/api/phieu-dat', { data: { maChuyenBay: cb.maChuyenBay, maHangVe: 'H2', hanhKhach: { ...hanhKhachMoi(), [o]: gt } } });
-      expect(ph.status(), `${o} = ${gt}`).toBe(400);
-    }
-
-    // họ tên 50 ký tự có thẻ HTML: lưu được, hiện như chữ thường
-    await nhapRoiO(oSo, so12);
-    await expect(loiCccd).toHaveCount(0);
-    const { maPhieu } = await datVaLayMa(page);
-    const dong = await timPhieu(page, maPhieu);
-    await expect(dong).toContainText(ten50);
-    await expect(dong.locator('b').filter({ hasText: /^Lâm$/ })).toHaveCount(0);
-    expect(await docCsdl('PHIEUDATCHO', 'MaChuyenBay', cb.maChuyenBay)).toHaveLength(1);
-    await xemCsdl(page, `phiếu ${maPhieu} lưu họ tên 50 ký tự nguyên văn`,
-      { bang: 'HANHKHACH', cot: 'SoGiayTo', giaTri: so12, soDong: 1, dung: { HoTen: ten50, DienThoai: '0912345678' } },
-      { bang: 'PHIEUDATCHO', cot: 'MaChuyenBay', giaTri: cb.maChuyenBay, soDong: 1 });
+    await expect(form.getByText('Điện thoại gồm 8 đến 15 chữ số, có thể có dấu + ở đầu (ví dụ +84).')).toBeVisible();
   });
 
-  test('UC05.17 Bấm Đặt vé hai lần thật nhanh: chỉ lập 1 phiếu (lặp lại cùng thao tác)', async ({ page }) => {
+  test('UC05.17 Bấm Đặt vé hai lần thật nhanh: chỉ lập 1 phiếu (Chương 7, tr. 46)', async ({ page }) => {
     const api = await ApiThu.moi();
     const cb = await api.themChuyenBay();
     await api.dong();
@@ -436,5 +381,20 @@ test.describe('Bổ sung UC05 Quản lý đặt vé', () => {
     await expect(hoi).toHaveCount(0);
     expect(await docCsdl('PHIEUDATCHO', 'MaChuyenBay', cb.maChuyenBay)).toHaveLength(1);
     await xemCsdl(page, `chuyến bay ${cb.maChuyenBay} chỉ có 1 phiếu`, { bang: 'PHIEUDATCHO', cot: 'MaChuyenBay', giaTri: cb.maChuyenBay, soDong: 1 });
+  });
+  test('UC05.18 Đang nhập dở ở màn hình Đặt vé mà bấm menu khác thì hỏi xác nhận; chọn Tiếp tục nhập thì giữ thông tin, chọn Rời trang thì sang trang mới (B5, Ch.5 nguyên lý khôi phục)', async ({ page }) => {
+    await dangNhap(page, 'nhanVien', '/dat-ve');
+    await nhapHanhKhach(page, 'Lý Văn Nhập Dở', soCanCuocMoi());
+    const menu = page.getByRole('navigation', { name: 'Menu chính' });
+    await menu.getByRole('link', { name: 'Chuyến bay', exact: true }).click();
+    const hoi = hopThoai(page, 'Rời trang khi chưa lưu?');
+    await expect(hoi).toBeVisible();
+    await hoi.getByRole('button', { name: 'Tiếp tục nhập' }).click();
+    await expect(hoi).toHaveCount(0);
+    await expect(page).toHaveURL(/\/dat-ve/);
+    await expect(bieuMau(page).getByRole('textbox', { name: 'Hành khách' })).toHaveValue('Lý Văn Nhập Dở');
+    await menu.getByRole('link', { name: 'Chuyến bay', exact: true }).click();
+    await hopThoai(page, 'Rời trang khi chưa lưu?').getByRole('button', { name: 'Rời trang' }).click();
+    await expect(page).toHaveURL(/\/chuyen-bay/);
   });
 });

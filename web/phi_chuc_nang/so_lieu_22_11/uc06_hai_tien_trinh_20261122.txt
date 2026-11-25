@@ -1,0 +1,108 @@
+﻿AT03 (Bảng 5.36) - chạy cùng lúc hai tiến trình UC06 trên QLBANVE_HQ, Windows 11, ngày 22/11/2026
+Bản build HQ: ket_qua\may_chu\QuanLyBanVe.Api.dll (build 22/11/2026 05:32), không build lại.
+Hai tiến trình: cổng 5095 và 5096, cùng chuỗi kết nối QLBANVE_HQ (localhost\SQLEXPRESS), BoDinhThoi__Bat=true, KiemThu__Bat=false,
+mỗi tiến trình một NhatKy__ThuMuc và một tệp stdout riêng. Start-Process gọi liền nhau. Mỗi tiến trình chạy UC06 một lần lúc khởi động.
+Trước mỗi lần: đưa PD00600001-PD00601000 về Chờ thanh toán, ThoiDiemDat = giờ VN - 25 giờ (như 07_do_hq04.ps1), không gắn vé;
+kiểm tra không có phiếu Chờ thanh toán đến hạn nào khác (quá 24 giờ hoặc chuyến đến mốc hủy QĐ3) - mọi lần đều 0.
+Số "báo hủy" lấy từ dòng BoDinhThoi "Tu dong huy N phieu..." và dòng TienIch_NhatKy của từng tiến trình.
+DAL_PhieuDatCho.huy: UPDATE PHIEUDATCHO SET TinhTrang=N'Đã hủy' WHERE MaPhieuDat=@maPhieu AND TinhTrang=N'Chờ thanh toán';
+số hủy là số dòng UPDATE thực sự đổi, nên một phiếu chỉ được tính ở tiến trình đổi nó trước; tổng hai bên = 1.000 = số phiếu
+chuyển Chờ thanh toán -> Đã hủy (trước 1.000, sau 0), tức không phiếu nào bị hủy hai lần. Bảng không có cột thời điểm hủy.
+
+Lần chạy thử 08:30:01 (trước khi sửa lỗi đọc số trong script đo, không phải lỗi phần mềm): 5095 báo hủy 358, 5096 báo hủy 642,
+tổng 1.000; SQL sau: nhóm 1000 dòng, Đã hủy 1000, Chờ thanh toán 0, tổng PHIEUDATCHO 1996217 (trước 1996217); lệch Start-Process 31 ms;
+không dòng lỗi, stderr rỗng.
+===== Lần 1 =====
+TRUOC|gio SQL 2026-11-22 08:32:25|phieu den han khac 0|nhom Cho thanh toan 1000|tong PHIEUDATCHO 1996217|tong Cho thanh toan 37990
+Khởi động 5095: gọi Start-Process 2026-11-22 08:32:27.565, PID 7560, StartTime 2026-11-22 08:32:27.607
+Khởi động 5096: gọi Start-Process 2026-11-22 08:32:27.631, PID 28104, StartTime 2026-11-22 08:32:27.654
+Lệch giữa hai lần Start-Process: 46 ms
+--- Tiến trình 5095 (PID 7560): báo hủy 672 phiếu
+    stdout: 2026-11-22 08:32:28.126 info: Microsoft.Hosting.Lifetime[0] Application started. Press Ctrl+C to shut down.
+    stdout: 2026-11-22 08:32:30.282 info: QuanLyBanVe.Api.TienIch.BoDinhThoi[0] Tu dong huy 672 phieu dat cho qua han.
+    số dòng lỗi/ngoại lệ trong stdout: 0; stderr: 0 byte
+    TienIch_NhatKy: 2026-11-22 08:32:28 | Hệ thống đã tự động hủy 672 phiếu đặt chỗ quá hạn.
+--- Tiến trình 5096 (PID 28104): báo hủy 328 phiếu
+    stdout: 2026-11-22 08:32:28.128 info: Microsoft.Hosting.Lifetime[0] Application started. Press Ctrl+C to shut down.
+    stdout: 2026-11-22 08:32:30.282 info: QuanLyBanVe.Api.TienIch.BoDinhThoi[0] Tu dong huy 328 phieu dat cho qua han.
+    số dòng lỗi/ngoại lệ trong stdout: 0; stderr: 0 byte
+    TienIch_NhatKy: 2026-11-22 08:32:28 | Hệ thống đã tự động hủy 328 phiếu đặt chỗ quá hạn.
+SAU|nhom con 1000|Da huy 1000|Cho thanh toan 0|ve gan nhom 0|tong PHIEUDATCHO 1996217|tong Cho thanh toan 36990
+KẾT QUẢ lần 1: 5095 hủy 672, 5096 hủy 328, tổng 1000; CSDL Đã hủy 1000/1000; tổng phiếu trước 1996217, sau 1996217; ĐẠT
+Đã dừng: 5095 thoát=True, 5096 thoát=True
+===== Lần 2 =====
+TRUOC|gio SQL 2026-11-22 08:32:35|phieu den han khac 0|nhom Cho thanh toan 1000|tong PHIEUDATCHO 1996217|tong Cho thanh toan 37990
+Khởi động 5095: gọi Start-Process 2026-11-22 08:32:36.530, PID 28444, StartTime 2026-11-22 08:32:36.534
+Khởi động 5096: gọi Start-Process 2026-11-22 08:32:36.560, PID 21228, StartTime 2026-11-22 08:32:36.566
+Lệch giữa hai lần Start-Process: 32 ms
+--- Tiến trình 5095 (PID 28444): báo hủy 517 phiếu
+    stdout: 2026-11-22 08:32:37.031 info: Microsoft.Hosting.Lifetime[0] Application started. Press Ctrl+C to shut down.
+    stdout: 2026-11-22 08:32:38.724 info: QuanLyBanVe.Api.TienIch.BoDinhThoi[0] Tu dong huy 517 phieu dat cho qua han.
+    số dòng lỗi/ngoại lệ trong stdout: 0; stderr: 0 byte
+    TienIch_NhatKy: 2026-11-22 08:32:36 | Hệ thống đã tự động hủy 517 phiếu đặt chỗ quá hạn.
+--- Tiến trình 5096 (PID 21228): báo hủy 483 phiếu
+    stdout: 2026-11-22 08:32:37.049 info: Microsoft.Hosting.Lifetime[0] Application started. Press Ctrl+C to shut down.
+    stdout: 2026-11-22 08:32:38.725 info: QuanLyBanVe.Api.TienIch.BoDinhThoi[0] Tu dong huy 483 phieu dat cho qua han.
+    số dòng lỗi/ngoại lệ trong stdout: 0; stderr: 0 byte
+    TienIch_NhatKy: 2026-11-22 08:32:37 | Hệ thống đã tự động hủy 483 phiếu đặt chỗ quá hạn.
+SAU|nhom con 1000|Da huy 1000|Cho thanh toan 0|ve gan nhom 0|tong PHIEUDATCHO 1996217|tong Cho thanh toan 36990
+KẾT QUẢ lần 2: 5095 hủy 517, 5096 hủy 483, tổng 1000; CSDL Đã hủy 1000/1000; tổng phiếu trước 1996217, sau 1996217; ĐẠT
+Đã dừng: 5095 thoát=True, 5096 thoát=True
+===== Lần 3 =====
+TRUOC|gio SQL 2026-11-22 08:32:43|phieu den han khac 0|nhom Cho thanh toan 1000|tong PHIEUDATCHO 1996217|tong Cho thanh toan 37990
+Khởi động 5095: gọi Start-Process 2026-11-22 08:32:44.644, PID 13520, StartTime 2026-11-22 08:32:44.647
+Khởi động 5096: gọi Start-Process 2026-11-22 08:32:44.661, PID 26312, StartTime 2026-11-22 08:32:44.666
+Lệch giữa hai lần Start-Process: 19 ms
+--- Tiến trình 5095 (PID 13520): báo hủy 514 phiếu
+    stdout: 2026-11-22 08:32:45.161 info: Microsoft.Hosting.Lifetime[0] Application started. Press Ctrl+C to shut down.
+    stdout: 2026-11-22 08:32:46.436 info: QuanLyBanVe.Api.TienIch.BoDinhThoi[0] Tu dong huy 514 phieu dat cho qua han.
+    số dòng lỗi/ngoại lệ trong stdout: 0; stderr: 0 byte
+    TienIch_NhatKy: 2026-11-22 08:32:45 | Hệ thống đã tự động hủy 514 phiếu đặt chỗ quá hạn.
+--- Tiến trình 5096 (PID 26312): báo hủy 486 phiếu
+    stdout: 2026-11-22 08:32:45.201 info: Microsoft.Hosting.Lifetime[0] Application started. Press Ctrl+C to shut down.
+    stdout: 2026-11-22 08:32:46.438 info: QuanLyBanVe.Api.TienIch.BoDinhThoi[0] Tu dong huy 486 phieu dat cho qua han.
+    số dòng lỗi/ngoại lệ trong stdout: 0; stderr: 0 byte
+    TienIch_NhatKy: 2026-11-22 08:32:45 | Hệ thống đã tự động hủy 486 phiếu đặt chỗ quá hạn.
+SAU|nhom con 1000|Da huy 1000|Cho thanh toan 0|ve gan nhom 0|tong PHIEUDATCHO 1996217|tong Cho thanh toan 36990
+KẾT QUẢ lần 3: 5095 hủy 514, 5096 hủy 486, tổng 1000; CSDL Đã hủy 1000/1000; tổng phiếu trước 1996217, sau 1996217; ĐẠT
+Đã dừng: 5095 thoát=True, 5096 thoát=True
+===== Lần 4 =====
+TRUOC|gio SQL 2026-11-22 08:32:51|phieu den han khac 0|nhom Cho thanh toan 1000|tong PHIEUDATCHO 1996217|tong Cho thanh toan 37990
+Khởi động 5095: gọi Start-Process 2026-11-22 08:32:52.425, PID 5084, StartTime 2026-11-22 08:32:52.432
+Khởi động 5096: gọi Start-Process 2026-11-22 08:32:52.441, PID 13876, StartTime 2026-11-22 08:32:52.442
+Lệch giữa hai lần Start-Process: 10 ms
+--- Tiến trình 5095 (PID 5084): báo hủy 462 phiếu
+    stdout: 2026-11-22 08:32:52.859 info: Microsoft.Hosting.Lifetime[0] Application started. Press Ctrl+C to shut down.
+    stdout: 2026-11-22 08:32:54.140 info: QuanLyBanVe.Api.TienIch.BoDinhThoi[0] Tu dong huy 462 phieu dat cho qua han.
+    số dòng lỗi/ngoại lệ trong stdout: 0; stderr: 0 byte
+    TienIch_NhatKy: 2026-11-22 08:32:52 | Hệ thống đã tự động hủy 462 phiếu đặt chỗ quá hạn.
+--- Tiến trình 5096 (PID 13876): báo hủy 538 phiếu
+    stdout: 2026-11-22 08:32:52.856 info: Microsoft.Hosting.Lifetime[0] Application started. Press Ctrl+C to shut down.
+    stdout: 2026-11-22 08:32:54.148 info: QuanLyBanVe.Api.TienIch.BoDinhThoi[0] Tu dong huy 538 phieu dat cho qua han.
+    số dòng lỗi/ngoại lệ trong stdout: 0; stderr: 0 byte
+    TienIch_NhatKy: 2026-11-22 08:32:52 | Hệ thống đã tự động hủy 538 phiếu đặt chỗ quá hạn.
+SAU|nhom con 1000|Da huy 1000|Cho thanh toan 0|ve gan nhom 0|tong PHIEUDATCHO 1996217|tong Cho thanh toan 36990
+KẾT QUẢ lần 4: 5095 hủy 462, 5096 hủy 538, tổng 1000; CSDL Đã hủy 1000/1000; tổng phiếu trước 1996217, sau 1996217; ĐẠT
+Đã dừng: 5095 thoát=True, 5096 thoát=True
+===== Lần 5 =====
+TRUOC|gio SQL 2026-11-22 08:32:59|phieu den han khac 0|nhom Cho thanh toan 1000|tong PHIEUDATCHO 1996217|tong Cho thanh toan 37990
+Khởi động 5095: gọi Start-Process 2026-11-22 08:33:00.451, PID 12132, StartTime 2026-11-22 08:33:00.457
+Khởi động 5096: gọi Start-Process 2026-11-22 08:33:00.466, PID 15824, StartTime 2026-11-22 08:33:00.468
+Lệch giữa hai lần Start-Process: 11 ms
+--- Tiến trình 5095 (PID 12132): báo hủy 439 phiếu
+    stdout: 2026-11-22 08:33:00.898 info: Microsoft.Hosting.Lifetime[0] Application started. Press Ctrl+C to shut down.
+    stdout: 2026-11-22 08:33:02.161 info: QuanLyBanVe.Api.TienIch.BoDinhThoi[0] Tu dong huy 439 phieu dat cho qua han.
+    số dòng lỗi/ngoại lệ trong stdout: 0; stderr: 0 byte
+    TienIch_NhatKy: 2026-11-22 08:33:00 | Hệ thống đã tự động hủy 439 phiếu đặt chỗ quá hạn.
+--- Tiến trình 5096 (PID 15824): báo hủy 561 phiếu
+    stdout: 2026-11-22 08:33:00.899 info: Microsoft.Hosting.Lifetime[0] Application started. Press Ctrl+C to shut down.
+    stdout: 2026-11-22 08:33:02.161 info: QuanLyBanVe.Api.TienIch.BoDinhThoi[0] Tu dong huy 561 phieu dat cho qua han.
+    số dòng lỗi/ngoại lệ trong stdout: 0; stderr: 0 byte
+    TienIch_NhatKy: 2026-11-22 08:33:00 | Hệ thống đã tự động hủy 561 phiếu đặt chỗ quá hạn.
+SAU|nhom con 1000|Da huy 1000|Cho thanh toan 0|ve gan nhom 0|tong PHIEUDATCHO 1996217|tong Cho thanh toan 36990
+KẾT QUẢ lần 5: 5095 hủy 439, 5096 hủy 561, tổng 1000; CSDL Đã hủy 1000/1000; tổng phiếu trước 1996217, sau 1996217; ĐẠT
+Đã dừng: 5095 thoát=True, 5096 thoát=True
+
+Sau đợt đo: dừng cả hai tiến trình, trả ThoiDiemDat của nhóm về 2026-11-21 03:04:43 như trước đợt đo.
+CUOI|nhom 1000|Da huy 1000|ThoiDiemDat 2026-11-21 03:04:43 .. 2026-11-21 03:04:43|tong PHIEUDATCHO 1996217|tong Cho thanh toan 36990
+Cổng 5095, 5096 trống sau đợt đo; máy chủ cổng 5080 không bị đụng.
